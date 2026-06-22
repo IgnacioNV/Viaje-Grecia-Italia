@@ -1,0 +1,126 @@
+/* ============================================================
+   EUROPE TRIP — THEME SYSTEM
+   3 themes: greece (base) | puglia | cruise
+   Cambio via data-theme en :root
+   ============================================================ */
+
+/* ── GREECE (base, Santorini) ──────────────────────────── */
+:root,
+:root[data-theme='greece'] {
+  --color-primary:    #1B3FA6;
+  --color-primary-10: rgba(27, 63, 166, 0.10);
+  --color-primary-20: rgba(27, 63, 166, 0.20);
+  --color-accent:     #E8B84A;
+  --color-bg:         #EFF2F7;
+  --color-surface:    #FFFFFF;
+  --color-text:       #0D1733;
+  --color-text-soft:  rgba(13, 23, 51, 0.55);
+  --color-text-muted: rgba(13, 23, 51, 0.38);
+  --color-border:     rgba(27, 63, 166, 0.15);
+
+  /* Card shape */
+  --card-radius:        4px;
+  --card-shadow:        none;
+  --card-border:        1px solid rgba(27, 63, 166, 0.15);
+  --card-border-left:   3px solid var(--color-primary);
+  --card-border-radius-left: 0;
+
+  /* Stamp / icon container */
+  --stamp-radius:  6px;
+  --stamp-bg:      var(--color-primary-10);
+  --stamp-border:  1px solid var(--color-primary-20);
+  --stamp-shadow:  none;
+
+  /* Typography */
+  --font-display: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body:    -apple-system, 'Helvetica Neue', sans-serif;
+
+  /* Navbar active indicator */
+  --nav-active-color:   var(--color-primary);
+  --nav-active-bg:      var(--color-primary);
+  --nav-active-border:  var(--color-accent);
+
+  /* Linen texture tint */
+  --texture-color-1: rgba(27, 63, 166, 0.03);
+  --texture-color-2: rgba(27, 63, 166, 0.015);
+
+  /* Phase badge */
+  --phase-bg:    #FFF3CD;
+  --phase-color: #856404;
+}
+
+/* ── PUGLIA (Italia) ───────────────────────────────────── */
+:root[data-theme='puglia'] {
+  --color-primary:    #C2622E;
+  --color-primary-10: rgba(194, 98, 46, 0.10);
+  --color-primary-20: rgba(194, 98, 46, 0.20);
+  --color-accent:     #E8A84A;
+  --color-bg:         #F6EEDF;
+  --color-surface:    #FFFBF4;
+  --color-text:       #3A2A1A;
+  --color-text-soft:  rgba(58, 42, 26, 0.55);
+  --color-text-muted: rgba(58, 42, 26, 0.38);
+  --color-border:     rgba(194, 98, 46, 0.18);
+
+  --card-radius:        14px;
+  --card-shadow:        none;
+  --card-border:        1.5px solid var(--color-primary);
+  --card-border-left:   1.5px solid var(--color-primary);
+  --card-border-radius-left: 14px;
+
+  --stamp-radius:  50%;
+  --stamp-bg:      var(--color-primary-10);
+  --stamp-border:  1px solid var(--color-primary-20);
+  --stamp-shadow:  none;
+
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-body:    -apple-system, 'Helvetica Neue', sans-serif;
+
+  --nav-active-color:   var(--color-primary);
+  --nav-active-bg:      var(--color-primary);
+  --nav-active-border:  var(--color-accent);
+
+  --texture-color-1: rgba(194, 98, 46, 0.03);
+  --texture-color-2: rgba(194, 98, 46, 0.015);
+
+  --phase-bg:    #FFF3CD;
+  --phase-color: #856404;
+}
+
+/* ── CRUISE (Adriático) ────────────────────────────────── */
+:root[data-theme='cruise'] {
+  --color-primary:    #1A5FAA;
+  --color-primary-10: rgba(26, 95, 170, 0.10);
+  --color-primary-20: rgba(26, 95, 170, 0.20);
+  --color-accent:     #3EADD4;
+  --color-bg:         #F1F6FB;
+  --color-surface:    #FFFFFF;
+  --color-text:       #0D1F35;
+  --color-text-soft:  rgba(13, 31, 53, 0.55);
+  --color-text-muted: rgba(13, 31, 53, 0.38);
+  --color-border:     rgba(26, 95, 170, 0.12);
+
+  --card-radius:        20px;
+  --card-shadow:        0 2px 16px rgba(26, 95, 170, 0.10);
+  --card-border:        none;
+  --card-border-left:   none;
+  --card-border-radius-left: 20px;
+
+  --stamp-radius:  50%;
+  --stamp-bg:      var(--color-primary-10);
+  --stamp-border:  none;
+  --stamp-shadow:  0 1px 6px rgba(62, 173, 212, 0.20);
+
+  --font-display: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body:    -apple-system, 'Helvetica Neue', sans-serif;
+
+  --nav-active-color:   var(--color-primary);
+  --nav-active-bg:      var(--color-primary);
+  --nav-active-border:  var(--color-accent);
+
+  --texture-color-1: rgba(62, 173, 212, 0.02);
+  --texture-color-2: rgba(26, 95, 170, 0.01);
+
+  --phase-bg:    #FFF3CD;
+  --phase-color: #856404;
+}

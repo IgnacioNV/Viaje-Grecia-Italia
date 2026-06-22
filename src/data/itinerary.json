@@ -1,0 +1,379 @@
+[
+  {
+    "id": "day-1",
+    "date": "2026-06-21",
+    "destination": "Roma",
+    "country": "Italia",
+    "phase": "individual",
+    "theme": "puglia",
+    "tagline": "El punto de partida",
+    "activities": [
+      {
+        "id": "act-1-1",
+        "dayId": "day-1",
+        "time": "14:00",
+        "title": "Llegada al aeropuerto FCO",
+        "location": "Aeropuerto Fiumicino",
+        "period": "afternoon",
+        "scope": "group"
+      },
+      {
+        "id": "act-1-2",
+        "dayId": "day-1",
+        "time": "18:00",
+        "title": "Check-in Hotel Artemide",
+        "location": "Via Nazionale, Roma",
+        "period": "afternoon",
+        "scope": "group",
+        "documentRef": "doc-hotel-roma"
+      }
+    ]
+  },
+  {
+    "id": "day-2",
+    "date": "2026-06-22",
+    "destination": "Roma",
+    "country": "Italia",
+    "phase": "group",
+    "theme": "puglia",
+    "tagline": "Coliseo y pasta",
+    "activities": [
+      {
+        "id": "act-2-1",
+        "dayId": "day-2",
+        "time": "09:00",
+        "title": "Visita al Coliseo",
+        "location": "Piazza del Colosseo",
+        "period": "morning",
+        "scope": "group",
+        "documentRef": "doc-ticket-coliseo"
+      },
+      {
+        "id": "act-2-2",
+        "dayId": "day-2",
+        "time": "13:30",
+        "title": "Almuerzo en Trastevere",
+        "location": "Piazza di Santa Maria",
+        "period": "afternoon",
+        "scope": "group"
+      },
+      {
+        "id": "act-2-3",
+        "dayId": "day-2",
+        "time": "16:00",
+        "title": "Fontana di Trevi",
+        "location": "Piazza di Trevi",
+        "period": "afternoon",
+        "scope": "group"
+      },
+      {
+        "id": "act-2-4",
+        "dayId": "day-2",
+        "time": "20:30",
+        "title": "Cena en el hotel",
+        "location": "Via Nazionale",
+        "period": "night",
+        "scope": "group"
+      }
+    ]
+  },
+  {
+    "id": "day-3",
+    "date": "2026-06-23",
+    "destination": "Alberobello",
+    "country": "Italia",
+    "phase": "group",
+    "theme": "puglia",
+    "tagline": "Trulli, piedra y cal",
+    "activities": [
+      {
+        "id": "act-3-1",
+        "dayId": "day-3",
+        "time": "10:00",
+        "title": "Tour Trulli de Alberobello",
+        "location": "Centro histórico",
+        "period": "morning",
+        "scope": "group",
+        "documentRef": "doc-ticket-trulli"
+      },
+      {
+        "id": "act-3-2",
+        "dayId": "day-3",
+        "time": "13:00",
+        "title": "Almuerzo en Masseria",
+        "location": "Masseria del Conte",
+        "period": "afternoon",
+        "scope": "group"
+      },
+      {
+        "id": "act-3-3",
+        "dayId": "day-3",
+        "time": "16:00",
+        "title": "Taller de cerámica",
+        "location": "Grottaglie · plazas limitadas",
+        "period": "afternoon",
+        "scope": ["lucia", "maria", "sofia", "abuela"]
+      },
+      {
+        "id": "act-3-4",
+        "dayId": "day-3",
+        "time": "16:00",
+        "title": "Fútbol en la piazza",
+        "location": "Piazza del Popolo",
+        "period": "afternoon",
+        "scope": ["tomas", "mateo", "nacho"]
+      }
+    ]
+  },
+  {
+    "id": "day-4",
+    "date": "2026-06-24",
+    "destination": "Dubrovnik",
+    "country": "Croacia",
+    "phase": "group",
+    "theme": "cruise",
+    "tagline": "La perla del Adriático",
+    "activities": [
+      {
+        "id": "act-4-1",
+        "dayId": "day-4",
+        "time": "08:00",
+        "title": "Embarque crucero MSC",
+        "location": "Puerto de Bari",
+        "period": "morning",
+        "scope": "group",
+        "documentRef": "doc-boarding"
+      },
+      {
+        "id": "act-4-2",
+        "dayId": "day-4",
+        "time": "14:00",
+        "title": "Llegada a Dubrovnik",
+        "location": "Puerto Gruž · Croacia",
+        "period": "afternoon",
+        "scope": "group"
+      },
+      {
+        "id": "act-4-3",
+        "dayId": "day-4",
+        "time": "15:30",
+        "title": "Murallas de Dubrovnik",
+        "location": "Stara Grad",
+        "period": "afternoon",
+        "scope": "group",
+        "documentRef": "doc-ticket-dubrovnik"
+      }
+    ]
+  },
+  {
+    "id": "day-5",
+    "date": "2026-06-25",
+    "destination": "Kotor",
+    "country": "Montenegro",
+    "phase": "group",
+    "theme": "cruise",
+    "tagline": "La bahía verde",
+    "activities": [
+      {
+        "id": "act-5-1",
+        "dayId": "day-5",
+        "time": "08:00",
+        "title": "Desayuno buffet — Cubierta 9",
+        "location": "Restaurante Horizon",
+        "period": "morning",
+        "scope": "group"
+      },
+      {
+        "id": "act-5-2",
+        "dayId": "day-5",
+        "time": "10:00",
+        "title": "Llegada a Kotor",
+        "location": "Puerto de Kotor · Montenegro",
+        "period": "morning",
+        "scope": "group"
+      },
+      {
+        "id": "act-5-3",
+        "dayId": "day-5",
+        "time": "11:00",
+        "title": "Subida a la Fortaleza",
+        "location": "San Giovanni · 1350 escalones",
+        "period": "morning",
+        "scope": ["tomas", "nacho", "lucia", "mateo"]
+      },
+      {
+        "id": "act-5-4",
+        "dayId": "day-5",
+        "time": "11:00",
+        "title": "Ciudad vieja a pie",
+        "location": "Stari Grad, Kotor",
+        "period": "morning",
+        "scope": ["maria", "sofia", "abuela"]
+      }
+    ]
+  },
+  {
+    "id": "day-6",
+    "date": "2026-06-26",
+    "destination": "A bordo",
+    "country": "Mar Adriático",
+    "phase": "group",
+    "theme": "cruise",
+    "tagline": "Sin tierra a la vista",
+    "activities": [
+      {
+        "id": "act-6-1",
+        "dayId": "day-6",
+        "time": "07:30",
+        "title": "Desayuno buffet — Cubierta 9",
+        "location": "Restaurante Horizon",
+        "period": "morning",
+        "scope": "group"
+      },
+      {
+        "id": "act-6-2",
+        "dayId": "day-6",
+        "time": "10:00",
+        "title": "Excursión Kotor (opcional)",
+        "location": "Montenegro",
+        "period": "morning",
+        "scope": ["tomas", "nacho"]
+      },
+      {
+        "id": "act-6-3",
+        "dayId": "day-6",
+        "time": "14:00",
+        "title": "Pileta cubierta — Deck 11",
+        "location": "A bordo MSC",
+        "period": "afternoon",
+        "scope": "group"
+      },
+      {
+        "id": "act-6-4",
+        "dayId": "day-6",
+        "time": "20:00",
+        "title": "Cena de gala",
+        "location": "Restaurante L'Olivo",
+        "period": "night",
+        "scope": "group"
+      }
+    ]
+  },
+  {
+    "id": "day-7",
+    "date": "2026-06-27",
+    "destination": "Atenas",
+    "country": "Grecia",
+    "phase": "group",
+    "theme": "greece",
+    "tagline": "La ciudad blanca de mármol",
+    "activities": [
+      {
+        "id": "act-7-1",
+        "dayId": "day-7",
+        "time": "09:00",
+        "title": "Desembarque en El Pireo",
+        "location": "Puerto de El Pireo · Atenas",
+        "period": "morning",
+        "scope": "group"
+      },
+      {
+        "id": "act-7-2",
+        "dayId": "day-7",
+        "time": "11:00",
+        "title": "La Acrópolis",
+        "location": "Colina de la Acrópolis",
+        "period": "morning",
+        "scope": "group",
+        "documentRef": "doc-ticket-acropolis"
+      },
+      {
+        "id": "act-7-3",
+        "dayId": "day-7",
+        "time": "14:00",
+        "title": "Almuerzo en Monastiraki",
+        "location": "Plaka · Atenas",
+        "period": "afternoon",
+        "scope": "group"
+      }
+    ]
+  },
+  {
+    "id": "day-8",
+    "date": "2026-06-28",
+    "destination": "Santorini",
+    "country": "Grecia",
+    "phase": "group",
+    "theme": "greece",
+    "tagline": "Azul y blanco para siempre",
+    "activities": [
+      {
+        "id": "act-8-1",
+        "dayId": "day-8",
+        "time": "09:00",
+        "title": "Vuelo Atenas → Santorini",
+        "location": "Aeropuerto Thira JTR",
+        "period": "morning",
+        "scope": "group",
+        "documentRef": "doc-vuelo-santorini"
+      },
+      {
+        "id": "act-8-2",
+        "dayId": "day-8",
+        "time": "11:30",
+        "title": "Check-in Hotel Mystique",
+        "location": "Oia, Santorini",
+        "period": "morning",
+        "scope": "group",
+        "documentRef": "doc-hotel-mystique"
+      },
+      {
+        "id": "act-8-3",
+        "dayId": "day-8",
+        "time": "16:00",
+        "title": "Playa de Kamari",
+        "location": "Arena negra volcánica",
+        "period": "afternoon",
+        "scope": "group"
+      }
+    ]
+  },
+  {
+    "id": "day-9",
+    "date": "2026-06-29",
+    "destination": "Oia",
+    "country": "Grecia",
+    "phase": "group",
+    "theme": "greece",
+    "tagline": "Un día blanco en la caldera",
+    "activities": [
+      {
+        "id": "act-9-1",
+        "dayId": "day-9",
+        "time": "09:00",
+        "title": "Caminata por el pueblo blanco",
+        "location": "Oia, Santorini",
+        "period": "morning",
+        "scope": "group"
+      },
+      {
+        "id": "act-9-2",
+        "dayId": "day-9",
+        "time": "12:30",
+        "title": "Almuerzo frente al mar",
+        "location": "Taverna Katina · 13:00",
+        "period": "afternoon",
+        "scope": "group"
+      },
+      {
+        "id": "act-9-3",
+        "dayId": "day-9",
+        "time": "19:30",
+        "title": "Atardecer en el castillo",
+        "location": "Punto de encuentro",
+        "period": "night",
+        "scope": "group"
+      }
+    ]
+  }
+]
