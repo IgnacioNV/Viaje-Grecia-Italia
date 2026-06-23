@@ -9,11 +9,11 @@ import type { IconName } from '../components/ui/IconStamp'
 const SEED = seedDocs as SeedDocument[]
 
 const TYPE_ICON: Record<string, IconName> = {
-  ticket: 'ticket',
-  passport: 'passport',
+  ticket:      'ticket',
+  passport:    'passport',
   reservation: 'reservation',
-  voucher: 'docs',
-  other: 'docs',
+  voucher:     'document',
+  other:       'document',
 }
 
 const DOC_TYPES: { value: DocumentType; label: string }[] = [

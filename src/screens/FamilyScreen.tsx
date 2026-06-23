@@ -180,7 +180,7 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
         {person.flightOrigin && (
           <div className="card" style={{ padding: '14px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <IconStamp icon="plane" size={38} />
+              <IconStamp icon="flight" size={38} />
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 600, fontSize: 15 }}>Vuelo propio</div>
                 <div style={{ fontSize: 12, color: 'var(--color-text-soft)' }}>

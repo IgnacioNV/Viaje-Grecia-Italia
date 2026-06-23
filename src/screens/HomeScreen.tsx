@@ -65,17 +65,8 @@ export function HomeScreen({ personId, personName }: HomeScreenProps) {
     <div className="screen">
       {/* ── Header ─────────────────────────────── */}
       <div style={{ padding: '20px 20px 0' }}>
-        {/* Person badge + toggle */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <div className="person-badge">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-            </svg>
-            Viendo como {personName}
-          </div>
-
-          {/* Day / Week toggle */}
+        {/* Toggle Día / Semana */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 12 }}>
           <div style={{
             display: 'flex',
             background: 'var(--color-primary-10)',
@@ -166,12 +157,12 @@ function DayView({ grouped }: { grouped: Record<string, Activity[]> }) {
 function ActivityCard({ activity }: { activity: Activity }) {
   const doc = getDocForActivity(activity.id)
 
-  const iconName = (): 'plane' | 'restaurant' | 'ticket' | 'reservation' | 'location' | 'home' => {
-    if (activity.id.includes('vuelo') || activity.title.toLowerCase().includes('vuelo')) return 'plane'
+  const iconName = (): 'flight' | 'restaurant' | 'ticket' | 'reservation' | 'pin' | 'home' => {
+    if (activity.title.toLowerCase().includes('vuelo') || activity.title.toLowerCase().includes('embarque')) return 'flight'
     if (activity.title.toLowerCase().includes('almuerzo') || activity.title.toLowerCase().includes('cena') || activity.title.toLowerCase().includes('desayuno')) return 'restaurant'
     if (doc?.type === 'ticket') return 'ticket'
     if (doc?.type === 'reservation') return 'reservation'
-    return 'location'
+    return 'pin'
   }
 
   return (

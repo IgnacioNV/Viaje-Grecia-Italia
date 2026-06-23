@@ -2,11 +2,11 @@ import { NavLink } from 'react-router-dom'
 import { IconStamp } from './IconStamp'
 
 const NAV_ITEMS = [
-  { to: '/home',   label: 'Hoy',    icon: 'home'    as const },
-  { to: '/family', label: 'Family', icon: 'family'  as const },
-  { to: '/docs',   label: 'Docs',   icon: 'docs'    as const },
-  { to: '/journal',label: 'Diario', icon: 'journal' as const },
-  { to: '/map',    label: 'Mapa',   icon: 'map'     as const },
+  { to: '/home',   label: 'Hoy',    icon: 'home'     as const },
+  { to: '/family', label: 'Family', icon: 'family'   as const },
+  { to: '/docs',   label: 'Docs',   icon: 'document' as const },
+  { to: '/journal',label: 'Diario', icon: 'journal'  as const },
+  { to: '/map',    label: 'Mapa',   icon: 'map'      as const },
 ]
 
 export function Navbar() {

@@ -21,7 +21,7 @@ export function WelcomeScreen({ onSelect }: WelcomeScreenProps) {
           ¿Quién<br/>sos?
         </h1>
         <p style={{ color: 'var(--color-text-soft)', fontSize: 15, lineHeight: 1.5 }}>
-          Tocá tu nombre para empezar.<br/>Solo se pregunta una vez.
+          Tocá tu nombre para empezar.
         </p>
       </div>
 
@@ -95,8 +95,7 @@ export function WelcomeScreen({ onSelect }: WelcomeScreenProps) {
         textAlign: 'center',
         lineHeight: 1.5,
       }}>
-        Esta app funciona completamente offline.<br/>
-        Todos los datos están en tu teléfono.
+        Viaje Europa · Familia García
       </p>
     </div>
   )
