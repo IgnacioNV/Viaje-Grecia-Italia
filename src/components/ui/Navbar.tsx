@@ -2,12 +2,15 @@ import { NavLink } from 'react-router-dom'
 import { IconStamp } from './IconStamp'
 
 const NAV_ITEMS = [
-  { to: '/home',   label: 'Hoy',    icon: 'home'     as const },
-  { to: '/family', label: 'Family', icon: 'family'   as const },
-  { to: '/docs',   label: 'Docs',   icon: 'document' as const },
-  { to: '/journal',label: 'Diario', icon: 'journal'  as const },
-  { to: '/map',    label: 'Mapa',   icon: 'map'      as const },
+  { to: '/home',    label: 'Hoy',    icon: 'home'     as const },
+  { to: '/family',  label: 'Family', icon: 'family'   as const },
+  { to: '/docs',    label: 'Docs',   icon: 'document' as const },
+  { to: '/journal', label: 'Diario', icon: 'journal'  as const },
+  { to: '/map',     label: 'Mapa',   icon: 'map'      as const },
 ]
+
+// Navbar height exported so screens can use it for bottom padding
+export const NAVBAR_HEIGHT = 72
 
 export function Navbar() {
   return (
@@ -21,8 +24,11 @@ export function Navbar() {
       background: 'var(--color-surface)',
       borderTop: '0.5px solid var(--color-border)',
       display: 'flex',
-      padding: '8px 0 max(8px, env(safe-area-inset-bottom))',
+      alignItems: 'flex-start',
+      paddingTop: 10,
+      paddingBottom: 'max(12px, env(safe-area-inset-bottom))',
       zIndex: 100,
+      minHeight: NAVBAR_HEIGHT,
     }}>
       {NAV_ITEMS.map(({ to, label, icon }) => (
         <NavLink
@@ -35,42 +41,39 @@ export function Navbar() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: 3,
+              gap: 4,
             }}>
+              {/* Icon — bigger, no background container */}
               <IconStamp
                 icon={icon}
-                size={32}
-                style={isActive ? {
-                  background: 'var(--nav-active-bg)',
-                  color: '#fff',
-                  border: 'none',
-                  boxShadow: 'none',
-                } : {
+                size={38}
+                style={{
                   background: 'transparent',
                   border: 'none',
                   boxShadow: 'none',
-                  color: 'var(--color-text-muted)',
-                  opacity: 0.5,
+                  color: isActive ? 'var(--color-primary)' : 'var(--color-text-muted)',
+                  opacity: isActive ? 1 : 0.45,
                 }}
               />
+
+              {/* Label */}
               <span style={{
-                fontSize: 10,
+                fontSize: 11,
                 fontWeight: isActive ? 600 : 400,
                 color: isActive ? 'var(--color-primary)' : 'var(--color-text-muted)',
-                letterSpacing: '0.02em',
                 fontFamily: 'var(--font-detail)',
               }}>
                 {label}
               </span>
-              {isActive && (
-                <div style={{
-                  width: 18,
-                  height: 2.5,
-                  borderRadius: 2,
-                  background: 'var(--color-accent)',
-                  marginTop: -1,
-                }} />
-              )}
+
+              {/* Active bar — under the label */}
+              <div style={{
+                height: 2.5,
+                width: 20,
+                borderRadius: 2,
+                background: isActive ? 'var(--color-accent)' : 'transparent',
+                marginTop: 1,
+              }} />
             </div>
           )}
         </NavLink>

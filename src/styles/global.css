@@ -86,7 +86,7 @@ p { line-height: 1.5; }
 /* ── Screen container ───────────────────────────────── */
 .screen {
   flex: 1;
-  padding: 0 0 80px; /* space for bottom navbar */
+  padding: 0 0 96px; /* 72px navbar + 24px breathing room */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }

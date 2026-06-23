@@ -74,8 +74,8 @@ export function DocsScreen({ personId }: DocsScreenProps) {
         onClick={() => setShowUpload(true)}
         style={{
           position: 'fixed',
-          bottom: 90,
-          right: 20,
+          bottom: 88,
+          right: 'max(20px, calc(50vw - 195px))',
           width: 52,
           height: 52,
           borderRadius: '50%',
