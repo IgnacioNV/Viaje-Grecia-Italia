@@ -170,7 +170,7 @@ function DaySection({ day, dayNumber, personId, isLast }: {
       <div style={{ flex: 1, paddingBottom: isLast ? 0 : 20 }}>
         {/* Date header */}
         <div style={{ marginBottom: 12, paddingTop: 10 }}>
-          <div style={{ fontWeight: 600, fontSize: 16, color: 'var(--color-text)', textTransform: 'capitalize' }}>
+          <div style={{ fontWeight: 600, fontSize: 16, color: 'var(--color-text)', textTransform: 'capitalize', fontFamily: 'var(--font-body)' }}>
             {formatDate(day.date)}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 3 }}>
@@ -179,7 +179,7 @@ function DaySection({ day, dayNumber, personId, isLast }: {
               <path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/>
               <circle cx="12" cy="9" r="2.5"/>
             </svg>
-            <span style={{ fontSize: 13, color: 'var(--color-text-soft)' }}>
+            <span style={{ fontSize: 13, color: 'var(--color-accent)', fontFamily: 'var(--font-detail)' }}>
               {day.destination}
             </span>
             {day.phase === 'individual' && (
@@ -271,7 +271,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
               <circle cx="12" cy="12" r="10"/>
               <polyline points="12,6 12,12 16,14"/>
             </svg>
-            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-primary)' }}>
+            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-primary)', fontFamily: 'var(--font-detail)' }}>
               {activity.time}
             </span>
           </div>
@@ -285,7 +285,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
               <path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/>
               <circle cx="12" cy="9" r="2.5"/>
             </svg>
-            <span style={{ fontSize: 12, color: 'var(--color-text-soft)' }}>
+            <span style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
               {activity.location}
             </span>
           </div>

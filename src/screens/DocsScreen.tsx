@@ -39,7 +39,7 @@ export function DocsScreen({ personId }: DocsScreenProps) {
       <div style={{ padding: '20px 20px 0' }}>
         <p className="eyebrow" style={{ marginBottom: 6 }}>Maleta digital</p>
         <h1 style={{ fontSize: 28 }}>Documentos</h1>
-        <p style={{ fontSize: 12, color: 'var(--color-text-muted)', marginTop: 4 }}>
+        <p style={{ fontSize: 12, color: 'var(--color-text-muted)', marginTop: 4, fontFamily: 'var(--font-detail)' }}>
           Todo offline · {SEED.length + localDocs.length} archivos guardados
         </p>
       </div>
@@ -112,7 +112,7 @@ function DocRow({ title, type, subtitle, badge }: {
       <IconStamp icon={TYPE_ICON[type] ?? 'docs'} size={38} />
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--color-text)' }}>{title}</div>
-        <div style={{ fontSize: 11, color: 'var(--color-text-soft)', marginTop: 2 }}>{subtitle}</div>
+        <div style={{ fontSize: 11, color: 'var(--color-text-soft)', marginTop: 2, fontFamily: 'var(--font-detail)' }}>{subtitle}</div>
       </div>
       <span style={{
         fontSize: 10, fontWeight: 700,

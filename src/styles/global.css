@@ -46,19 +46,33 @@ body {
 }
 
 /* ── Typography ─────────────────────────────────────── */
-h1, h2, h3, h4 {
-  font-family: var(--font-display);
-  color: var(--color-text);
-  line-height: 1.15;
-  transition: font-family 0.3s ease;
+
+/* Albert Sans — todo */
+body, button, input, select, textarea {
+  font-family: var(--font-body);
 }
 
-h1 { font-size: 28px; font-weight: 600; }
-h2 { font-size: 22px; font-weight: 500; }
-h3 { font-size: 17px; font-weight: 500; }
-h4 { font-size: 14px; font-weight: 500; }
+h1, h2, h3, h4 {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  line-height: 1.15;
+}
 
-p  { line-height: 1.5; }
+h1 { font-size: 28px; font-weight: 700; }
+h2 { font-size: 22px; font-weight: 600; }
+h3 { font-size: 17px; font-weight: 600; }
+h4 { font-size: 14px; font-weight: 600; }
+
+p { line-height: 1.5; }
+
+/* Shantell Sans — subtítulos, horarios, ubicaciones */
+.font-detail,
+.text-subtitle,
+.text-time,
+.text-location,
+.text-nav-label {
+  font-family: var(--font-detail);
+}
 
 .eyebrow {
   font-size: 10px;
@@ -66,6 +80,7 @@ p  { line-height: 1.5; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-primary);
+  font-family: var(--font-body);
 }
 
 /* ── Screen container ───────────────────────────────── */

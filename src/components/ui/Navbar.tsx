@@ -58,6 +58,7 @@ export function Navbar() {
                 fontWeight: isActive ? 600 : 400,
                 color: isActive ? 'var(--color-primary)' : 'var(--color-text-muted)',
                 letterSpacing: '0.02em',
+                fontFamily: 'var(--font-detail)',
               }}>
                 {label}
               </span>

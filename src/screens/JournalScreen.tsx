@@ -93,7 +93,7 @@ function JournalCard({ entry }: { entry: JournalEntry }) {
       <div style={{
         fontSize: 9, fontWeight: 700, letterSpacing: '0.1em',
         textTransform: 'uppercase', color: 'var(--color-primary)',
-        marginBottom: 4,
+        marginBottom: 4, fontFamily: 'var(--font-detail)',
       }}>
         {date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} · {date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
       </div>

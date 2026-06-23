@@ -58,7 +58,7 @@ export function FamilyScreen() {
               <div style={{ fontWeight: 600, fontSize: 16, color: 'var(--color-text)' }}>
                 {person.name}
               </div>
-              <div style={{ fontSize: 12, color: 'var(--color-text-soft)', marginTop: 1 }}>
+              <div style={{ fontSize: 12, color: 'var(--color-text-soft)', marginTop: 1, fontFamily: 'var(--font-detail)' }}>
                 {person.role}
               </div>
             </div>
@@ -118,6 +118,7 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
             fontSize: 12,
             fontWeight: 600,
             color: 'var(--color-primary)',
+            fontFamily: 'var(--font-detail)',
           }}>
             {person.role}
           </div>
