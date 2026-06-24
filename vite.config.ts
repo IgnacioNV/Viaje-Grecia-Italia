@@ -9,9 +9,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/**', 'seed-docs/**'],
       manifest: {
-        name: 'Viaje Europa — Familia García',
+        name: 'Viaje Europa 2026',
         short_name: 'Europa',
-        description: 'Cuaderno de viaje familiar',
+        description: 'Bari · Crucero · Grecia — Julio 2026',
         theme_color: '#1B3FA6',
         background_color: '#EFF2F7',
         display: 'standalone',

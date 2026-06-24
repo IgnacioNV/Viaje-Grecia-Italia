@@ -16,7 +16,7 @@ export function WelcomeScreen({ onSelect }: WelcomeScreenProps) {
     }}>
       {/* Header */}
       <div style={{ marginBottom: 40 }}>
-        <p className="eyebrow" style={{ marginBottom: 8 }}>Europa · Junio 2026</p>
+        <p className="eyebrow" style={{ marginBottom: 8 }}>Bari · Crucero · Grecia · Julio 2026</p>
         <h1 style={{ fontSize: 32, marginBottom: 8 }}>
           ¿Quién<br/>sos?
         </h1>

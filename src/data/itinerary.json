@@ -1,222 +1,285 @@
 [
   {
     "id": "day-1",
-    "date": "2026-06-21",
-    "destination": "Roma",
+    "date": "2026-07-21",
+    "destination": "Bari",
     "country": "Italia",
-    "phase": "individual",
+    "phase": "group",
     "theme": "puglia",
-    "tagline": "El punto de partida",
+    "tagline": "Bienvenidos a Puglia",
     "activities": [
       {
         "id": "act-1-1",
         "dayId": "day-1",
-        "time": "14:00",
-        "title": "Llegada al aeropuerto FCO",
-        "location": "Aeropuerto Fiumicino",
+        "time": "14:30",
+        "title": "Llegada a Bari",
+        "location": "Aeropuerto de Bari",
         "period": "afternoon",
         "scope": "group"
       },
       {
         "id": "act-1-2",
         "dayId": "day-1",
-        "time": "18:00",
-        "title": "Check-in Hotel Artemide",
-        "location": "Via Nazionale, Roma",
+        "time": "16:00",
+        "title": "Bari Vecchia",
+        "location": "Casco histórico de Bari",
         "period": "afternoon",
         "scope": "group",
-        "documentRef": "doc-hotel-roma"
+        "notes": "Basilica di San Nicola, Cattedrale di San Sabino, Arco Basso (calle de las orecchiette) y calles medievales. Caminar sin apuro."
+      },
+      {
+        "id": "act-1-3",
+        "dayId": "day-1",
+        "time": "19:00",
+        "title": "Paseo marítimo al atardecer",
+        "location": "Lungomare Nazario Sauro",
+        "period": "night",
+        "scope": "group",
+        "notes": "Ideal para el atardecer."
+      },
+      {
+        "id": "act-1-4",
+        "dayId": "day-1",
+        "time": "21:00",
+        "title": "Cena en Bari",
+        "location": "Bari Vecchia",
+        "period": "night",
+        "scope": "group",
+        "notes": "Probar focaccia barese, panzerotti y helado artesanal."
       }
     ]
   },
   {
     "id": "day-2",
-    "date": "2026-06-22",
-    "destination": "Roma",
+    "date": "2026-07-22",
+    "destination": "Monopoli",
     "country": "Italia",
     "phase": "group",
     "theme": "puglia",
-    "tagline": "Coliseo y pasta",
+    "tagline": "Callecitas blancas y mar Adriático",
     "activities": [
       {
         "id": "act-2-1",
         "dayId": "day-2",
         "time": "09:00",
-        "title": "Visita al Coliseo",
-        "location": "Piazza del Colosseo",
+        "title": "Tren a Monopoli",
+        "location": "Estación de Bari Central",
         "period": "morning",
         "scope": "group",
-        "documentRef": "doc-ticket-coliseo"
+        "notes": "Duración aproximada: 30 minutos."
       },
       {
         "id": "act-2-2",
         "dayId": "day-2",
-        "time": "13:30",
-        "title": "Almuerzo en Trastevere",
-        "location": "Piazza di Santa Maria",
-        "period": "afternoon",
-        "scope": "group"
+        "time": "10:00",
+        "title": "Porto Antico di Monopoli",
+        "location": "Puerto histórico de Monopoli",
+        "period": "morning",
+        "scope": "group",
+        "notes": "Puerto histórico con excelentes vistas."
       },
       {
         "id": "act-2-3",
         "dayId": "day-2",
-        "time": "16:00",
-        "title": "Fontana di Trevi",
-        "location": "Piazza di Trevi",
-        "period": "afternoon",
-        "scope": "group"
+        "time": "10:30",
+        "title": "Centro histórico de Monopoli",
+        "location": "Monopoli, Italia",
+        "period": "morning",
+        "scope": "group",
+        "notes": "Callecitas blancas, plazas y rincones frente al mar. Bastioni di Monopoli, Basilica Cattedrale Maria Santissima della Madia y Castello Carlo V."
       },
       {
         "id": "act-2-4",
         "dayId": "day-2",
-        "time": "20:30",
-        "title": "Cena en el hotel",
-        "location": "Via Nazionale",
+        "time": "13:00",
+        "title": "Almuerzo en el puerto",
+        "location": "Porto Antico, Monopoli",
+        "period": "afternoon",
+        "scope": "group"
+      },
+      {
+        "id": "act-2-5",
+        "dayId": "day-2",
+        "time": "15:00",
+        "title": "Playa Cala Porta Vecchia (opcional)",
+        "location": "Monopoli",
+        "period": "afternoon",
+        "scope": "group"
+      },
+      {
+        "id": "act-2-6",
+        "dayId": "day-2",
+        "time": "17:30",
+        "title": "Regreso a Bari",
+        "location": "Estación de Monopoli",
+        "period": "afternoon",
+        "scope": "group"
+      },
+      {
+        "id": "act-2-7",
+        "dayId": "day-2",
+        "time": "20:00",
+        "title": "Noche en Bari",
+        "location": "Via Sparano · Paseo marítimo",
+        "period": "night",
+        "scope": "group",
+        "notes": "Via Sparano, plazas del centro y paseo marítimo iluminado. Helado artesanal antes de volver al hotel."
+      }
+    ]
+  },
+  {
+    "id": "day-3",
+    "date": "2026-07-23",
+    "destination": "Matera · Alberobello",
+    "country": "Italia",
+    "phase": "group",
+    "theme": "puglia",
+    "tagline": "Los Sassi y los Trulli",
+    "activities": [
+      {
+        "id": "act-3-1",
+        "dayId": "day-3",
+        "time": "08:30",
+        "title": "Punto de encuentro excursión",
+        "location": "Corso Cavour · Camera di Commercio",
+        "period": "morning",
+        "scope": "group",
+        "notes": "Presentarse a las 08:30. Salida a las 09:00. Llevar zapatillas, agua, gorra y protector solar."
+      },
+      {
+        "id": "act-3-2",
+        "dayId": "day-3",
+        "time": "10:00",
+        "title": "Matera",
+        "location": "Matera, Basilicata",
+        "period": "morning",
+        "scope": "group",
+        "notes": "Los Sassi, miradores panorámicos, iglesias excavadas en roca y centro histórico."
+      },
+      {
+        "id": "act-3-3",
+        "dayId": "day-3",
+        "time": "15:00",
+        "title": "Alberobello",
+        "location": "Alberobello, Puglia",
+        "period": "afternoon",
+        "scope": "group",
+        "notes": "Barrio de los trulli, miradores y calles típicas."
+      },
+      {
+        "id": "act-3-4",
+        "dayId": "day-3",
+        "time": "19:00",
+        "title": "Regreso a Bari",
+        "location": "Bari",
         "period": "night",
         "scope": "group"
       }
     ]
   },
   {
-    "id": "day-3",
-    "date": "2026-06-23",
-    "destination": "Alberobello",
+    "id": "day-4",
+    "date": "2026-07-24",
+    "destination": "Valle de Itria",
     "country": "Italia",
     "phase": "group",
     "theme": "puglia",
-    "tagline": "Trulli, piedra y cal",
-    "activities": [
-      {
-        "id": "act-3-1",
-        "dayId": "day-3",
-        "time": "10:00",
-        "title": "Tour Trulli de Alberobello",
-        "location": "Centro histórico",
-        "period": "morning",
-        "scope": "group",
-        "documentRef": "doc-ticket-trulli"
-      },
-      {
-        "id": "act-3-2",
-        "dayId": "day-3",
-        "time": "13:00",
-        "title": "Almuerzo en Masseria",
-        "location": "Masseria del Conte",
-        "period": "afternoon",
-        "scope": "group"
-      },
-      {
-        "id": "act-3-3",
-        "dayId": "day-3",
-        "time": "16:00",
-        "title": "Taller de cerámica",
-        "location": "Grottaglie · plazas limitadas",
-        "period": "afternoon",
-        "scope": ["lucia", "maria", "sofia", "abuela"]
-      },
-      {
-        "id": "act-3-4",
-        "dayId": "day-3",
-        "time": "16:00",
-        "title": "Fútbol en la piazza",
-        "location": "Piazza del Popolo",
-        "period": "afternoon",
-        "scope": ["tomas", "mateo", "nacho"]
-      }
-    ]
-  },
-  {
-    "id": "day-4",
-    "date": "2026-06-24",
-    "destination": "Dubrovnik",
-    "country": "Croacia",
-    "phase": "group",
-    "theme": "cruise",
-    "tagline": "La perla del Adriático",
+    "tagline": "Polignano, Ostuni y Locorotondo",
     "activities": [
       {
         "id": "act-4-1",
         "dayId": "day-4",
-        "time": "08:00",
-        "title": "Embarque crucero MSC",
-        "location": "Puerto de Bari",
+        "time": "08:15",
+        "title": "Punto de encuentro excursión",
+        "location": "Piazza Eroi del Mare",
         "period": "morning",
         "scope": "group",
-        "documentRef": "doc-boarding"
+        "notes": "Presentarse a las 08:15. Salida a las 08:30. Regreso a las 18:30."
       },
       {
         "id": "act-4-2",
         "dayId": "day-4",
-        "time": "14:00",
-        "title": "Llegada a Dubrovnik",
-        "location": "Puerto Gruž · Croacia",
-        "period": "afternoon",
-        "scope": "group"
+        "time": "09:30",
+        "title": "Polignano a Mare",
+        "location": "Polignano a Mare, Puglia",
+        "period": "morning",
+        "scope": "group",
+        "notes": "Acantilados, miradores, centro histórico y Playa Lama Monachile."
       },
       {
         "id": "act-4-3",
         "dayId": "day-4",
+        "time": "12:30",
+        "title": "Ostuni — La Ciudad Blanca",
+        "location": "Ostuni, Puglia",
+        "period": "afternoon",
+        "scope": "group"
+      },
+      {
+        "id": "act-4-4",
+        "dayId": "day-4",
         "time": "15:30",
-        "title": "Murallas de Dubrovnik",
-        "location": "Stara Grad",
+        "title": "Locorotondo",
+        "location": "Locorotondo, Puglia",
         "period": "afternoon",
         "scope": "group",
-        "documentRef": "doc-ticket-dubrovnik"
+        "notes": "Uno de los pueblos más bonitos de Puglia."
+      },
+      {
+        "id": "act-4-5",
+        "dayId": "day-4",
+        "time": "18:30",
+        "title": "Regreso a Bari",
+        "location": "Bari",
+        "period": "night",
+        "scope": "group"
       }
     ]
   },
   {
     "id": "day-5",
-    "date": "2026-06-25",
-    "destination": "Kotor",
-    "country": "Montenegro",
+    "date": "2026-07-25",
+    "destination": "Embarque",
+    "country": "Bari · Italia",
     "phase": "group",
     "theme": "cruise",
-    "tagline": "La bahía verde",
+    "tagline": "Empieza el crucero",
     "activities": [
       {
         "id": "act-5-1",
         "dayId": "day-5",
-        "time": "08:00",
-        "title": "Desayuno buffet — Cubierta 9",
-        "location": "Restaurante Horizon",
+        "time": "09:00",
+        "title": "Check-out del hotel",
+        "location": "Bari",
         "period": "morning",
         "scope": "group"
       },
       {
         "id": "act-5-2",
         "dayId": "day-5",
-        "time": "10:00",
-        "title": "Llegada a Kotor",
-        "location": "Puerto de Kotor · Montenegro",
-        "period": "morning",
-        "scope": "group"
+        "time": "12:00",
+        "title": "Embarque crucero",
+        "location": "Puerto de Bari",
+        "period": "afternoon",
+        "scope": "group",
+        "notes": "Inicio del crucero por el Mediterráneo."
       },
       {
         "id": "act-5-3",
         "dayId": "day-5",
-        "time": "11:00",
-        "title": "Subida a la Fortaleza",
-        "location": "San Giovanni · 1350 escalones",
-        "period": "morning",
-        "scope": ["tomas", "nacho", "lucia", "mateo"]
-      },
-      {
-        "id": "act-5-4",
-        "dayId": "day-5",
-        "time": "11:00",
-        "title": "Ciudad vieja a pie",
-        "location": "Stari Grad, Kotor",
-        "period": "morning",
-        "scope": ["maria", "sofia", "abuela"]
+        "time": "18:00",
+        "title": "Zarpe",
+        "location": "Puerto de Bari",
+        "period": "afternoon",
+        "scope": "group"
       }
     ]
   },
   {
     "id": "day-6",
-    "date": "2026-06-26",
+    "date": "2026-07-26",
     "destination": "A bordo",
-    "country": "Mar Adriático",
+    "country": "Mar Mediterráneo",
     "phase": "group",
     "theme": "cruise",
     "tagline": "Sin tierra a la vista",
@@ -224,36 +287,28 @@
       {
         "id": "act-6-1",
         "dayId": "day-6",
-        "time": "07:30",
-        "title": "Desayuno buffet — Cubierta 9",
-        "location": "Restaurante Horizon",
+        "time": "09:00",
+        "title": "Desayuno buffet",
+        "location": "Restaurante del barco",
         "period": "morning",
         "scope": "group"
       },
       {
         "id": "act-6-2",
         "dayId": "day-6",
-        "time": "10:00",
-        "title": "Excursión Kotor (opcional)",
-        "location": "Montenegro",
+        "time": "11:00",
+        "title": "Piscinas y actividades a bordo",
+        "location": "Cubierta principal",
         "period": "morning",
-        "scope": ["tomas", "nacho"]
+        "scope": "group",
+        "notes": "Piscinas, espectáculos, actividades del barco y descanso."
       },
       {
         "id": "act-6-3",
         "dayId": "day-6",
-        "time": "14:00",
-        "title": "Pileta cubierta — Deck 11",
-        "location": "A bordo MSC",
-        "period": "afternoon",
-        "scope": "group"
-      },
-      {
-        "id": "act-6-4",
-        "dayId": "day-6",
         "time": "20:00",
-        "title": "Cena de gala",
-        "location": "Restaurante L'Olivo",
+        "title": "Cena y espectáculo nocturno",
+        "location": "A bordo",
         "period": "night",
         "scope": "group"
       }
@@ -261,38 +316,38 @@
   },
   {
     "id": "day-7",
-    "date": "2026-06-27",
-    "destination": "Atenas",
+    "date": "2026-07-27",
+    "destination": "Santorini",
     "country": "Grecia",
     "phase": "group",
     "theme": "greece",
-    "tagline": "La ciudad blanca de mármol",
+    "tagline": "El lugar más fotogénico del viaje",
     "activities": [
       {
         "id": "act-7-1",
         "dayId": "day-7",
-        "time": "09:00",
-        "title": "Desembarque en El Pireo",
-        "location": "Puerto de El Pireo · Atenas",
+        "time": "08:00",
+        "title": "Llegada a Santorini",
+        "location": "Puerto de Santorini",
         "period": "morning",
         "scope": "group"
       },
       {
         "id": "act-7-2",
         "dayId": "day-7",
-        "time": "11:00",
-        "title": "La Acrópolis",
-        "location": "Colina de la Acrópolis",
+        "time": "09:00",
+        "title": "Excursión Santorini",
+        "location": "Santorini, Grecia",
         "period": "morning",
         "scope": "group",
-        "documentRef": "doc-ticket-acropolis"
+        "notes": "Excursión ya contratada. Llevar agua, protector solar y gorra. Probablemente el lugar más fotogénico del viaje."
       },
       {
         "id": "act-7-3",
         "dayId": "day-7",
-        "time": "14:00",
-        "title": "Almuerzo en Monastiraki",
-        "location": "Plaka · Atenas",
+        "time": "18:00",
+        "title": "Regreso al barco",
+        "location": "Puerto de Santorini",
         "period": "afternoon",
         "scope": "group"
       }
@@ -300,39 +355,38 @@
   },
   {
     "id": "day-8",
-    "date": "2026-06-28",
-    "destination": "Santorini",
+    "date": "2026-07-28",
+    "destination": "Atenas",
     "country": "Grecia",
     "phase": "group",
     "theme": "greece",
-    "tagline": "Azul y blanco para siempre",
+    "tagline": "El día más histórico del crucero",
     "activities": [
       {
         "id": "act-8-1",
         "dayId": "day-8",
-        "time": "09:00",
-        "title": "Vuelo Atenas → Santorini",
-        "location": "Aeropuerto Thira JTR",
+        "time": "08:00",
+        "title": "Llegada al Pireo",
+        "location": "Puerto de El Pireo · Atenas",
         "period": "morning",
-        "scope": "group",
-        "documentRef": "doc-vuelo-santorini"
+        "scope": "group"
       },
       {
         "id": "act-8-2",
         "dayId": "day-8",
-        "time": "11:30",
-        "title": "Check-in Hotel Mystique",
-        "location": "Oia, Santorini",
+        "time": "09:00",
+        "title": "Excursión Atenas",
+        "location": "Atenas, Grecia",
         "period": "morning",
         "scope": "group",
-        "documentRef": "doc-hotel-mystique"
+        "notes": "Excursión ya contratada. Imprescindibles: Acrópolis y Partenón."
       },
       {
         "id": "act-8-3",
         "dayId": "day-8",
-        "time": "16:00",
-        "title": "Playa de Kamari",
-        "location": "Arena negra volcánica",
+        "time": "17:00",
+        "title": "Regreso al barco",
+        "location": "Puerto de El Pireo",
         "period": "afternoon",
         "scope": "group"
       }
@@ -340,39 +394,170 @@
   },
   {
     "id": "day-9",
-    "date": "2026-06-29",
-    "destination": "Oia",
+    "date": "2026-07-29",
+    "destination": "Katakolo",
     "country": "Grecia",
     "phase": "group",
     "theme": "greece",
-    "tagline": "Un día blanco en la caldera",
+    "tagline": "El origen de los Juegos Olímpicos",
     "activities": [
       {
         "id": "act-9-1",
         "dayId": "day-9",
-        "time": "09:00",
-        "title": "Caminata por el pueblo blanco",
-        "location": "Oia, Santorini",
+        "time": "08:00",
+        "title": "Llegada a Katakolo",
+        "location": "Puerto de Katakolo",
         "period": "morning",
         "scope": "group"
       },
       {
         "id": "act-9-2",
         "dayId": "day-9",
-        "time": "12:30",
-        "title": "Almuerzo frente al mar",
-        "location": "Taverna Katina · 13:00",
-        "period": "afternoon",
-        "scope": "group"
+        "time": "09:00",
+        "title": "Excursión Olimpia",
+        "location": "Archaeological Site of Olympia",
+        "period": "morning",
+        "scope": "group",
+        "notes": "Excursión ya contratada. Lugar de nacimiento de los Juegos Olímpicos."
       },
       {
         "id": "act-9-3",
         "dayId": "day-9",
-        "time": "19:30",
-        "title": "Atardecer en el castillo",
-        "location": "Punto de encuentro",
+        "time": "17:00",
+        "title": "Regreso al barco",
+        "location": "Puerto de Katakolo",
+        "period": "afternoon",
+        "scope": "group"
+      }
+    ]
+  },
+  {
+    "id": "day-10",
+    "date": "2026-07-30",
+    "destination": "Cefalonia",
+    "country": "Grecia",
+    "phase": "group",
+    "theme": "greece",
+    "tagline": "Cuevas, tortugas y playas turquesas",
+    "activities": [
+      {
+        "id": "act-10-1",
+        "dayId": "day-10",
+        "time": "09:00",
+        "title": "Excursión Melissani Cave",
+        "location": "Melissani Cave · Cefalonia",
+        "period": "morning",
+        "scope": "group",
+        "notes": "Excursión reservada con traslado incluido. Ahorra tiempo y evita filas."
+      },
+      {
+        "id": "act-10-2",
+        "dayId": "day-10",
+        "time": "12:00",
+        "title": "Argostoli",
+        "location": "Argostoli · Cefalonia",
+        "period": "afternoon",
+        "scope": "group",
+        "notes": "Puerto, paseo marítimo y plaza principal. Buscar las tortugas marinas Caretta caretta cerca del puerto."
+      },
+      {
+        "id": "act-10-3",
+        "dayId": "day-10",
+        "time": "15:00",
+        "title": "Makris Gialos Beach",
+        "location": "Makris Gialos · Cefalonia",
+        "period": "afternoon",
+        "scope": "group",
+        "notes": "Ir en taxi para aprovechar mejor el tiempo."
+      },
+      {
+        "id": "act-10-4",
+        "dayId": "day-10",
+        "time": "18:00",
+        "title": "Regreso al barco",
+        "location": "Puerto de Argostoli",
+        "period": "afternoon",
+        "scope": "group"
+      }
+    ]
+  },
+  {
+    "id": "day-11",
+    "date": "2026-07-31",
+    "destination": "Corfú",
+    "country": "Grecia",
+    "phase": "group",
+    "theme": "greece",
+    "tagline": "Calles venecianas y mar turquesa",
+    "activities": [
+      {
+        "id": "act-11-1",
+        "dayId": "day-11",
+        "time": "09:00",
+        "title": "Corfu Old Town",
+        "location": "Casco histórico de Corfú",
+        "period": "morning",
+        "scope": "group",
+        "notes": "Calles venecianas, Liston (la avenida más famosa), Spianada Square y Old Fortress of Corfu. Subir a la fortaleza para las mejores vistas."
+      },
+      {
+        "id": "act-11-2",
+        "dayId": "day-11",
+        "time": "13:00",
+        "title": "Almuerzo en el casco histórico",
+        "location": "Corfu Old Town",
+        "period": "afternoon",
+        "scope": "group"
+      },
+      {
+        "id": "act-11-3",
+        "dayId": "day-11",
+        "time": "15:00",
+        "title": "Faliraki Beach",
+        "location": "Faliraki Beach · Corfú",
+        "period": "afternoon",
+        "scope": "group",
+        "notes": "Muy cerca del centro histórico."
+      },
+      {
+        "id": "act-11-4",
+        "dayId": "day-11",
+        "time": "17:30",
+        "title": "Últimas horas en Corfú",
+        "location": "Centro histórico · Corfú",
+        "period": "afternoon",
+        "scope": "group",
+        "notes": "Helado, compras y último paseo por el centro histórico."
+      },
+      {
+        "id": "act-11-5",
+        "dayId": "day-11",
+        "time": "19:00",
+        "title": "Regreso al barco",
+        "location": "Puerto de Corfú",
         "period": "night",
         "scope": "group"
+      }
+    ]
+  },
+  {
+    "id": "day-12",
+    "date": "2026-08-01",
+    "destination": "Regreso a Bari",
+    "country": "Italia",
+    "phase": "group",
+    "theme": "puglia",
+    "tagline": "Fin del viaje",
+    "activities": [
+      {
+        "id": "act-12-1",
+        "dayId": "day-12",
+        "time": "08:00",
+        "title": "Desembarque en Bari",
+        "location": "Puerto de Bari · Italia",
+        "period": "morning",
+        "scope": "group",
+        "notes": "Fin del viaje. ¡Gracias por este viaje increíble!"
       }
     ]
   }

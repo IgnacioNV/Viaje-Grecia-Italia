@@ -1,55 +1,37 @@
 [
   {
-    "id": "maria",
-    "name": "María José",
-    "role": "Mamá · organizadora del viaje",
-    "passport": { "number": "AAA123456", "expiry": "2029-03-15" },
-    "emergencyContact": "+54 9 11 1234-5678",
-    "insurance": "Assist Card Gold - Póliza #AC-2026-789"
+    "id": "raquel",
+    "name": "Raquel",
+    "role": "Abuela"
   },
   {
-    "id": "tomas",
-    "name": "Tomás",
-    "role": "Papá",
-    "passport": { "number": "BBB654321", "expiry": "2031-07-22" },
-    "emergencyContact": "+54 9 11 8765-4321",
-    "insurance": "Assist Card Gold - Póliza #AC-2026-790"
+    "id": "guille",
+    "name": "Guille",
+    "role": "Abuelo"
   },
   {
-    "id": "lucia",
-    "name": "Lucía",
-    "role": "Hija · 14 años",
-    "passport": { "number": "CCC111222", "expiry": "2030-11-10" },
-    "insurance": "Assist Card Gold - Póliza #AC-2026-791"
+    "id": "manu",
+    "name": "Manu",
+    "role": "23 años"
   },
   {
-    "id": "mateo",
-    "name": "Mateo",
-    "role": "Hijo · 11 años",
-    "passport": { "number": "DDD333444", "expiry": "2028-05-30" },
-    "insurance": "Assist Card Gold - Póliza #AC-2026-792"
-  },
-  {
-    "id": "sofia",
-    "name": "Sofía",
-    "role": "Hija · 8 años",
-    "passport": { "number": "EEE555666", "expiry": "2028-08-14" },
-    "insurance": "Assist Card Gold - Póliza #AC-2026-793"
-  },
-  {
-    "id": "abuela",
-    "name": "Abuela Rosa",
-    "role": "Abuela · reservas tranquilas",
-    "passport": { "number": "FFF777888", "expiry": "2027-01-08" },
-    "emergencyContact": "+54 9 11 2222-3333",
-    "insurance": "Assist Card Senior - Póliza #AC-2026-794"
+    "id": "joaco",
+    "name": "Joaco",
+    "role": "19 años"
   },
   {
     "id": "nacho",
     "name": "Nacho",
-    "role": "Hijo · 17 años",
-    "passport": { "number": "GGG999000", "expiry": "2029-09-19" },
-    "insurance": "Assist Card Gold - Póliza #AC-2026-795",
-    "flightOrigin": "Buenos Aires - vuelo propio"
+    "role": "19 años"
+  },
+  {
+    "id": "nico",
+    "name": "Nico",
+    "role": "16 años"
+  },
+  {
+    "id": "emi",
+    "name": "Emi",
+    "role": "15 años"
   }
 ]
