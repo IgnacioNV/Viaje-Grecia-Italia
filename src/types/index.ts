@@ -64,3 +64,14 @@ export interface JournalEntry {
   photoBase64?: string
   mood?: string
 }
+
+export interface PersonalProfile {
+  id?: number
+  personId: string
+  phoneNumber?: string
+  emergencyPhone?: string
+  passportFront?: string  // base64
+  passportBack?: string   // base64
+  insuranceFile?: string  // base64
+  updatedAt: string
+}
