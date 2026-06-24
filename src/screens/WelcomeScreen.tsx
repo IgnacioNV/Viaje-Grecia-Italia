@@ -17,8 +17,8 @@ export function WelcomeScreen({ onSelect }: WelcomeScreenProps) {
       {/* Header */}
       <div style={{ marginBottom: 40 }}>
         <p className="eyebrow" style={{ marginBottom: 8 }}>Bari · Crucero · Grecia · Julio 2026</p>
-        <h1 style={{ fontSize: 32, marginBottom: 8 }}>
-          ¿Quién<br/>sos?
+        <h1 style={{ fontSize: 32, marginBottom: 8, whiteSpace: 'nowrap' }}>
+          ¿Quién sos?
         </h1>
         <p style={{ color: 'var(--color-text-soft)', fontSize: 15, lineHeight: 1.5 }}>
           Tocá tu nombre para empezar.
