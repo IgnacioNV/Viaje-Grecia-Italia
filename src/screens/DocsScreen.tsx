@@ -5,44 +5,64 @@ import { db } from '../db/dexie'
 import type { DocumentType, LocalDocument, PersonalProfile } from '../types'
 import type { IconName } from '../components/ui/IconStamp'
 
-const CATEGORY_DOCS: Record<string, { id: string; title: string; sub: string; detail: string; icon: IconName }[]> = {
-  pasaportes: [],   // se cargan desde el perfil personal
+// Fecha del evento — para calcular estado temporal
+interface DocItem {
+  id: string
+  title: string
+  sub: string
+  detail: string
+  icon: IconName
+  eventDate?: string // YYYY-MM-DD
+}
+
+const CATEGORY_DOCS: Record<string, DocItem[]> = {
+  pasaportes: [],
   hoteles: [
-    { id: 'h1', title: 'Hotel en Bari', sub: '21–25 jul · 4 noches', icon: 'reservation',
+    { id: 'h1', title: 'Hotel en Bari', sub: '21–25 jul · 4 noches', icon: 'reservation', eventDate: '2026-07-21',
       detail: 'Check-in: 21 jul a partir de 15:00\nCheck-out: 25 jul antes de 11:00\nConfirmación: pendiente de agregar' },
   ],
   transporte: [
-    { id: 't1', title: 'Vuelo Buenos Aires → Bari', sub: 'Por confirmar · julio 2026', icon: 'flight',
+    { id: 't1', title: 'Vuelo Buenos Aires → Bari', sub: 'Por confirmar · julio 2026', icon: 'flight', eventDate: '2026-07-21',
       detail: 'Vuelo de ida. Detalles pendientes.' },
-    { id: 't2', title: 'Vuelo Bari → Buenos Aires', sub: 'Por confirmar · agosto 2026', icon: 'flight',
+    { id: 't2', title: 'Vuelo Bari → Buenos Aires', sub: 'Por confirmar · agosto 2026', icon: 'flight', eventDate: '2026-08-01',
       detail: 'Vuelo de regreso. Detalles pendientes.' },
-    { id: 't3', title: 'Crucero MSC', sub: '25 jul – 1 ago · 7 noches', icon: 'anchor',
+    { id: 't3', title: 'Crucero MSC', sub: '25 jul – 1 ago · 7 noches', icon: 'anchor', eventDate: '2026-07-25',
       detail: 'Puerto de embarque: Bari\nRuta: Santorini → Atenas → Katakolo → Cefalonia → Corfú' },
   ],
   tickets: [
-    { id: 'e1', title: 'Excursión Matera + Alberobello', sub: 'Día 3 · 23 jul · Salida 09:00', icon: 'ticket',
+    { id: 'e1', title: 'Excursión Matera + Alberobello', sub: 'Día 3 · 23 jul · Salida 09:00', icon: 'ticket', eventDate: '2026-07-23',
       detail: 'Punto de encuentro: Corso Cavour\nRegreso: 19:00. Llevar agua y zapatillas.' },
-    { id: 'e2', title: 'Excursión Valle de Itria', sub: 'Día 4 · 24 jul · Salida 08:30', icon: 'ticket',
+    { id: 'e2', title: 'Excursión Valle de Itria', sub: 'Día 4 · 24 jul · Salida 08:30', icon: 'ticket', eventDate: '2026-07-24',
       detail: 'Punto de encuentro: Piazza Eroi del Mare\nPolignano · Ostuni · Locorotondo · Regreso 18:30' },
-    { id: 'e3', title: 'Excursión Santorini', sub: 'Día 7 · 27 jul · Contratada', icon: 'ticket',
+    { id: 'e3', title: 'Excursión Santorini', sub: 'Día 7 · 27 jul · Contratada', icon: 'ticket', eventDate: '2026-07-27',
       detail: 'Excursión ya contratada. Llevar protector solar y agua.' },
-    { id: 'e4', title: 'Excursión Atenas', sub: 'Día 8 · 28 jul · Contratada', icon: 'ticket',
+    { id: 'e4', title: 'Excursión Atenas', sub: 'Día 8 · 28 jul · Contratada', icon: 'ticket', eventDate: '2026-07-28',
       detail: 'Acrópolis y Partenón. Excursión ya contratada.' },
-    { id: 'e5', title: 'Excursión Olimpia', sub: 'Día 9 · 29 jul · Contratada', icon: 'ticket',
+    { id: 'e5', title: 'Excursión Olimpia', sub: 'Día 9 · 29 jul · Contratada', icon: 'ticket', eventDate: '2026-07-29',
       detail: 'Archaeological Site of Olympia. Excursión ya contratada.' },
-    { id: 'e6', title: 'Melissani Cave', sub: 'Día 10 · 30 jul · Reservada', icon: 'ticket',
+    { id: 'e6', title: 'Melissani Cave', sub: 'Día 10 · 30 jul · Reservada', icon: 'ticket', eventDate: '2026-07-30',
       detail: 'Excursión reservada con traslado. Evita filas.' },
   ],
+}
+
+type DocStatus = 'upcoming' | 'today' | 'past'
+
+function getDocStatus(eventDate?: string): DocStatus {
+  if (!eventDate) return 'upcoming'
+  const today = new Date().toISOString().split('T')[0]
+  if (eventDate === today) return 'today'
+  if (eventDate < today) return 'past'
+  return 'upcoming'
 }
 
 type DocSection = 'overview' | 'category' | 'profile' | 'upload'
 type CategoryKey = 'pasaportes' | 'hoteles' | 'transporte' | 'tickets'
 
-const CATEGORY_LABELS: Record<CategoryKey, string> = {
-  pasaportes: 'Pasaportes',
-  hoteles:    'Hoteles',
-  transporte: 'Transporte',
-  tickets:    'Tickets',
+const CATEGORY_LABELS: Record<CategoryKey, { label: string; icon: IconName }> = {
+  pasaportes: { label: 'Pasaportes',  icon: 'passport' },
+  hoteles:    { label: 'Hoteles',     icon: 'reservation' },
+  transporte: { label: 'Transporte',  icon: 'flight' },
+  tickets:    { label: 'Tickets',     icon: 'ticket' },
 }
 
 interface DocsScreenProps { personId: string }
@@ -56,18 +76,17 @@ export function DocsScreen({ personId }: DocsScreenProps) {
   if (section === 'upload')   return <UploadSection  personId={personId} onBack={() => setSection('overview')} />
   if (section === 'category') return (
     <CategoryView
-      label={CATEGORY_LABELS[activeCategory]}
+      label={CATEGORY_LABELS[activeCategory].label}
       docs={CATEGORY_DOCS[activeCategory]}
       onBack={() => setSection('overview')}
     />
   )
 
-  // All upcoming docs (flat list)
-  const allDocs = [
+  const allDocs: DocItem[] = [
     ...CATEGORY_DOCS.transporte,
     ...CATEGORY_DOCS.tickets,
     ...CATEGORY_DOCS.hoteles,
-  ]
+  ].sort((a, b) => (a.eventDate ?? '') < (b.eventDate ?? '') ? -1 : 1)
 
   return (
     <div className="screen">
@@ -75,60 +94,65 @@ export function DocsScreen({ personId }: DocsScreenProps) {
         <p className="eyebrow" style={{ marginBottom: 6 }}>Maleta digital</p>
         <h1 style={{ fontSize: 30, fontWeight: 700, marginBottom: 20 }}>Documentos</h1>
 
-        {/* Quick actions */}
-        <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
+        {/* ── NIVEL 1: Acciones utilitarias — mínimas, sin card ── */}
+        <div style={{ display: 'flex', gap: 16, marginBottom: 20, paddingBottom: 20, borderBottom: '1px solid var(--color-border)' }}>
           {[
-            { icon: 'passport' as IconName, label: 'Mi perfil', sub: 'Pasaporte · Seguro · Tel.', action: () => setSection('profile') },
-            { icon: 'upload'   as IconName, label: 'Subir archivo', sub: 'Foto o PDF privado', action: () => setSection('upload') },
-          ].map(({ icon, label, sub, action }) => (
+            { icon: 'passport' as IconName, label: 'Mi perfil', action: () => setSection('profile') },
+            { icon: 'upload'   as IconName, label: 'Subir archivo', action: () => setSection('upload') },
+          ].map(({ icon, label, action }) => (
             <button key={label} onClick={action} style={{
-              flex: 1, padding: '16px 14px', textAlign: 'left', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '7px 14px', borderRadius: 20,
+              border: '1px solid var(--color-border)',
               background: 'var(--color-surface)',
-              border: '1.5px solid var(--color-primary)',
-              borderRadius: 16,
-              boxShadow: 'none',
+              color: 'var(--color-text-soft)',
+              fontSize: 13, fontWeight: 500,
+              cursor: 'pointer', fontFamily: 'var(--font-body)',
             }}>
-              <IconStamp icon={icon} size={34} style={{ marginBottom: 10 }} />
-              <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--color-text)', marginBottom: 3 }}>{label}</div>
-              <div style={{ fontSize: 11, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>{sub}</div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"
+                color="var(--color-primary)">
+                <IconSVG name={icon} />
+              </svg>
+              {label}
             </button>
           ))}
         </div>
 
-        {/* Divider */}
-        <div style={{ height: '0.5px', background: 'var(--color-border)', margin: '0 0 20px' }} />
-
-        {/* Category grid 2x2 */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
-          {(Object.keys(CATEGORY_LABELS) as CategoryKey[]).map(key => (
-            <button key={key} onClick={() => { setActiveCategory(key); setSection('category') }} style={{
-              padding: '18px 16px', textAlign: 'left', cursor: 'pointer',
-              background: 'var(--color-surface)',
-              border: '1.5px solid var(--color-primary)',
-              borderRadius: 16,
-              minHeight: 72,
-            }}>
-              <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--color-text)' }}>
-                {CATEGORY_LABELS[key]}
-              </div>
-              <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 4, fontFamily: 'var(--font-detail)' }}>
-                {CATEGORY_DOCS[key].length > 0 ? `${CATEGORY_DOCS[key].length} doc${CATEGORY_DOCS[key].length !== 1 ? 's' : ''}` : 'Sin documentos aún'}
-              </div>
-            </button>
-          ))}
+        {/* ── NIVEL 2: Categorías — fondo soft, rol de navegación ── */}
+        <p className="eyebrow" style={{ marginBottom: 10 }}>Categorías</p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 24 }}>
+          {(Object.keys(CATEGORY_LABELS) as CategoryKey[]).map(key => {
+            const { label, icon } = CATEGORY_LABELS[key]
+            const count = CATEGORY_DOCS[key].length
+            return (
+              <button key={key} onClick={() => { setActiveCategory(key); setSection('category') }} style={{
+                padding: '14px 14px', textAlign: 'left', cursor: 'pointer',
+                background: 'var(--color-primary-10)',
+                border: '1px solid var(--color-primary-20)',
+                borderRadius: 14, minHeight: 68,
+                display: 'flex', flexDirection: 'column', gap: 6,
+              }}>
+                <IconStamp icon={icon} size={28}
+                  style={{ background: 'transparent', border: 'none', boxShadow: 'none' }} />
+                <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--color-text)' }}>{label}</div>
+                <div style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>
+                  {count > 0 ? `${count} doc${count !== 1 ? 's' : ''}` : 'Sin documentos aún'}
+                </div>
+              </button>
+            )
+          })}
         </div>
 
-        {/* Próximos documentos */}
+        {/* ── NIVEL 3: Documentos próximos — el contenido real ── */}
         <p className="eyebrow" style={{ color: 'var(--color-primary)', marginBottom: 12 }}>
           Próximos documentos
         </p>
       </div>
 
-      {/* Expandable list */}
       <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
         {allDocs.map(doc => <ExpandableRow key={doc.id} doc={doc} />)}
 
-        {/* Local docs */}
         {localDocs.length > 0 && (
           <>
             <p className="eyebrow" style={{ color: 'var(--color-primary)', marginTop: 8, marginBottom: 4 }}>
@@ -137,7 +161,7 @@ export function DocsScreen({ personId }: DocsScreenProps) {
             {localDocs.map(doc => (
               <div key={doc.id} style={{
                 display: 'flex', alignItems: 'center', gap: 12,
-                padding: '12px 14px', background: 'var(--color-surface)',
+                padding: '13px 14px', background: 'var(--color-surface)',
                 border: '1.5px solid var(--color-primary)',
                 borderRadius: 16,
               }}>
@@ -170,31 +194,63 @@ export function DocsScreen({ personId }: DocsScreenProps) {
   )
 }
 
-/* ── Expandable row ─────────────────────────────────────── */
-function ExpandableRow({ doc }: { doc: { icon: IconName; title: string; sub: string; detail: string } }) {
+/* ── Expandable row con estado temporal ─────────────────── */
+function ExpandableRow({ doc }: { doc: DocItem }) {
   const [open, setOpen] = useState(false)
+  const status = getDocStatus(doc.eventDate)
+
+  const statusConfig = {
+    today:    { label: 'Hoy',    bg: 'var(--color-accent)',     color: '#fff',                    border: '2px solid var(--color-accent)' },
+    past:     { label: 'Ya fue', bg: 'rgba(0,0,0,0.06)',       color: 'var(--color-text-muted)', border: '1px solid var(--color-border)' },
+    upcoming: { label: '',       bg: 'var(--color-surface)',    color: '',                        border: '1.5px solid var(--color-primary)' },
+  }
+  const cfg = statusConfig[status]
+
   return (
     <div style={{
-      background: 'var(--color-surface)',
-      border: '1.5px solid var(--color-primary)',
+      background: cfg.bg,
+      border: cfg.border,
       borderRadius: 16, overflow: 'hidden',
+      opacity: status === 'past' ? 0.55 : 1,
+      transition: 'opacity 0.2s',
     }}>
       <button onClick={() => setOpen(v => !v)} style={{
         display: 'flex', alignItems: 'center', gap: 12,
         padding: '13px 14px', width: '100%',
         background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left',
       }}>
-        <IconStamp icon={doc.icon} size={36} />
+        <IconStamp icon={doc.icon} size={36}
+          style={status === 'past' ? { opacity: 0.5 } : {}} />
         <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--color-text)' }}>{doc.title}</div>
-          <div style={{ fontSize: 11, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>{doc.sub}</div>
+          <div style={{ fontWeight: 600, fontSize: 14, color: status === 'past' ? 'var(--color-text-muted)' : 'var(--color-text)' }}>
+            {doc.title}
+          </div>
+          <div style={{ fontSize: 11, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
+            {doc.sub}
+          </div>
         </div>
+
+        {/* Status badge */}
+        {status === 'today' && (
+          <span style={{
+            fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 8,
+            background: 'var(--color-primary)', color: '#fff', flexShrink: 0,
+          }}>Hoy</span>
+        )}
+        {status === 'past' && (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="var(--color-text-muted)" strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0 }}>
+            <polyline points="20,6 9,17 4,12"/>
+          </svg>
+        )}
+
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
           stroke="var(--color-text-muted)" strokeWidth="2" strokeLinecap="round"
-          style={{ transform: open ? 'rotate(180deg)' : 'none', transition: '0.2s', flexShrink: 0 }}>
+          style={{ transform: open ? 'rotate(180deg)' : 'none', transition: '0.2s', flexShrink: 0, marginLeft: 4 }}>
           <path d="M6 9l6 6 6-6"/>
         </svg>
       </button>
+
       {open && (
         <div style={{
           padding: '0 14px 14px 62px',
@@ -203,16 +259,30 @@ function ExpandableRow({ doc }: { doc: { icon: IconName; title: string; sub: str
           whiteSpace: 'pre-line',
           borderTop: '1px solid var(--color-border)',
           paddingTop: 12,
-        }}>{doc.detail}</div>
+        }}>
+          {doc.detail}
+          {status === 'past' && (
+            <div style={{ marginTop: 10, fontSize: 11, color: 'var(--color-text-muted)', fontStyle: 'italic' }}>
+              Este evento ya pasó. Podés seguir descargando el documento si lo necesitás.
+            </div>
+          )}
+        </div>
       )}
     </div>
   )
 }
 
+/* ── Inline SVG helper for utility buttons ──────────────── */
+function IconSVG({ name }: { name: IconName }) {
+  if (name === 'passport') return <><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="11" r="3"/><line x1="7" y1="7" x2="17" y2="7"/><line x1="7" y1="18" x2="17" y2="18"/></>
+  if (name === 'upload')   return <><polyline points="16,6 12,2 8,6"/><line x1="12" y1="2" x2="12" y2="15"/><path d="M20 17v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/></>
+  return null
+}
+
 /* ── Category detail view ───────────────────────────────── */
 function CategoryView({ label, docs, onBack }: {
   label: string
-  docs: { id: string; icon: IconName; title: string; sub: string; detail: string }[]
+  docs: DocItem[]
   onBack: () => void
 }) {
   return (
