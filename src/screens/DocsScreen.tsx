@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { IconStamp } from '../components/ui/IconStamp'
 import { db } from '../db/dexie'
-import type { DocumentType, LocalDocument, PersonalProfile } from '../types'
+import type { DocumentType, LocalDocument } from '../types'
 import type { IconName } from '../components/ui/IconStamp'
 
 // Fecha del evento — para calcular estado temporal
@@ -72,12 +72,33 @@ export function DocsScreen({ personId }: DocsScreenProps) {
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('tickets')
   const localDocs = useLiveQuery(() => db.localDocuments.toArray(), []) ?? []
 
+  // Merge local docs into categories by type
+  const localByCategory: Record<string, DocItem[]> = {
+    pasaportes: localDocs.filter(d => d.type === 'passport').map(d => ({
+      id: `local-${d.id}`, title: d.title, sub: 'Subido por vos', icon: 'passport' as IconName,
+      detail: `Subido el ${new Date(d.createdAt).toLocaleDateString('es-ES')}`, eventDate: undefined,
+    })),
+    hoteles: localDocs.filter(d => d.type === 'reservation').map(d => ({
+      id: `local-${d.id}`, title: d.title, sub: 'Subido por vos', icon: 'reservation' as IconName,
+      detail: `Subido el ${new Date(d.createdAt).toLocaleDateString('es-ES')}`, eventDate: undefined,
+    })),
+    transporte: localDocs.filter(d => d.type === 'voucher').map(d => ({
+      id: `local-${d.id}`, title: d.title, sub: 'Subido por vos', icon: 'flight' as IconName,
+      detail: `Subido el ${new Date(d.createdAt).toLocaleDateString('es-ES')}`, eventDate: undefined,
+    })),
+    tickets: localDocs.filter(d => d.type === 'ticket').map(d => ({
+      id: `local-${d.id}`, title: d.title, sub: 'Subido por vos', icon: 'ticket' as IconName,
+      detail: `Subido el ${new Date(d.createdAt).toLocaleDateString('es-ES')}`, eventDate: undefined,
+    })),
+  }
+  const otherLocalDocs = localDocs.filter(d => d.type === 'other')
+
   if (section === 'profile')  return <ProfileSection personId={personId} onBack={() => setSection('overview')} />
   if (section === 'upload')   return <UploadSection  personId={personId} onBack={() => setSection('overview')} />
   if (section === 'category') return (
     <CategoryView
       label={CATEGORY_LABELS[activeCategory].label}
-      docs={CATEGORY_DOCS[activeCategory]}
+      docs={[...CATEGORY_DOCS[activeCategory], ...(localByCategory[activeCategory] ?? [])]}
       onBack={() => setSection('overview')}
     />
   )
@@ -124,7 +145,7 @@ export function DocsScreen({ personId }: DocsScreenProps) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 24 }}>
           {(Object.keys(CATEGORY_LABELS) as CategoryKey[]).map(key => {
             const { label, icon } = CATEGORY_LABELS[key]
-            const count = CATEGORY_DOCS[key].length
+            const count = CATEGORY_DOCS[key].length + (localByCategory[key]?.length ?? 0)
             return (
               <button key={key} onClick={() => { setActiveCategory(key); setSection('category') }} style={{
                 padding: '14px 14px', textAlign: 'left', cursor: 'pointer',
@@ -153,17 +174,16 @@ export function DocsScreen({ personId }: DocsScreenProps) {
       <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
         {allDocs.map(doc => <ExpandableRow key={doc.id} doc={doc} />)}
 
-        {localDocs.length > 0 && (
+        {otherLocalDocs.length > 0 && (
           <>
             <p className="eyebrow" style={{ color: 'var(--color-primary)', marginTop: 8, marginBottom: 4 }}>
-              Mis archivos
+              Otros archivos
             </p>
-            {localDocs.map(doc => (
+            {otherLocalDocs.map(doc => (
               <div key={doc.id} style={{
                 display: 'flex', alignItems: 'center', gap: 12,
                 padding: '13px 14px', background: 'var(--color-surface)',
-                border: '1.5px solid var(--color-primary)',
-                borderRadius: 16,
+                border: '1.5px solid var(--color-primary)', borderRadius: 16,
               }}>
                 <IconStamp icon="document" size={36} />
                 <div style={{ flex: 1 }}>
@@ -318,43 +338,38 @@ function ProfileSection({ personId, onBack }: { personId: string; onBack: () => 
   const profile = useLiveQuery(() => db.personalProfiles.where('personId').equals(personId).first(), [personId])
   const [phone, setPhone] = useState('')
   const [emergency, setEmergency] = useState('')
-  const [passportFront, setPassportFront] = useState<string | undefined>()
-  const [passportBack,  setPassportBack]  = useState<string | undefined>()
+  const [passports, setPassports] = useState<any[]>([])
   const [insurance, setInsurance] = useState<string | undefined>()
   const [initialized, setInitialized] = useState(false)
   const [saving, setSaving] = useState(false)
 
   if (profile !== undefined && !initialized) {
-    setPhone(profile?.phoneNumber ?? ''); setEmergency(profile?.emergencyPhone ?? '')
-    setPassportFront(profile?.passportFront); setPassportBack(profile?.passportBack)
-    setInsurance(profile?.insuranceFile); setInitialized(true)
+    setPhone(profile?.phoneNumber ?? '')
+    setEmergency(profile?.emergencyPhone ?? '')
+    setPassports(profile?.passports ?? [])
+    setInsurance(profile?.insuranceFile)
+    setInitialized(true)
   }
 
   const toBase64 = (file: File): Promise<string> => new Promise((res, rej) => {
     const r = new FileReader(); r.onload = () => res(r.result as string); r.onerror = rej; r.readAsDataURL(file)
   })
 
+  const addPassport = () => setPassports(prev => [...prev, { id: crypto.randomUUID(), country: '' }])
+  const updatePassport = (id: string, field: string, value: string) =>
+    setPassports(prev => prev.map((p: any) => p.id === id ? { ...p, [field]: value } : p))
+  const removePassport = (id: string) => setPassports(prev => prev.filter((p: any) => p.id !== id))
+
   const handleSave = async () => {
     setSaving(true)
     try {
-      const data: PersonalProfile = { personId, phoneNumber: phone || undefined, emergencyPhone: emergency || undefined, passportFront, passportBack, insuranceFile: insurance, updatedAt: new Date().toISOString() }
+      const data = { personId, passports, phoneNumber: phone || undefined, emergencyPhone: emergency || undefined, insuranceFile: insurance, updatedAt: new Date().toISOString() }
       const existing = await db.personalProfiles.where('personId').equals(personId).first()
       if (existing?.id) await db.personalProfiles.update(existing.id, data)
-      else await db.personalProfiles.add(data)
+      else await db.personalProfiles.add(data as any)
       onBack()
     } finally { setSaving(false) }
   }
-
-  const FileInput = ({ label, value, onChange }: { label: string; value?: string; onChange: (v: string) => void }) => (
-    <label style={{ display: 'block', padding: '12px 14px', borderRadius: 12, border: '1px dashed var(--color-primary-20)', cursor: 'pointer', marginBottom: 10 }}>
-      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-text)', marginBottom: 4 }}>{label}</div>
-      {value
-        ? <img src={value} alt={label} style={{ width: '100%', borderRadius: 8, maxHeight: 160, objectFit: 'cover' }} />
-        : <div style={{ fontSize: 12, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Tocá para agregar foto o PDF</div>
-      }
-      <input type="file" accept="image/*,.pdf" style={{ display: 'none' }} onChange={async e => { const f = e.target.files?.[0]; if (f) onChange(await toBase64(f)) }} />
-    </label>
-  )
 
   return (
     <div style={{ minHeight: '100dvh', overflowY: 'auto', padding: '20px 20px 40px', background: 'var(--color-bg)' }}>
@@ -364,16 +379,52 @@ function ProfileSection({ personId, onBack }: { personId: string; onBack: () => 
       </button>
       <h2 style={{ marginBottom: 4 }}>Mi perfil</h2>
       <p style={{ fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 20, fontFamily: 'var(--font-detail)' }}>Solo visible para vos · guardado en tu teléfono</p>
-      <p className="eyebrow" style={{ marginBottom: 10 }}>Pasaporte</p>
-      <FileInput label="Frente" value={passportFront} onChange={setPassportFront} />
-      <FileInput label="Dorso" value={passportBack} onChange={setPassportBack} />
-      <p className="eyebrow" style={{ margin: '16px 0 10px' }}>Seguro médico</p>
-      <FileInput label="Póliza de seguro" value={insurance} onChange={setInsurance} />
-      <p className="eyebrow" style={{ margin: '16px 0 10px' }}>Teléfonos</p>
-      {[{ label: 'Tu número', val: phone, set: setPhone, req: true }, { label: 'Emergencia', val: emergency, set: setEmergency, req: false }].map(({ label, val, set, req }) => (
+
+      <p className="eyebrow" style={{ marginBottom: 10 }}>Pasaportes</p>
+      {passports.map((p: any, idx: number) => (
+        <div key={p.id} style={{ marginBottom: 12, padding: '14px', background: 'var(--color-surface)', borderRadius: 12, border: '1px solid var(--color-border)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-primary)' }}>Pasaporte {idx + 1}</span>
+            <button onClick={() => removePassport(p.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#e53e3e', fontSize: 12, fontFamily: 'var(--font-body)' }}>Eliminar</button>
+          </div>
+          {[
+            { field: 'country', label: 'País', placeholder: 'Argentina' },
+            { field: 'number',  label: 'Número', placeholder: 'AAA123456' },
+            { field: 'expiry',  label: 'Vencimiento', placeholder: '2029-12-31' },
+          ].map(({ field, label, placeholder }) => (
+            <div key={field} style={{ marginBottom: 8 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, marginBottom: 4, color: 'var(--color-text-soft)' }}>{label}</div>
+              <input value={p[field] ?? ''} onChange={e => updatePassport(p.id, field, e.target.value)} placeholder={placeholder}
+                style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--color-border)', borderRadius: 8, fontSize: 13, background: 'var(--color-bg)', color: 'var(--color-text)', outline: 'none', boxSizing: 'border-box' as const, fontFamily: 'var(--font-body)' }} />
+            </div>
+          ))}
+          {(['photoFront', 'photoBack'] as const).map(field => (
+            <label key={field} style={{ display: 'block', marginBottom: 8 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, marginBottom: 4, color: 'var(--color-text-soft)' }}>{field === 'photoFront' ? 'Foto frente' : 'Foto dorso'}</div>
+              {p[field] ? <img src={p[field]} alt={field} style={{ width: '100%', borderRadius: 8, maxHeight: 100, objectFit: 'cover' }} />
+                : <div style={{ padding: '10px 12px', border: '1px dashed var(--color-border)', borderRadius: 8, fontSize: 12, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Tocá para agregar foto</div>}
+              <input type="file" accept="image/*" style={{ display: 'none' }} onChange={async e => { const f = e.target.files?.[0]; if (f) updatePassport(p.id, field, await toBase64(f)) }} />
+            </label>
+          ))}
+        </div>
+      ))}
+      <button onClick={addPassport} style={{ width: '100%', padding: '10px', marginBottom: 20, border: '1.5px dashed var(--color-primary)', borderRadius: 10, background: 'transparent', color: 'var(--color-primary)', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
+        + Agregar pasaporte
+      </button>
+
+      <p className="eyebrow" style={{ marginBottom: 10 }}>Seguro médico</p>
+      <label style={{ display: 'block', padding: '12px 14px', borderRadius: 12, border: '1px dashed var(--color-primary-20)', cursor: 'pointer', marginBottom: 20 }}>
+        {insurance ? <img src={insurance} alt="seguro" style={{ width: '100%', borderRadius: 8, maxHeight: 120, objectFit: 'cover' }} />
+          : <div style={{ fontSize: 12, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Tocá para agregar póliza</div>}
+        <input type="file" accept="image/*,.pdf" style={{ display: 'none' }} onChange={async e => { const f = e.target.files?.[0]; if (f) setInsurance(await toBase64(f)) }} />
+      </label>
+
+      <p className="eyebrow" style={{ marginBottom: 10 }}>Teléfonos</p>
+      {[{ label: 'Tu número', val: phone, set: setPhone }, { label: 'Emergencia (opcional)', val: emergency, set: setEmergency }].map(({ label, val, set }) => (
         <div key={label} style={{ marginBottom: 10 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4 }}>{label} {!req && <span style={{ fontWeight: 400, color: 'var(--color-text-muted)' }}>· opcional</span>}</div>
-          <input type="tel" value={val} onChange={e => set(e.target.value)} placeholder="+54 9 11 1234-5678" style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--color-border)', borderRadius: 10, fontSize: 14, background: 'var(--color-bg)', color: 'var(--color-text)', outline: 'none', fontFamily: 'var(--font-detail)', boxSizing: 'border-box' as const }} />
+          <div style={{ fontSize: 11, fontWeight: 600, marginBottom: 4, color: 'var(--color-text-soft)' }}>{label}</div>
+          <input type="tel" value={val} onChange={e => set(e.target.value)} placeholder="+54 9 11 1234-5678"
+            style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--color-border)', borderRadius: 8, fontSize: 13, background: 'var(--color-bg)', color: 'var(--color-text)', outline: 'none', boxSizing: 'border-box' as const, fontFamily: 'var(--font-detail)' }} />
         </div>
       ))}
       <button onClick={handleSave} disabled={saving} style={{ width: '100%', padding: '14px', marginTop: 8, background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
