@@ -124,15 +124,21 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
 
   return (
     <div>
-      {/* Destination hero image */}
-      {info?.image && (
-        <div style={{ position: 'relative', margin: '16px 20px 0', borderRadius: 20, overflow: 'hidden', height: 180 }}>
+      {/* Destination hero */}
+      <div style={{
+        position: 'relative', margin: '16px 20px 0',
+        borderRadius: 20, overflow: 'hidden', height: 180,
+        background: info?.gradient ?? 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)',
+      }}>
+        {info?.image && (
           <img
             src={info.image}
             alt={day.destination}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
             loading="lazy"
+            onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
           />
+        )}
           <div style={{
             position: 'absolute', inset: 0,
             background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)',
@@ -162,25 +168,6 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
             }}>Fase individual</div>
           )}
         </div>
-      )}
-
-      {/* Without image fallback */}
-      {!info?.image && (
-        <div style={{ padding: '12px 20px 0', display: 'flex', gap: 14, alignItems: 'center' }}>
-          <div style={{
-            width: 44, height: 44, borderRadius: '50%',
-            background: 'var(--color-primary)', color: '#fff',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 16, fontWeight: 700, flexShrink: 0,
-          }}>{dayNumber}</div>
-          <div>
-            <div style={{ fontWeight: 600, fontSize: 16, textTransform: 'capitalize' }}>{formatDate(day.date)}</div>
-            <div style={{ fontSize: 13, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
-              {day.destination} · {day.country}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Activities */}
       <div style={{ padding: '14px 20px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>

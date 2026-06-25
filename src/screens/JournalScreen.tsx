@@ -35,6 +35,9 @@ export function JournalScreen({ personId, personName }: JournalScreenProps) {
     [personId]
   ) ?? []
 
+  const TRIP_END = new Date('2026-08-02') // habilitado el día después del regreso
+  const tripEnded = new Date() > TRIP_END
+
   const handleExport = async () => {
     if (entries.length === 0) return
     setExporting(true)
@@ -58,21 +61,35 @@ export function JournalScreen({ personId, personName }: JournalScreenProps) {
             <h1 style={{ fontSize: 28 }}>Diario</h1>
           </div>
           {entries.length > 0 && (
-            <button onClick={handleExport} disabled={exporting} style={{
-              display: 'flex', alignItems: 'center', gap: 6,
-              padding: '8px 14px', borderRadius: 20,
-              border: '1.5px solid var(--color-primary)',
-              background: 'transparent', color: 'var(--color-primary)',
-              fontSize: 12, fontWeight: 600, cursor: 'pointer',
-              fontFamily: 'var(--font-body)',
-            }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              {exporting ? 'Generando...' : 'PDF'}
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 3 }}>
+              <button
+                onClick={tripEnded ? handleExport : undefined}
+                disabled={!tripEnded || exporting}
+                title={tripEnded ? 'Descargar diario en PDF' : 'Disponible al terminar el viaje'}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  padding: '8px 14px', borderRadius: 20,
+                  border: `1.5px solid ${tripEnded ? 'var(--color-primary)' : 'var(--color-border)'}`,
+                  background: 'transparent',
+                  color: tripEnded ? 'var(--color-primary)' : 'var(--color-text-muted)',
+                  fontSize: 12, fontWeight: 600,
+                  cursor: tripEnded ? 'pointer' : 'default',
+                  fontFamily: 'var(--font-body)',
+                  opacity: tripEnded ? 1 : 0.5,
+                }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                {exporting ? 'Generando...' : 'PDF'}
+              </button>
+              {!tripEnded && (
+                <span style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>
+                  Disponible el 2 ago
+                </span>
+              )}
+            </div>
           )}
         </div>
         <p style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 6, fontFamily: 'var(--font-detail)' }}>
