@@ -27,7 +27,7 @@ function AppRoutes() {
         } />
         <Route path="/family" element={<FamilyScreen />} />
         <Route path="/docs" element={<DocsScreen personId={personId} />} />
-        <Route path="/journal" element={<JournalScreen personId={personId} />} />
+        <Route path="/journal" element={<JournalScreen personId={personId} personName={currentPerson.name} />} />
         <Route path="/map" element={<MapScreen />} />
         <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
