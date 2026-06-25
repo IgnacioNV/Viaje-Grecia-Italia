@@ -1,8 +1,10 @@
 import { useState, useMemo } from 'react'
+import { useLiveQuery } from 'dexie-react-hooks'
 import itinerary from '../data/itinerary.json'
 import seedDocs from '../data/documents.seed.json'
 import { getDestinationInfo } from '../data/cultural'
-import type { Day, Activity, SeedDocument } from '../types'
+import { db } from '../db/dexie'
+import type { Day, Activity, SeedDocument, Passport } from '../types'
 
 const DAYS = itinerary as Day[]
 const DOCS = seedDocs as SeedDocument[]
@@ -40,15 +42,32 @@ export function HomeScreen({ personId, personName }: HomeScreenProps) {
   const todayIdx = useMemo(getTodayIndex, [])
   const [tab, setTab] = useState<TabType>('today')
   const [selectedIdx, setSelectedIdx] = useState(todayIdx)
+  const [showProfile, setShowProfile] = useState(false)
 
   const displayDay = tab === 'today' ? DAYS[todayIdx] : DAYS[selectedIdx]
+  const initials = personName.slice(0, 2).toUpperCase()
 
   return (
     <div className="screen">
       <div style={{ padding: '24px 20px 0' }}>
-        <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--color-text-soft)', marginBottom: 4 }}>
-          {getGreeting(personName)}
-        </p>
+        {/* Top row: greeting + avatar */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+          <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--color-text-soft)' }}>
+            {getGreeting(personName)}
+          </p>
+          <button onClick={() => setShowProfile(true)} style={{
+            width: 36, height: 36, borderRadius: '50%',
+            background: 'var(--color-primary)', color: '#fff',
+            border: 'none', cursor: 'pointer',
+            fontSize: 13, fontWeight: 700,
+            fontFamily: 'var(--font-body)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            {initials}
+          </button>
+        </div>
+
         <h1 style={{ fontSize: 30, fontWeight: 700, marginBottom: 20 }}>Mi itinerario</h1>
 
         {/* Tabs: Hoy / Todo */}
@@ -112,6 +131,11 @@ export function HomeScreen({ personId, personName }: HomeScreenProps) {
         personId={personId}
         dayNumber={DAYS.indexOf(displayDay) + 1}
       />
+
+      {/* Profile sheet */}
+      {showProfile && (
+        <ProfileSheet personId={personId} personName={personName} onClose={() => setShowProfile(false)} />
+      )}
     </div>
   )
 }
@@ -282,5 +306,239 @@ function ActivityCard({ activity }: { activity: Activity }) {
         </div>
       )}
     </div>
+  )
+}
+
+/* ── Profile Sheet ──────────────────────────────────────── */
+function ProfileSheet({ personId, personName, onClose }: {
+  personId: string; personName: string; onClose: () => void
+}) {
+  const profile = useLiveQuery(
+    () => db.personalProfiles.where('personId').equals(personId).first(),
+    [personId]
+  )
+  const [editing, setEditing] = useState(false)
+
+  if (editing) {
+    return <ProfileEditor personId={personId} profile={profile ?? null} onDone={() => setEditing(false)} onClose={onClose} />
+  }
+
+  const initials = personName.slice(0, 2).toUpperCase()
+
+  return (
+    <>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 200 }} />
+      <div style={{
+        position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)',
+        width: '100%', maxWidth: 430,
+        background: 'var(--color-surface)',
+        borderRadius: '20px 20px 0 0',
+        padding: '20px 20px max(24px, env(safe-area-inset-bottom))',
+        zIndex: 201, maxHeight: '85dvh', overflowY: 'auto',
+      }}>
+        <div style={{ width: 36, height: 4, borderRadius: 2, background: 'var(--color-border)', margin: '0 auto 20px' }} />
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
+          <div style={{
+            width: 56, height: 56, borderRadius: '50%',
+            background: 'var(--color-primary)', color: '#fff',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 20, fontWeight: 700, flexShrink: 0,
+          }}>{initials}</div>
+          <div>
+            <h2 style={{ fontSize: 22, marginBottom: 2 }}>{personName}</h2>
+            <p style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
+              {profile ? 'Perfil completado' : 'Perfil sin completar'}
+            </p>
+          </div>
+          <button onClick={() => setEditing(true)} style={{
+            marginLeft: 'auto', padding: '7px 14px', borderRadius: 20,
+            border: '1.5px solid var(--color-primary)',
+            background: 'transparent', color: 'var(--color-primary)',
+            fontSize: 12, fontWeight: 600, cursor: 'pointer',
+            fontFamily: 'var(--font-body)',
+          }}>Editar</button>
+        </div>
+
+        {/* Passports */}
+        {profile?.passports && profile.passports.length > 0 && (
+          <div style={{ marginBottom: 16 }}>
+            <p className="eyebrow" style={{ marginBottom: 8 }}>Pasaportes ({profile.passports.length})</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {profile.passports.map((p: Passport) => (
+                <div key={p.id} style={{
+                  padding: '12px 14px', background: 'var(--color-bg)',
+                  borderRadius: 12, border: '1px solid var(--color-border)',
+                }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>{p.country || 'País no especificado'}</div>
+                  {p.number && <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>N° {p.number}</div>}
+                  {p.expiry && <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>Vence: {p.expiry}</div>}
+                  {p.photoFront && (
+                    <img src={p.photoFront} alt="Pasaporte" style={{ width: '100%', borderRadius: 8, marginTop: 8, maxHeight: 120, objectFit: 'cover' }} />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Insurance */}
+        {profile?.insuranceFile && (
+          <div style={{ marginBottom: 16 }}>
+            <p className="eyebrow" style={{ marginBottom: 8 }}>Seguro médico</p>
+            <div style={{ padding: '12px 14px', background: 'var(--color-bg)', borderRadius: 12, border: '1px solid var(--color-border)' }}>
+              <img src={profile.insuranceFile} alt="Seguro" style={{ width: '100%', borderRadius: 8, maxHeight: 120, objectFit: 'cover' }} />
+            </div>
+          </div>
+        )}
+
+        {/* Phones */}
+        {(profile?.phoneNumber || profile?.emergencyPhone) && (
+          <div style={{ marginBottom: 8 }}>
+            <p className="eyebrow" style={{ marginBottom: 8 }}>Teléfonos</p>
+            {profile.phoneNumber && (
+              <div style={{ padding: '10px 14px', background: 'var(--color-bg)', borderRadius: 10, border: '1px solid var(--color-border)', marginBottom: 6, fontSize: 13, fontFamily: 'var(--font-detail)' }}>
+                {profile.phoneNumber}
+              </div>
+            )}
+            {profile.emergencyPhone && (
+              <div style={{ padding: '10px 14px', background: 'var(--color-bg)', borderRadius: 10, border: '1px solid var(--color-border)', fontSize: 13, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
+                Emergencia: {profile.emergencyPhone}
+              </div>
+            )}
+          </div>
+        )}
+
+        {!profile && (
+          <div style={{ textAlign: 'center', padding: '20px 0' }}>
+            <p style={{ color: 'var(--color-text-muted)', fontSize: 14, marginBottom: 16, fontFamily: 'var(--font-detail)' }}>
+              Todavía no cargaste tu información.
+            </p>
+            <button onClick={() => setEditing(true)} style={{
+              padding: '12px 24px', background: 'var(--color-primary)',
+              color: '#fff', border: 'none', borderRadius: 12,
+              fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)',
+            }}>Completar perfil</button>
+          </div>
+        )}
+      </div>
+    </>
+  )
+}
+
+/* ── Profile Editor ─────────────────────────────────────── */
+function ProfileEditor({ personId, profile, onDone, onClose }: {
+  personId: string; profile: any; onDone: () => void; onClose: () => void
+}) {
+  const [passports, setPassports] = useState<Passport[]>(profile?.passports ?? [])
+  const [phone, setPhone] = useState(profile?.phoneNumber ?? '')
+  const [emergency, setEmergency] = useState(profile?.emergencyPhone ?? '')
+  const [insurance, setInsurance] = useState<string | undefined>(profile?.insuranceFile)
+  const [saving, setSaving] = useState(false)
+
+  const toBase64 = (file: File): Promise<string> => new Promise((res, rej) => {
+    const r = new FileReader(); r.onload = () => res(r.result as string); r.onerror = rej; r.readAsDataURL(file)
+  })
+
+  const addPassport = () => {
+    setPassports(prev => [...prev, { id: crypto.randomUUID(), country: '' }])
+  }
+
+  const updatePassport = (id: string, field: keyof Passport, value: string) => {
+    setPassports(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p))
+  }
+
+  const removePassport = (id: string) => {
+    setPassports(prev => prev.filter(p => p.id !== id))
+  }
+
+  const handleSave = async () => {
+    setSaving(true)
+    try {
+      const data = { personId, passports, phoneNumber: phone || undefined, emergencyPhone: emergency || undefined, insuranceFile: insurance, updatedAt: new Date().toISOString() }
+      const existing = await db.personalProfiles.where('personId').equals(personId).first()
+      if (existing?.id) await db.personalProfiles.update(existing.id, data)
+      else await db.personalProfiles.add(data as any)
+      onDone()
+    } finally { setSaving(false) }
+  }
+
+  return (
+    <>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 200 }} />
+      <div style={{
+        position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)',
+        width: '100%', maxWidth: 430,
+        background: 'var(--color-surface)',
+        borderRadius: '20px 20px 0 0',
+        padding: '20px 20px max(24px, env(safe-area-inset-bottom))',
+        zIndex: 201, maxHeight: '90dvh', overflowY: 'auto',
+      }}>
+        <div style={{ width: 36, height: 4, borderRadius: 2, background: 'var(--color-border)', margin: '0 auto 20px' }} />
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+          <h3>Editar perfil</h3>
+          <button onClick={onDone} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', fontSize: 13 }}>Cancelar</button>
+        </div>
+
+        {/* Passports */}
+        <p className="eyebrow" style={{ marginBottom: 10 }}>Pasaportes</p>
+        {passports.map((p, idx) => (
+          <div key={p.id} style={{ marginBottom: 14, padding: '14px', background: 'var(--color-bg)', borderRadius: 12, border: '1px solid var(--color-border)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-primary)' }}>Pasaporte {idx + 1}</span>
+              <button onClick={() => removePassport(p.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#e53e3e', fontSize: 12, fontFamily: 'var(--font-body)' }}>Eliminar</button>
+            </div>
+            {[
+              { field: 'country' as const, label: 'País', placeholder: 'Argentina' },
+              { field: 'number'  as const, label: 'Número', placeholder: 'AAA123456' },
+              { field: 'expiry'  as const, label: 'Vencimiento', placeholder: '2029-12-31' },
+            ].map(({ field, label, placeholder }) => (
+              <div key={field} style={{ marginBottom: 8 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: 4 }}>{label}</div>
+                <input value={p[field] ?? ''} onChange={e => updatePassport(p.id, field, e.target.value)}
+                  placeholder={placeholder} style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--color-border)', borderRadius: 8, fontSize: 13, background: 'var(--color-surface)', color: 'var(--color-text)', outline: 'none', boxSizing: 'border-box' as const, fontFamily: 'var(--font-body)' }} />
+              </div>
+            ))}
+            {/* Passport photos */}
+            {(['photoFront', 'photoBack'] as const).map(field => (
+              <label key={field} style={{ display: 'block', marginBottom: 8 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: 4 }}>{field === 'photoFront' ? 'Foto frente' : 'Foto dorso'}</div>
+                {p[field] ? <img src={p[field]} alt={field} style={{ width: '100%', borderRadius: 8, maxHeight: 100, objectFit: 'cover' }} /> : <div style={{ padding: '10px 12px', border: '1px dashed var(--color-border)', borderRadius: 8, fontSize: 12, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Tocá para agregar foto</div>}
+                <input type="file" accept="image/*" style={{ display: 'none' }} onChange={async e => { const f = e.target.files?.[0]; if (f) updatePassport(p.id, field, await toBase64(f)) }} />
+              </label>
+            ))}
+          </div>
+        ))}
+
+        <button onClick={addPassport} style={{ width: '100%', padding: '10px', marginBottom: 20, border: '1.5px dashed var(--color-primary)', borderRadius: 10, background: 'transparent', color: 'var(--color-primary)', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
+          + Agregar pasaporte
+        </button>
+
+        {/* Insurance */}
+        <p className="eyebrow" style={{ marginBottom: 10 }}>Seguro médico</p>
+        <label style={{ display: 'block', marginBottom: 20, padding: '12px 14px', borderRadius: 12, border: '1px dashed var(--color-primary-20)', cursor: 'pointer' }}>
+          {insurance ? <img src={insurance} alt="seguro" style={{ width: '100%', borderRadius: 8, maxHeight: 120, objectFit: 'cover' }} /> : <div style={{ fontSize: 12, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Tocá para agregar póliza</div>}
+          <input type="file" accept="image/*,.pdf" style={{ display: 'none' }} onChange={async e => { const f = e.target.files?.[0]; if (f) setInsurance(await toBase64(f)) }} />
+        </label>
+
+        {/* Phones */}
+        <p className="eyebrow" style={{ marginBottom: 10 }}>Teléfonos</p>
+        {[
+          { label: 'Tu número', val: phone, set: setPhone },
+          { label: 'Emergencia (opcional)', val: emergency, set: setEmergency },
+        ].map(({ label, val, set }) => (
+          <div key={label} style={{ marginBottom: 10 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: 4 }}>{label}</div>
+            <input type="tel" value={val} onChange={e => set(e.target.value)} placeholder="+54 9 11 1234-5678" style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--color-border)', borderRadius: 8, fontSize: 13, background: 'var(--color-bg)', color: 'var(--color-text)', outline: 'none', boxSizing: 'border-box' as const, fontFamily: 'var(--font-detail)' }} />
+          </div>
+        ))}
+
+        <button onClick={handleSave} disabled={saving} style={{ width: '100%', padding: '14px', marginTop: 12, background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
+          {saving ? 'Guardando...' : 'Guardar perfil'}
+        </button>
+      </div>
+    </>
   )
 }

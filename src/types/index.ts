@@ -46,6 +46,15 @@ export interface SeedDocument {
   createdAt: string
 }
 
+export interface Passport {
+  id: string
+  country: string
+  number?: string
+  expiry?: string
+  photoFront?: string
+  photoBack?: string
+}
+
 // IndexedDB types (Dexie)
 export interface LocalDocument {
   id?: number
@@ -70,8 +79,7 @@ export interface PersonalProfile {
   personId: string
   phoneNumber?: string
   emergencyPhone?: string
-  passportFront?: string  // base64
-  passportBack?: string   // base64
-  insuranceFile?: string  // base64
+  passports: Passport[]
+  insuranceFile?: string
   updatedAt: string
 }
