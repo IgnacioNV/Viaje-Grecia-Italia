@@ -95,7 +95,7 @@ export function WelcomeScreen({ onSelect }: WelcomeScreenProps) {
         textAlign: 'center',
         lineHeight: 1.5,
       }}>
-        Viaje Europa · Familia García
+        Viaje Europa · Familia Valcarce
       </p>
     </div>
   )

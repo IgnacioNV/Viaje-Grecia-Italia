@@ -15,7 +15,7 @@ export function FamilyScreen() {
   return (
     <div className="screen">
       <div style={{ padding: '20px 20px 0' }}>
-        <p className="eyebrow" style={{ marginBottom: 6 }}>Familia García</p>
+        <p className="eyebrow" style={{ marginBottom: 6 }}>Familia Valcarce</p>
         <h1 style={{ fontSize: 28 }}>{PEOPLE.length} viajeros</h1>
       </div>
 
