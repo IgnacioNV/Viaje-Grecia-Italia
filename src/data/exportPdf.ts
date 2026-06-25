@@ -1,4 +1,4 @@
-import jsPDF from 'jspdf'
+import { jsPDF } from 'jspdf'
 import type { JournalEntry } from '../types'
 import itinerary from './itinerary.json'
 import type { Day } from '../types'
