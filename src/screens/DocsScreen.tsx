@@ -234,8 +234,10 @@ export function DocsScreen({ personId }: DocsScreenProps) {
 /* ── Expandable row con estado temporal ─────────────────── */
 function ExpandableRow({ doc, currentPersonId }: { doc: DocItem; currentPersonId?: string }) {
   const [open, setOpen] = useState(false)
+  const [previewSrc, setPreviewSrc] = useState<string | null>(null)
   const status = getDocStatus(doc.eventDate)
   const canDelete = !!(doc.localId && doc.ownerPersonId && doc.ownerPersonId === currentPersonId)
+  const canPreview = !!doc.localId
 
   const statusConfig = {
     today:    { bg: 'var(--color-surface)',    border: '2px solid var(--color-accent)' },
@@ -244,58 +246,99 @@ function ExpandableRow({ doc, currentPersonId }: { doc: DocItem; currentPersonId
   }
   const cfg = statusConfig[status]
 
-  return (
-    <div style={{ background: cfg.bg, border: cfg.border, borderRadius: 16, overflow: 'hidden', opacity: status === 'past' ? 0.55 : 1 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 14px' }}>
-        <button onClick={() => setOpen(v => !v)} style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}>
-          <IconStamp icon={doc.icon} size={36} style={status === 'past' ? { opacity: 0.5 } : {}} />
-          <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 600, fontSize: 14, color: status === 'past' ? 'var(--color-text-muted)' : 'var(--color-text)' }}>{doc.title}</div>
-            <div style={{ fontSize: 11, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>{doc.sub}</div>
-          </div>
-        </button>
+  const handlePreview = async () => {
+    if (!doc.localId) return
+    const localDoc = await db.localDocuments.get(doc.localId)
+    if (localDoc?.fileBase64) setPreviewSrc(localDoc.fileBase64)
+  }
 
-        {/* Badges + actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-          {status === 'today' && (
-            <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 8, background: 'var(--color-primary)', color: '#fff' }}>Hoy</span>
-          )}
-          {status === 'past' && (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" strokeWidth="2" strokeLinecap="round">
-              <polyline points="20,6 9,17 4,12"/>
-            </svg>
-          )}
-          {canDelete && (
-            <button
-              onClick={async e => { e.stopPropagation(); if (confirm(`Borrar "${doc.title}"?`)) await db.localDocuments.delete(doc.localId!) }}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: 'var(--color-text-muted)' }}
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-                <polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/>
-                <path d="M10,11v6"/><path d="M14,11v6"/>
-                <path d="M9,6V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V6"/>
+  return (
+    <>
+      <div style={{ background: cfg.bg, border: cfg.border, borderRadius: 16, overflow: 'hidden', opacity: status === 'past' ? 0.55 : 1 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 14px' }}>
+          <button onClick={() => setOpen(v => !v)} style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}>
+            <IconStamp icon={doc.icon} size={36} style={status === 'past' ? { opacity: 0.5 } : {}} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 600, fontSize: 14, color: status === 'past' ? 'var(--color-text-muted)' : 'var(--color-text)' }}>{doc.title}</div>
+              <div style={{ fontSize: 11, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>{doc.sub}</div>
+            </div>
+          </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
+            {status === 'today' && (
+              <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 8, background: 'var(--color-primary)', color: '#fff' }}>Hoy</span>
+            )}
+            {status === 'past' && (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" strokeWidth="2" strokeLinecap="round">
+                <polyline points="20,6 9,17 4,12"/>
+              </svg>
+            )}
+            {canPreview && (
+              <button onClick={handlePreview} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: 'var(--color-primary)' }} title="Ver archivo">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            )}
+            {canDelete && (
+              <button onClick={async e => { e.stopPropagation(); if (confirm(`Borrar "${doc.title}"?`)) await db.localDocuments.delete(doc.localId!) }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: 'var(--color-text-muted)' }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                  <polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/>
+                  <path d="M10,11v6"/><path d="M14,11v6"/>
+                  <path d="M9,6V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V6"/>
+                </svg>
+              </button>
+            )}
+            <button onClick={() => setOpen(v => !v)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" strokeWidth="2" strokeLinecap="round"
+                style={{ transform: open ? 'rotate(180deg)' : 'none', transition: '0.2s' }}>
+                <path d="M6 9l6 6 6-6"/>
               </svg>
             </button>
-          )}
-          <button onClick={() => setOpen(v => !v)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" strokeWidth="2" strokeLinecap="round"
-              style={{ transform: open ? 'rotate(180deg)' : 'none', transition: '0.2s' }}>
-              <path d="M6 9l6 6 6-6"/>
-            </svg>
-          </button>
+          </div>
         </div>
+
+        {open && (
+          <div style={{ padding: '12px 14px 14px 62px', fontSize: 13, lineHeight: 1.6, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', whiteSpace: 'pre-line', borderTop: '1px solid var(--color-border)' }}>
+            {doc.detail}
+            {status === 'past' && (
+              <div style={{ marginTop: 10, fontSize: 11, color: 'var(--color-text-muted)', fontStyle: 'italic' }}>
+                Este evento ya pasó. Podés seguir viendo el documento si lo necesitás.
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
-      {open && (
-        <div style={{ padding: '12px 14px 14px 62px', fontSize: 13, lineHeight: 1.6, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', whiteSpace: 'pre-line', borderTop: '1px solid var(--color-border)' }}>
-          {doc.detail}
-          {status === 'past' && (
-            <div style={{ marginTop: 10, fontSize: 11, color: 'var(--color-text-muted)', fontStyle: 'italic' }}>
-              Este evento ya pasó. Podés seguir descargando el documento si lo necesitás.
-            </div>
-          )}
-        </div>
-      )}
+      {previewSrc && <FilePreview src={previewSrc} onClose={() => setPreviewSrc(null)} />}
+    </>
+  )
+}
+
+/* ── File Preview overlay ────────────────────────────────── */
+function FilePreview({ src, onClose }: { src: string; onClose: () => void }) {
+  const isPdf = src.startsWith('data:application/pdf')
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.92)', zIndex: 300, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '16px 20px' }}>
+        <button onClick={onClose} style={{
+          width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.15)',
+          border: 'none', cursor: 'pointer', color: '#fff',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 16px 32px' }}>
+        {isPdf
+          ? <iframe src={src} style={{ width: '100%', height: '100%', borderRadius: 12, border: 'none' }} title="Documento" />
+          : <img src={src} alt="Vista previa" style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: 12, objectFit: 'contain' }} />
+        }
+      </div>
     </div>
   )
 }

@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useLiveQuery } from 'dexie-react-hooks'
 import { IconStamp } from '../components/ui/IconStamp'
+import { db } from '../db/dexie'
 import people from '../data/people.json'
-import type { Person } from '../types'
+import type { Person, Passport } from '../types'
 
 const PEOPLE = people as Person[]
 
@@ -21,43 +23,22 @@ export function FamilyScreen() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '16px' }}>
         {PEOPLE.map(person => (
-          <button
-            key={person.id}
-            onClick={() => setSelected(person)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 14,
-              padding: '14px',
-              background: 'var(--color-surface)',
-              border: 'var(--card-border)',
-              borderRadius: 'var(--card-radius)',
-              boxShadow: 'var(--card-shadow)',
-              cursor: 'pointer',
-              textAlign: 'left',
-              width: '100%',
-            }}
-          >
+          <button key={person.id} onClick={() => setSelected(person)} style={{
+            display: 'flex', alignItems: 'center', gap: 14,
+            padding: '14px', background: 'var(--color-surface)',
+            border: 'var(--card-border)', borderRadius: 'var(--card-radius)',
+            boxShadow: 'var(--card-shadow)', cursor: 'pointer', textAlign: 'left', width: '100%',
+          }}>
             <div style={{
-              width: 44,
-              height: 44,
-              borderRadius: 'var(--stamp-radius)',
-              background: 'var(--color-primary-10)',
-              border: 'var(--stamp-border)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 18,
-              fontWeight: 700,
-              color: 'var(--color-primary)',
-              flexShrink: 0,
+              width: 44, height: 44, borderRadius: 'var(--stamp-radius)',
+              background: 'var(--color-primary-10)', border: 'var(--stamp-border)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 18, fontWeight: 700, color: 'var(--color-primary)', flexShrink: 0,
             }}>
               {person.name.charAt(0)}
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 600, fontSize: 16, color: 'var(--color-text)' }}>
-                {person.name}
-              </div>
+              <div style={{ fontWeight: 600, fontSize: 16 }}>{person.name}</div>
               <div style={{ fontSize: 12, color: 'var(--color-text-soft)', marginTop: 1, fontFamily: 'var(--font-detail)' }}>
                 {person.role}
               </div>
@@ -73,16 +54,24 @@ export function FamilyScreen() {
   )
 }
 
+/* ── Person Detail ───────────────────────────────────────── */
 function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }) {
+  const profile = useLiveQuery(
+    () => db.personalProfiles.where('personId').equals(person.id).first(),
+    [person.id]
+  )
+
+  const passports: Passport[] = profile?.passports ?? []
+  const [previewSrc, setPreviewSrc] = useState<string | null>(null)
+
   return (
     <div className="screen">
-      {/* Header */}
       <div style={{ padding: '20px 20px 0' }}>
         <button onClick={onBack} style={{
           display: 'flex', alignItems: 'center', gap: 6,
           background: 'none', border: 'none', cursor: 'pointer',
           color: 'var(--color-primary)', fontSize: 14, fontWeight: 500,
-          marginBottom: 20, padding: 0,
+          marginBottom: 20, padding: 0, fontFamily: 'var(--font-body)',
         }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
@@ -94,102 +83,205 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
         {/* Avatar */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 24 }}>
           <div style={{
-            width: 80,
-            height: 80,
-            borderRadius: 'var(--stamp-radius)',
-            background: 'var(--color-primary-10)',
-            border: 'var(--stamp-border)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 32,
-            fontWeight: 700,
-            color: 'var(--color-primary)',
-            marginBottom: 12,
+            width: 72, height: 72, borderRadius: 'var(--stamp-radius)',
+            background: 'var(--color-primary-10)', border: 'var(--stamp-border)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 28, fontWeight: 700, color: 'var(--color-primary)', marginBottom: 12,
           }}>
             {person.name.charAt(0)}
           </div>
-          <h2 style={{ fontSize: 24 }}>{person.name}</h2>
+          <h2 style={{ fontSize: 24, marginBottom: 4 }}>{person.name}</h2>
           <div style={{
-            marginTop: 6,
-            padding: '3px 12px',
-            borderRadius: 20,
+            padding: '3px 12px', borderRadius: 20,
             background: 'var(--color-primary-10)',
-            fontSize: 12,
-            fontWeight: 600,
-            color: 'var(--color-primary)',
+            fontSize: 12, fontWeight: 600, color: 'var(--color-primary)',
             fontFamily: 'var(--font-detail)',
-          }}>
-            {person.role}
-          </div>
+          }}>{person.role}</div>
         </div>
       </div>
 
-      {/* Document sections */}
-      <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <p className="eyebrow" style={{ padding: '0 4px', marginBottom: 4 }}>Sus documentos</p>
+      <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
 
-        {person.passport && (
-          <div className="card" style={{ padding: '14px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <IconStamp icon="passport" size={38} />
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: 15 }}>Pasaporte</div>
-                <div style={{ fontSize: 12, color: 'var(--color-text-soft)' }}>
-                  Vence {person.passport.expiry} · válido
+        {/* Passports from Dexie profile */}
+        {passports.length > 0 && (
+          <>
+            <p className="eyebrow" style={{ padding: '0 4px', marginBottom: 4 }}>
+              Pasaportes ({passports.length})
+            </p>
+            {passports.map((p, idx) => (
+              <div key={p.id} className="card" style={{ padding: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: (p.photoFront || p.photoBack) ? 12 : 0 }}>
+                  <IconStamp icon="passport" size={38} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 600, fontSize: 15 }}>
+                      Pasaporte {passports.length > 1 ? idx + 1 : ''} {p.country ? `· ${p.country}` : ''}
+                    </div>
+                    {p.number && (
+                      <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
+                        N° {p.number}
+                      </div>
+                    )}
+                    {p.expiry && (
+                      <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
+                        Vence: {p.expiry}
+                      </div>
+                    )}
+                  </div>
+                  <span style={{
+                    fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 8,
+                    background: '#d8f3dc', color: '#2d6a4f',
+                  }}>Listo</span>
                 </div>
+
+                {/* Passport photos */}
+                {(p.photoFront || p.photoBack) && (
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    {p.photoFront && (
+                      <button onClick={() => setPreviewSrc(p.photoFront!)} style={{
+                        flex: 1, border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden',
+                      }}>
+                        <img src={p.photoFront} alt="Frente" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
+                        <div style={{ fontSize: 10, textAlign: 'center', padding: '4px', color: 'var(--color-text-muted)', background: 'var(--color-bg)', fontFamily: 'var(--font-detail)' }}>Frente</div>
+                      </button>
+                    )}
+                    {p.photoBack && (
+                      <button onClick={() => setPreviewSrc(p.photoBack!)} style={{
+                        flex: 1, border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden',
+                      }}>
+                        <img src={p.photoBack} alt="Dorso" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
+                        <div style={{ fontSize: 10, textAlign: 'center', padding: '4px', color: 'var(--color-text-muted)', background: 'var(--color-bg)', fontFamily: 'var(--font-detail)' }}>Dorso</div>
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
-              <span style={{
-                fontSize: 11, fontWeight: 700,
-                color: '#2d6a4f',
-                background: '#d8f3dc',
-                padding: '2px 8px',
-                borderRadius: 8,
-              }}>Listo</span>
-            </div>
-          </div>
+            ))}
+          </>
         )}
 
-        {person.insurance && (
-          <div className="card" style={{ padding: '14px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        {/* Insurance */}
+        {profile?.insuranceFile && (
+          <>
+            <p className="eyebrow" style={{ padding: '0 4px', marginBottom: 4 }}>Seguro médico</p>
+            <button onClick={() => setPreviewSrc(profile.insuranceFile!)} className="card" style={{
+              padding: '14px', display: 'flex', alignItems: 'center', gap: 12,
+              width: '100%', cursor: 'pointer', border: 'none', textAlign: 'left',
+            }}>
               <IconStamp icon="shield" size={38} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: 15 }}>Seguro médico</div>
-                <div style={{ fontSize: 12, color: 'var(--color-text-soft)' }}>
-                  {person.insurance}
+                <div style={{ fontWeight: 600, fontSize: 15 }}>Póliza de seguro</div>
+                <div style={{ fontSize: 12, color: 'var(--color-primary)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
+                  Tocá para ver
                 </div>
               </div>
-            </div>
-          </div>
+            </button>
+          </>
         )}
 
-        {person.emergencyContact && (
-          <div className="card" style={{ padding: '14px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <IconStamp icon="family" size={38} />
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: 15 }}>Contacto de emergencia</div>
-                <div style={{ fontSize: 12, color: 'var(--color-text-soft)' }}>
-                  {person.emergencyContact}
+        {/* Phones */}
+        {(profile?.phoneNumber || profile?.emergencyPhone) && (
+          <>
+            <p className="eyebrow" style={{ padding: '0 4px', marginBottom: 4 }}>Teléfonos</p>
+            {profile?.phoneNumber && (
+              <div className="card" style={{ padding: '14px', display: 'flex', alignItems: 'center', gap: 12 }}>
+                <IconStamp icon="family" size={38} />
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: 15 }}>Teléfono</div>
+                  <div style={{ fontSize: 13, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
+                    {profile.phoneNumber}
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
+            )}
+            {profile?.emergencyPhone && (
+              <div className="card" style={{ padding: '14px', display: 'flex', alignItems: 'center', gap: 12 }}>
+                <IconStamp icon="family" size={38} />
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: 15 }}>Emergencia</div>
+                  <div style={{ fontSize: 13, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
+                    {profile.emergencyPhone}
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         )}
 
+        {/* Seed data (from people.json) */}
         {person.flightOrigin && (
-          <div className="card" style={{ padding: '14px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <>
+            <p className="eyebrow" style={{ padding: '0 4px', marginBottom: 4 }}>Vuelo propio</p>
+            <div className="card" style={{ padding: '14px', display: 'flex', alignItems: 'center', gap: 12 }}>
               <IconStamp icon="flight" size={38} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: 15 }}>Vuelo propio</div>
-                <div style={{ fontSize: 12, color: 'var(--color-text-soft)' }}>
+                <div style={{ fontWeight: 600, fontSize: 15 }}>Vuelo individual</div>
+                <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
                   {person.flightOrigin}
                 </div>
               </div>
             </div>
+          </>
+        )}
+
+        {/* Empty state */}
+        {!profile && !person.flightOrigin && (
+          <div style={{ textAlign: 'center', padding: '32px 0', color: 'var(--color-text-muted)' }}>
+            <p style={{ fontSize: 14, fontFamily: 'var(--font-detail)' }}>
+              {person.name} todavía no cargó su información.
+            </p>
           </div>
+        )}
+      </div>
+
+      {/* Image preview overlay */}
+      {previewSrc && (
+        <FilePreview src={previewSrc} onClose={() => setPreviewSrc(null)} />
+      )}
+    </div>
+  )
+}
+
+/* ── File Preview ────────────────────────────────────────── */
+function FilePreview({ src, onClose }: { src: string; onClose: () => void }) {
+  const isPdf = src.startsWith('data:application/pdf')
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.92)',
+      zIndex: 300, display: 'flex', flexDirection: 'column',
+    }}>
+      {/* Header */}
+      <div style={{
+        display: 'flex', justifyContent: 'flex-end',
+        padding: '16px 20px',
+      }}>
+        <button onClick={onClose} style={{
+          width: 36, height: 36, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.15)',
+          border: 'none', cursor: 'pointer', color: '#fff',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      {/* Content */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 16px 32px' }}>
+        {isPdf ? (
+          <iframe
+            src={src}
+            style={{ width: '100%', height: '100%', borderRadius: 12, border: 'none' }}
+            title="Documento"
+          />
+        ) : (
+          <img
+            src={src}
+            alt="Vista previa"
+            style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: 12, objectFit: 'contain' }}
+          />
         )}
       </div>
     </div>
