@@ -9,7 +9,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/**', 'seed-docs/**'],
       manifest: {
-        name: 'Viaje Europa 2026',
+        name: 'Viaje Europa 2026 · Valcarce',
         short_name: 'Europa',
         description: 'Bari · Crucero · Grecia — Julio 2026',
         theme_color: '#1B3FA6',

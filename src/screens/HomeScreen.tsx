@@ -501,14 +501,39 @@ function ProfileEditor({ personId, profile, onDone, onClose }: {
                   placeholder={placeholder} style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--color-border)', borderRadius: 8, fontSize: 13, background: 'var(--color-surface)', color: 'var(--color-text)', outline: 'none', boxSizing: 'border-box' as const, fontFamily: 'var(--font-body)' }} />
               </div>
             ))}
-            {/* Passport photos */}
-            {(['photoFront', 'photoBack'] as const).map(field => (
-              <label key={field} style={{ display: 'block', marginBottom: 8 }}>
-                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: 4 }}>{field === 'photoFront' ? 'Foto frente' : 'Foto dorso'}</div>
-                {p[field] ? <img src={p[field]} alt={field} style={{ width: '100%', borderRadius: 8, maxHeight: 100, objectFit: 'cover' }} /> : <div style={{ padding: '10px 12px', border: '1px dashed var(--color-border)', borderRadius: 8, fontSize: 12, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Tocá para agregar foto</div>}
-                <input type="file" accept="image/*" style={{ display: 'none' }} onChange={async e => { const f = e.target.files?.[0]; if (f) updatePassport(p.id, field, await toBase64(f)) }} />
-              </label>
-            ))}
+          {(['photoFront', 'photoBack'] as const).map(field => (
+            <div key={field} style={{ marginBottom: 8 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, marginBottom: 4, color: 'var(--color-text-soft)' }}>
+                {field === 'photoFront' ? 'Foto frente' : 'Foto dorso'}
+              </div>
+              {p[field] ? (
+                <div style={{ position: 'relative' }}>
+                  <img src={p[field]} alt={field} style={{ width: '100%', borderRadius: 8, maxHeight: 100, objectFit: 'cover', display: 'block' }} />
+                  <button
+                    onClick={() => updatePassport(p.id, field, '')}
+                    style={{
+                      position: 'absolute', top: 6, right: 6,
+                      width: 26, height: 26, borderRadius: '50%',
+                      background: 'rgba(0,0,0,0.6)', border: 'none',
+                      cursor: 'pointer', color: '#fff', fontSize: 14,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                <label style={{ display: 'block', cursor: 'pointer' }}>
+                  <div style={{ padding: '10px 12px', border: '1px dashed var(--color-border)', borderRadius: 8, fontSize: 12, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>
+                    Tocá para agregar foto
+                  </div>
+                  <input type="file" accept="image/*" style={{ display: 'none' }} onChange={async e => { const f = e.target.files?.[0]; if (f) updatePassport(p.id, field, await toBase64(f)) }} />
+                </label>
+              )}
+            </div>
+          ))}
           </div>
         ))}
 

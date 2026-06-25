@@ -12,7 +12,9 @@ interface DocItem {
   sub: string
   detail: string
   icon: IconName
-  eventDate?: string // YYYY-MM-DD
+  eventDate?: string    // YYYY-MM-DD
+  localId?: number      // set only for locally uploaded docs
+  ownerPersonId?: string
 }
 
 const CATEGORY_DOCS: Record<string, DocItem[]> = {
@@ -76,19 +78,23 @@ export function DocsScreen({ personId }: DocsScreenProps) {
   const localByCategory: Record<string, DocItem[]> = {
     pasaportes: localDocs.filter(d => d.type === 'passport').map(d => ({
       id: `local-${d.id}`, title: d.title, sub: 'Subido por vos', icon: 'passport' as IconName,
-      detail: `Subido el ${new Date(d.createdAt).toLocaleDateString('es-ES')}`, eventDate: undefined,
+      detail: `Subido el ${new Date(d.createdAt).toLocaleDateString('es-ES')}`,
+      localId: d.id, ownerPersonId: d.ownerPersonId,
     })),
     hoteles: localDocs.filter(d => d.type === 'reservation').map(d => ({
       id: `local-${d.id}`, title: d.title, sub: 'Subido por vos', icon: 'reservation' as IconName,
-      detail: `Subido el ${new Date(d.createdAt).toLocaleDateString('es-ES')}`, eventDate: undefined,
+      detail: `Subido el ${new Date(d.createdAt).toLocaleDateString('es-ES')}`,
+      localId: d.id, ownerPersonId: d.ownerPersonId,
     })),
     transporte: localDocs.filter(d => d.type === 'voucher').map(d => ({
       id: `local-${d.id}`, title: d.title, sub: 'Subido por vos', icon: 'flight' as IconName,
-      detail: `Subido el ${new Date(d.createdAt).toLocaleDateString('es-ES')}`, eventDate: undefined,
+      detail: `Subido el ${new Date(d.createdAt).toLocaleDateString('es-ES')}`,
+      localId: d.id, ownerPersonId: d.ownerPersonId,
     })),
     tickets: localDocs.filter(d => d.type === 'ticket').map(d => ({
       id: `local-${d.id}`, title: d.title, sub: 'Subido por vos', icon: 'ticket' as IconName,
-      detail: `Subido el ${new Date(d.createdAt).toLocaleDateString('es-ES')}`, eventDate: undefined,
+      detail: `Subido el ${new Date(d.createdAt).toLocaleDateString('es-ES')}`,
+      localId: d.id, ownerPersonId: d.ownerPersonId,
     })),
   }
   const otherLocalDocs = localDocs.filter(d => d.type === 'other')
@@ -99,6 +105,7 @@ export function DocsScreen({ personId }: DocsScreenProps) {
     <CategoryView
       label={CATEGORY_LABELS[activeCategory].label}
       docs={[...CATEGORY_DOCS[activeCategory], ...(localByCategory[activeCategory] ?? [])]}
+      currentPersonId={personId}
       onBack={() => setSection('overview')}
     />
   )
@@ -172,7 +179,7 @@ export function DocsScreen({ personId }: DocsScreenProps) {
       </div>
 
       <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {allDocs.map(doc => <ExpandableRow key={doc.id} doc={doc} />)}
+        {allDocs.map(doc => <ExpandableRow key={doc.id} doc={doc} currentPersonId={personId} />)}
 
         {otherLocalDocs.length > 0 && (
           <>
@@ -190,6 +197,16 @@ export function DocsScreen({ personId }: DocsScreenProps) {
                   <div style={{ fontWeight: 600, fontSize: 14 }}>{doc.title}</div>
                   <div style={{ fontSize: 11, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>Solo en tu teléfono</div>
                 </div>
+                {doc.ownerPersonId === personId && (
+                  <button
+                    onClick={async () => { if (confirm(`Borrar "${doc.title}"?`)) await db.localDocuments.delete(doc.id!) }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, color: 'var(--color-text-muted)' }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                      <polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/><path d="M9,6V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V6"/>
+                    </svg>
+                  </button>
+                )}
               </div>
             ))}
           </>
@@ -215,71 +232,62 @@ export function DocsScreen({ personId }: DocsScreenProps) {
 }
 
 /* ── Expandable row con estado temporal ─────────────────── */
-function ExpandableRow({ doc }: { doc: DocItem }) {
+function ExpandableRow({ doc, currentPersonId }: { doc: DocItem; currentPersonId?: string }) {
   const [open, setOpen] = useState(false)
   const status = getDocStatus(doc.eventDate)
+  const canDelete = !!(doc.localId && doc.ownerPersonId && doc.ownerPersonId === currentPersonId)
 
   const statusConfig = {
-    today:    { label: 'Hoy',    bg: 'var(--color-accent)',     color: '#fff',                    border: '2px solid var(--color-accent)' },
-    past:     { label: 'Ya fue', bg: 'rgba(0,0,0,0.06)',       color: 'var(--color-text-muted)', border: '1px solid var(--color-border)' },
-    upcoming: { label: '',       bg: 'var(--color-surface)',    color: '',                        border: '1.5px solid var(--color-primary)' },
+    today:    { bg: 'var(--color-surface)',    border: '2px solid var(--color-accent)' },
+    past:     { bg: 'rgba(0,0,0,0.03)',        border: '1px solid var(--color-border)' },
+    upcoming: { bg: 'var(--color-surface)',    border: '1.5px solid var(--color-primary)' },
   }
   const cfg = statusConfig[status]
 
   return (
-    <div style={{
-      background: cfg.bg,
-      border: cfg.border,
-      borderRadius: 16, overflow: 'hidden',
-      opacity: status === 'past' ? 0.55 : 1,
-      transition: 'opacity 0.2s',
-    }}>
-      <button onClick={() => setOpen(v => !v)} style={{
-        display: 'flex', alignItems: 'center', gap: 12,
-        padding: '13px 14px', width: '100%',
-        background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left',
-      }}>
-        <IconStamp icon={doc.icon} size={36}
-          style={status === 'past' ? { opacity: 0.5 } : {}} />
-        <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: 600, fontSize: 14, color: status === 'past' ? 'var(--color-text-muted)' : 'var(--color-text)' }}>
-            {doc.title}
+    <div style={{ background: cfg.bg, border: cfg.border, borderRadius: 16, overflow: 'hidden', opacity: status === 'past' ? 0.55 : 1 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 14px' }}>
+        <button onClick={() => setOpen(v => !v)} style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}>
+          <IconStamp icon={doc.icon} size={36} style={status === 'past' ? { opacity: 0.5 } : {}} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontWeight: 600, fontSize: 14, color: status === 'past' ? 'var(--color-text-muted)' : 'var(--color-text)' }}>{doc.title}</div>
+            <div style={{ fontSize: 11, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>{doc.sub}</div>
           </div>
-          <div style={{ fontSize: 11, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
-            {doc.sub}
-          </div>
+        </button>
+
+        {/* Badges + actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+          {status === 'today' && (
+            <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 8, background: 'var(--color-primary)', color: '#fff' }}>Hoy</span>
+          )}
+          {status === 'past' && (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" strokeWidth="2" strokeLinecap="round">
+              <polyline points="20,6 9,17 4,12"/>
+            </svg>
+          )}
+          {canDelete && (
+            <button
+              onClick={async e => { e.stopPropagation(); if (confirm(`Borrar "${doc.title}"?`)) await db.localDocuments.delete(doc.localId!) }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: 'var(--color-text-muted)' }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                <polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/>
+                <path d="M10,11v6"/><path d="M14,11v6"/>
+                <path d="M9,6V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V6"/>
+              </svg>
+            </button>
+          )}
+          <button onClick={() => setOpen(v => !v)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" strokeWidth="2" strokeLinecap="round"
+              style={{ transform: open ? 'rotate(180deg)' : 'none', transition: '0.2s' }}>
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
         </div>
-
-        {/* Status badge */}
-        {status === 'today' && (
-          <span style={{
-            fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 8,
-            background: 'var(--color-primary)', color: '#fff', flexShrink: 0,
-          }}>Hoy</span>
-        )}
-        {status === 'past' && (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-            stroke="var(--color-text-muted)" strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0 }}>
-            <polyline points="20,6 9,17 4,12"/>
-          </svg>
-        )}
-
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-          stroke="var(--color-text-muted)" strokeWidth="2" strokeLinecap="round"
-          style={{ transform: open ? 'rotate(180deg)' : 'none', transition: '0.2s', flexShrink: 0, marginLeft: 4 }}>
-          <path d="M6 9l6 6 6-6"/>
-        </svg>
-      </button>
+      </div>
 
       {open && (
-        <div style={{
-          padding: '0 14px 14px 62px',
-          fontSize: 13, lineHeight: 1.6,
-          color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)',
-          whiteSpace: 'pre-line',
-          borderTop: '1px solid var(--color-border)',
-          paddingTop: 12,
-        }}>
+        <div style={{ padding: '12px 14px 14px 62px', fontSize: 13, lineHeight: 1.6, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', whiteSpace: 'pre-line', borderTop: '1px solid var(--color-border)' }}>
           {doc.detail}
           {status === 'past' && (
             <div style={{ marginTop: 10, fontSize: 11, color: 'var(--color-text-muted)', fontStyle: 'italic' }}>
@@ -300,9 +308,10 @@ function IconSVG({ name }: { name: IconName }) {
 }
 
 /* ── Category detail view ───────────────────────────────── */
-function CategoryView({ label, docs, onBack }: {
+function CategoryView({ label, docs, currentPersonId, onBack }: {
   label: string
   docs: DocItem[]
+  currentPersonId?: string
   onBack: () => void
 }) {
   return (
@@ -326,7 +335,7 @@ function CategoryView({ label, docs, onBack }: {
         </p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {docs.map(doc => <ExpandableRow key={doc.id} doc={doc} />)}
+          {docs.map(doc => <ExpandableRow key={doc.id} doc={doc} currentPersonId={currentPersonId} />)}
         </div>
       )}
     </div>
@@ -399,12 +408,37 @@ function ProfileSection({ personId, onBack }: { personId: string; onBack: () => 
             </div>
           ))}
           {(['photoFront', 'photoBack'] as const).map(field => (
-            <label key={field} style={{ display: 'block', marginBottom: 8 }}>
-              <div style={{ fontSize: 11, fontWeight: 600, marginBottom: 4, color: 'var(--color-text-soft)' }}>{field === 'photoFront' ? 'Foto frente' : 'Foto dorso'}</div>
-              {p[field] ? <img src={p[field]} alt={field} style={{ width: '100%', borderRadius: 8, maxHeight: 100, objectFit: 'cover' }} />
-                : <div style={{ padding: '10px 12px', border: '1px dashed var(--color-border)', borderRadius: 8, fontSize: 12, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Tocá para agregar foto</div>}
-              <input type="file" accept="image/*" style={{ display: 'none' }} onChange={async e => { const f = e.target.files?.[0]; if (f) updatePassport(p.id, field, await toBase64(f)) }} />
-            </label>
+            <div key={field} style={{ marginBottom: 8 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, marginBottom: 4, color: 'var(--color-text-soft)' }}>
+                {field === 'photoFront' ? 'Foto frente' : 'Foto dorso'}
+              </div>
+              {p[field] ? (
+                <div style={{ position: 'relative' }}>
+                  <img src={p[field]} alt={field} style={{ width: '100%', borderRadius: 8, maxHeight: 100, objectFit: 'cover', display: 'block' }} />
+                  <button
+                    onClick={() => updatePassport(p.id, field, '')}
+                    style={{
+                      position: 'absolute', top: 6, right: 6,
+                      width: 26, height: 26, borderRadius: '50%',
+                      background: 'rgba(0,0,0,0.6)', border: 'none',
+                      cursor: 'pointer', color: '#fff',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                <label style={{ display: 'block', cursor: 'pointer' }}>
+                  <div style={{ padding: '10px 12px', border: '1px dashed var(--color-border)', borderRadius: 8, fontSize: 12, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>
+                    Tocá para agregar foto
+                  </div>
+                  <input type="file" accept="image/*" style={{ display: 'none' }} onChange={async e => { const f = e.target.files?.[0]; if (f) updatePassport(p.id, field, await toBase64(f)) }} />
+                </label>
+              )}
+            </div>
           ))}
         </div>
       ))}
