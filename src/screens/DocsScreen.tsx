@@ -215,9 +215,6 @@ function CategoryView({ label, docs, onBack }: {
   docs: { id: string; icon: IconName; title: string; sub: string; detail: string }[]
   onBack: () => void
 }) {
-  docs: { id: string; icon: IconName; title: string; sub: string; detail: string }[]
-  onBack: () => void
-}) {
   return (
     <div className="screen" style={{ padding: '20px' }}>
       <button onClick={onBack} style={{
