@@ -211,6 +211,10 @@ function ExpandableRow({ doc }: { doc: { icon: IconName; title: string; sub: str
 
 /* ── Category detail view ───────────────────────────────── */
 function CategoryView({ label, docs, onBack }: {
+  label: string
+  docs: { id: string; icon: IconName; title: string; sub: string; detail: string }[]
+  onBack: () => void
+}) {
   docs: { id: string; icon: IconName; title: string; sub: string; detail: string }[]
   onBack: () => void
 }) {
