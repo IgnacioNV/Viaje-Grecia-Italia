@@ -10,7 +10,56 @@
     "createdAt": "2026-06-26"
   },
   {
+    "id": "doc-excursion-katakolon",
+    "source": "seed",
+    "type": "ticket",
+    "ownerPersonId": "group",
+    "linkedActivityId": "act-9-2",
+    "title": "Excursión Katakolon · Olympia",
+    "file": "/seed-docs/excursion-katakolon.pdf",
+    "createdAt": "2026-06-26"
+  },
+  {
     "id": "doc-ticket-trulli",
+    "source": "seed",
+    "type": "ticket",
+    "ownerPersonId": "group",
+    "linkedActivityId": "act-3-1",
+    "title": "Tour Trulli de Alberobello",
+    "file": "/seed-docs/ticket-trulli.pdf",
+    "createdAt": "2026-05-01"
+  },
+  {
+    "id": "doc-ticket-acropolis",
+    "source": "seed",
+    "type": "ticket",
+    "ownerPersonId": "group",
+    "linkedActivityId": "act-8-2",
+    "title": "La Acrópolis — 7 adultos",
+    "file": "/seed-docs/ticket-acropolis.pdf",
+    "createdAt": "2026-05-01"
+  },
+  {
+    "id": "doc-boarding",
+    "source": "seed",
+    "type": "reservation",
+    "ownerPersonId": "group",
+    "linkedActivityId": "act-5-2",
+    "title": "Boarding pass MSC Crucero",
+    "file": "/seed-docs/boarding-msc.pdf",
+    "createdAt": "2026-05-01"
+  },
+  {
+    "id": "doc-hotel-bari",
+    "source": "seed",
+    "type": "reservation",
+    "ownerPersonId": "group",
+    "linkedActivityId": "act-1-2",
+    "title": "Hotel en Bari",
+    "file": "/seed-docs/hotel-bari.pdf",
+    "createdAt": "2026-05-01"
+  }
+]
     "source": "seed",
     "type": "ticket",
     "ownerPersonId": "group",
