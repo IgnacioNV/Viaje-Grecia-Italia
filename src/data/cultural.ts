@@ -1,29 +1,25 @@
 export interface DestinationInfo {
   image: string
-  gradient: string // fallback if image fails
   facts: { title: string; text: string }[]
 }
 
 export const DESTINATION_INFO: Record<string, DestinationInfo> = {
   'Bari': {
-    image: 'https://images.unsplash.com/photo-1565073624497-7144969a4172?w=800&q=80',
-    gradient: 'linear-gradient(135deg, #C2622E 0%, #E8A84A 100%)',
+    image: '/images/destinations/bari.svg',
     facts: [
       { title: 'Orecchiette', text: 'En el Arco Basso, las señoras del barrio hacen orecchiette a mano en las escaleras de sus casas. Es una tradición de siglos que sigue viva.' },
       { title: 'San Nicola', text: 'Las reliquias de San Nicolás —el original Santa Claus— descansan en Bari desde 1087, traídas desde Mira, Turquía, por marineros barianos.' },
     ],
   },
   'Monopoli': {
-    image: 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80',
-    gradient: 'linear-gradient(135deg, #C2622E 0%, #D4956A 100%)',
+    image: '/images/destinations/monopoli.svg',
     facts: [
       { title: 'Puerto milenario', text: 'El Porto Antico de Monopoli fue uno de los puertos más activos del Adriático durante la Edad Media, con conexiones comerciales hasta el Imperio Otomano.' },
       { title: 'Bastioni', text: 'Las murallas que rodean la ciudad fueron construidas por Carlos V de España en el siglo XVI para defenderse de los ataques turcos.' },
     ],
   },
   'Matera · Alberobello': {
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
-    gradient: 'linear-gradient(135deg, #8B6914 0%, #C4A05A 100%)',
+    image: '/images/destinations/matera-alberobello.svg',
     facts: [
       { title: 'La ciudad más antigua', text: 'Matera es una de las ciudades habitadas más antiguas del mundo, con asentamientos que datan del Paleolítico, hace más de 9.000 años.' },
       { title: 'Los Sassi', text: 'Los Sassi son viviendas excavadas en la roca que se usaron sin interrupción hasta 1950, cuando el gobierno italiano desalojó a sus 15.000 habitantes por considerarlas indignas.' },
@@ -31,70 +27,61 @@ export const DESTINATION_INFO: Record<string, DestinationInfo> = {
     ],
   },
   'Valle de Itria': {
-    image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
-    gradient: 'linear-gradient(135deg, #C2622E 0%, #E8B84A 100%)',
+    image: '/images/destinations/valle-de-itria.svg',
     facts: [
       { title: 'Polignano a Mare', text: 'El cantante italiano Domenico Modugno, creador de "Volare", nació en Polignano a Mare. Hay una estatua suya en el mirador principal.' },
       { title: 'Ostuni blanca', text: 'Ostuni se llama "La Città Bianca" porque todas las casas del centro histórico están pintadas de cal blanca, una tradición que empezó en el siglo XV para combatir la peste.' },
     ],
   },
   'Embarque': {
-    image: 'https://images.unsplash.com/photo-1548438294-1ad5d5f4f063?w=800&q=80',
-    gradient: 'linear-gradient(135deg, #1A5FAA 0%, #3EADD4 100%)',
+    image: '/images/destinations/embarque.svg',
     facts: [
       { title: 'El Adriático', text: 'El Mar Adriático tiene solo 170 metros de profundidad máxima, lo que lo hace uno de los mares más calmados del Mediterráneo. Ideal para un primer crucero.' },
     ],
   },
   'A bordo': {
-    image: 'https://images.unsplash.com/photo-1548438294-1ad5d5f4f063?w=800&q=80',
-    gradient: 'linear-gradient(135deg, #1A5FAA 0%, #3EADD4 100%)',
+    image: '/images/destinations/a-bordo.svg',
     facts: [
       { title: 'Vida a bordo', text: 'Los cruceros modernos tienen más empleados que pasajeros. Por cada 2-3 pasajeros hay un miembro de la tripulación trabajando para que todo funcione.' },
     ],
   },
   'Santorini': {
-    image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80',
-    gradient: 'linear-gradient(135deg, #1B3FA6 0%, #E8B84A 100%)',
+    image: '/images/destinations/santorini.svg',
     facts: [
       { title: 'La caldera', text: 'Santorini es el cráter de un supervolcán que explotó hace 3.600 años en una de las erupciones más grandes de la historia. La explosión posiblemente inspiró el mito de la Atlántida.' },
       { title: 'Cúpulas azules', text: 'Las famosas cúpulas azules de Oia son solo 7 en todo el pueblo. El azul representaba el cielo y el mar, y se creía que ahuyentaba a los espíritus malignos.' },
     ],
   },
   'Atenas': {
-    image: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=800&q=80',
-    gradient: 'linear-gradient(135deg, #1B3FA6 0%, #8B9EC8 100%)',
+    image: '/images/destinations/atenas.svg',
     facts: [
       { title: 'La Acrópolis', text: 'El Partenón tardó solo 15 años en construirse (447-432 a.C.), usando más de 100.000 toneladas de mármol del Monte Pentélico. Sus columnas no son perfectamente rectas —tienen una leve curvatura para parecer rectas al ojo humano.' },
       { title: 'Democracia', text: 'Atenas inventó la democracia en el siglo V a.C. Todos los ciudadanos votaban directamente en la Asamblea. El problema: solo eran ciudadanos los hombres libres adultos, excluyendo mujeres, esclavos y extranjeros.' },
     ],
   },
   'Katakolo': {
-    image: 'https://images.unsplash.com/photo-1601924638867-3a6de6b7a500?w=800&q=80',
-    gradient: 'linear-gradient(135deg, #2D5A27 0%, #7BAF6E 100%)',
+    image: '/images/destinations/katakolo.svg',
     facts: [
       { title: 'Los Juegos Olímpicos', text: 'Los primeros Juegos Olímpicos registrados se celebraron en Olimpia en el 776 a.C. Duraban 5 días e incluían carreras, lucha, lanzamiento de disco y carrera de carros.' },
       { title: 'La Llama Olímpica', text: 'La antorcha olímpica moderna se enciende aquí, en el Templo de Hera en Olimpia, usando un espejo parabólico y la luz del sol. Desde 1936 se lleva a la ciudad sede de los juegos.' },
     ],
   },
   'Cefalonia': {
-    image: 'https://images.unsplash.com/photo-1602088105661-e4a1acde3e1e?w=800&q=80',
-    gradient: 'linear-gradient(135deg, #1A5FAA 0%, #50C878 100%)',
+    image: '/images/destinations/cefalonia.svg',
     facts: [
       { title: 'Melissani', text: 'La cueva de Melissani tiene un lago subterráneo donde el agua parece cambiar de color entre azul y turquesa según la hora del día. En verano, el sol entra por el agujero del techo y el efecto es mágico.' },
       { title: 'Caretta caretta', text: 'Las tortugas bobas (Caretta caretta) anidan en las playas de Cefalonia desde hace millones de años. El puerto de Argostoli es famoso porque las tortugas vienen a buscar comida entre los botes pesqueros.' },
     ],
   },
   'Corfú': {
-    image: 'https://images.unsplash.com/photo-1580315905726-8f9b3b0c3c18?w=800&q=80',
-    gradient: 'linear-gradient(135deg, #1B3FA6 0%, #3EADD4 100%)',
+    image: '/images/destinations/corfu.svg',
     facts: [
       { title: 'Influencia veneciana', text: 'Corfú estuvo bajo dominio veneciano durante 400 años (1386-1797). Por eso su arquitectura parece Italia: balcones, callejones estrechos y la plaza Spianada, modelada sobre la Plaza de San Marcos de Venecia.' },
       { title: 'Cricket', text: 'Los corfiotes juegan cricket, un deporte que los ingleses introdujeron en el siglo XIX cuando controlaron la isla. Es el único lugar de Grecia donde se juega este deporte.' },
     ],
   },
   'Regreso a Bari': {
-    image: 'https://images.unsplash.com/photo-1565073624497-7144969a4172?w=800&q=80',
-    gradient: 'linear-gradient(135deg, #C2622E 0%, #E8A84A 100%)',
+    image: '/images/destinations/bari.svg',
     facts: [
       { title: 'Fin del viaje', text: 'Recorrieron más de 2.500 km por el Mediterráneo, visitaron 3 países y descubrieron lugares que tienen miles de años de historia. No está mal para unas vacaciones.' },
     ],

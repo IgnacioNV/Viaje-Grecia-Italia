@@ -158,7 +158,7 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
       <div style={{
         position: 'relative', margin: '16px 20px 0',
         borderRadius: 20, overflow: 'hidden', height: 180,
-        background: info?.gradient ?? 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)',
+        background: 'var(--color-primary-10)',
       }}>
         {info?.image && (
           <img
@@ -166,7 +166,6 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
             alt={day.destination}
             style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
             loading="lazy"
-            onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
           />
         )}
           <div style={{
