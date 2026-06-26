@@ -13,7 +13,6 @@ class TripDatabase extends Dexie {
       journalEntries:   '++id, authorId, date',
       personalProfiles: '++id, &personId',
     })
-    // v3: passports becomes array, migrate old passport fields
     this.version(3).stores({
       localDocuments:   '++id, ownerPersonId, type, createdAt',
       journalEntries:   '++id, authorId, date',
@@ -22,7 +21,6 @@ class TripDatabase extends Dexie {
       return tx.table('personalProfiles').toCollection().modify((profile: any) => {
         if (!profile.passports) {
           profile.passports = []
-          // migrate old single passport fields if present
           if (profile.passportFront || profile.passportBack) {
             profile.passports.push({
               id: crypto.randomUUID(),
@@ -33,6 +31,22 @@ class TripDatabase extends Dexie {
           }
           delete profile.passportFront
           delete profile.passportBack
+        }
+      })
+    })
+    // v4: moods array + facePhoto in personalProfiles
+    this.version(4).stores({
+      localDocuments:   '++id, ownerPersonId, type, createdAt',
+      journalEntries:   '++id, authorId, date',
+      personalProfiles: '++id, &personId',
+    }).upgrade(tx => {
+      // migrate mood (string) → moods (string[])
+      return tx.table('journalEntries').toCollection().modify((entry: any) => {
+        if (entry.mood && !entry.moods) {
+          entry.moods = [entry.mood]
+          delete entry.mood
+        } else if (!entry.moods) {
+          entry.moods = []
         }
       })
     })

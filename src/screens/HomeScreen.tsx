@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { CopyButton, StaticFilePreview } from '../components/ui/FilePreview'
 import itinerary from '../data/itinerary.json'
 import seedDocs from '../data/documents.seed.json'
 import { getDestinationInfo } from '../data/cultural'
@@ -44,6 +45,11 @@ export function HomeScreen({ personId, personName }: HomeScreenProps) {
   const [selectedIdx, setSelectedIdx] = useState(todayIdx)
   const [showProfile, setShowProfile] = useState(false)
 
+  const homeProfile = useLiveQuery(
+    () => db.personalProfiles.where('personId').equals(personId).first(),
+    [personId]
+  )
+
   const displayDay = tab === 'today' ? DAYS[todayIdx] : DAYS[selectedIdx]
   const initials = personName.slice(0, 2).toUpperCase()
 
@@ -57,14 +63,14 @@ export function HomeScreen({ personId, personName }: HomeScreenProps) {
           </p>
           <button onClick={() => setShowProfile(true)} style={{
             width: 36, height: 36, borderRadius: '50%',
-            background: 'var(--color-primary)', color: '#fff',
-            border: 'none', cursor: 'pointer',
-            fontSize: 13, fontWeight: 700,
-            fontFamily: 'var(--font-body)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0,
+            border: 'none', cursor: 'pointer', flexShrink: 0,
+            overflow: 'hidden', padding: 0,
+            background: 'var(--color-primary)',
           }}>
-            {initials}
+            {homeProfile?.facePhoto
+              ? <img src={homeProfile.facePhoto} alt={personName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              : <span style={{ color: '#fff', fontSize: 13, fontWeight: 700, fontFamily: 'var(--font-body)' }}>{initials}</span>
+            }
           </button>
         </div>
 
@@ -243,69 +249,82 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
 /* ── Activity Card ──────────────────────────────────────── */
 function ActivityCard({ activity }: { activity: Activity }) {
   const doc = getDocForActivity(activity.id)
-  const notes = (activity as Activity & { notes?: string }).notes
+  const notes = activity.notes
+  const [staticPreview, setStaticPreview] = useState<{ path: string; title: string } | null>(null)
 
   return (
-    <div style={{
-      background: 'var(--color-surface)', borderRadius: 16, padding: '14px 16px',
-      border: 'var(--card-border)', boxShadow: 'var(--card-shadow)',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
-        <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--color-text)', flex: 1, lineHeight: 1.3 }}>
-          {activity.title}
+    <>
+      <div style={{
+        background: 'var(--color-surface)', borderRadius: 16, padding: '14px 16px',
+        border: 'var(--card-border)', boxShadow: 'var(--card-shadow)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
+          <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--color-text)', flex: 1, lineHeight: 1.3 }}>
+            {activity.title}
+          </div>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 4,
+            padding: '4px 10px', borderRadius: 20,
+            background: 'var(--color-primary-10)', flexShrink: 0,
+          }}>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+              stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/>
+            </svg>
+            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-primary)', fontFamily: 'var(--font-detail)' }}>
+              {activity.time}
+            </span>
+          </div>
         </div>
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 4,
-          padding: '4px 10px', borderRadius: 20,
-          background: 'var(--color-primary-10)', flexShrink: 0,
-        }}>
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-            stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round">
-            <circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/>
-          </svg>
-          <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-primary)', fontFamily: 'var(--font-detail)' }}>
-            {activity.time}
-          </span>
-        </div>
+
+        {activity.location && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 8 }}>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+              stroke="var(--color-accent)" strokeWidth="2.2" strokeLinecap="round">
+              <path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/>
+              <circle cx="12" cy="9" r="2.5"/>
+            </svg>
+            <span style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
+              {activity.location}
+            </span>
+          </div>
+        )}
+
+        {notes && (
+          <p style={{ marginTop: 10, fontSize: 13, lineHeight: 1.55, color: 'var(--color-accent)', fontStyle: 'italic', fontFamily: 'var(--font-detail)' }}>
+            {notes}
+          </p>
+        )}
+
+        {doc && (
+          <button
+            onClick={() => setStaticPreview({ path: doc.file, title: doc.title })}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              marginTop: 10, padding: '5px 12px', borderRadius: 20,
+              border: '1px solid var(--color-primary-20)',
+              background: 'var(--color-primary-10)',
+              fontSize: 11, fontWeight: 500, color: 'var(--color-primary)',
+              cursor: 'pointer',
+            }}>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            {doc.title}
+          </button>
+        )}
       </div>
 
-      {activity.location && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 8 }}>
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-            stroke="var(--color-accent)" strokeWidth="2.2" strokeLinecap="round">
-            <path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/>
-            <circle cx="12" cy="9" r="2.5"/>
-          </svg>
-          <span style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
-            {activity.location}
-          </span>
-        </div>
+      {staticPreview && (
+        <StaticFilePreview
+          filePath={staticPreview.path}
+          title={staticPreview.title}
+          onClose={() => setStaticPreview(null)}
+        />
       )}
-
-      {notes && (
-        <p style={{
-          marginTop: 10, fontSize: 13, lineHeight: 1.55,
-          color: 'var(--color-accent)', fontStyle: 'italic', fontFamily: 'var(--font-detail)',
-        }}>{notes}</p>
-      )}
-
-      {doc && (
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 5,
-          marginTop: 10, padding: '4px 10px', borderRadius: 20,
-          border: '1px solid var(--color-primary-20)',
-          background: 'var(--color-primary-10)',
-          fontSize: 11, fontWeight: 500, color: 'var(--color-primary)',
-        }}>
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14,2 14,8 20,8"/>
-          </svg>
-          {doc.title}
-        </div>
-      )}
-    </div>
+    </>
   )
 }
 
@@ -340,12 +359,18 @@ function ProfileSheet({ personId, personName, onClose }: {
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
-          <div style={{
-            width: 56, height: 56, borderRadius: '50%',
-            background: 'var(--color-primary)', color: '#fff',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 20, fontWeight: 700, flexShrink: 0,
-          }}>{initials}</div>
+          {profile?.facePhoto ? (
+            <div style={{ width: 56, height: 56, borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
+              <img src={profile.facePhoto} alt={personName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+          ) : (
+            <div style={{
+              width: 56, height: 56, borderRadius: '50%',
+              background: 'var(--color-primary)', color: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 20, fontWeight: 700, flexShrink: 0,
+            }}>{initials}</div>
+          )}
           <div>
             <h2 style={{ fontSize: 22, marginBottom: 2 }}>{personName}</h2>
             <p style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
@@ -372,8 +397,13 @@ function ProfileSheet({ personId, personName, onClose }: {
                   borderRadius: 12, border: '1px solid var(--color-border)',
                 }}>
                   <div style={{ fontWeight: 600, fontSize: 14 }}>{p.country || 'País no especificado'}</div>
-                  {p.number && <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>N° {p.number}</div>}
-                  {p.expiry && <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>Vence: {p.expiry}</div>}
+                  {p.number && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
+                      <span style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>N° {p.number}</span>
+                      <CopyButton text={p.number} label="Copiar" />
+                    </div>
+                  )}
+                  {p.expiry && <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>Vence: {p.expiry}</div>}
                   {p.photoFront && (
                     <img src={p.photoFront} alt="Pasaporte" style={{ width: '100%', borderRadius: 8, marginTop: 8, maxHeight: 120, objectFit: 'cover' }} />
                   )}
@@ -398,13 +428,15 @@ function ProfileSheet({ personId, personName, onClose }: {
           <div style={{ marginBottom: 8 }}>
             <p className="eyebrow" style={{ marginBottom: 8 }}>Teléfonos</p>
             {profile.phoneNumber && (
-              <div style={{ padding: '10px 14px', background: 'var(--color-bg)', borderRadius: 10, border: '1px solid var(--color-border)', marginBottom: 6, fontSize: 13, fontFamily: 'var(--font-detail)' }}>
-                {profile.phoneNumber}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--color-bg)', borderRadius: 10, border: '1px solid var(--color-border)', marginBottom: 6 }}>
+                <span style={{ fontSize: 13, fontFamily: 'var(--font-detail)' }}>{profile.phoneNumber}</span>
+                <CopyButton text={profile.phoneNumber} />
               </div>
             )}
             {profile.emergencyPhone && (
-              <div style={{ padding: '10px 14px', background: 'var(--color-bg)', borderRadius: 10, border: '1px solid var(--color-border)', fontSize: 13, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
-                Emergencia: {profile.emergencyPhone}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--color-bg)', borderRadius: 10, border: '1px solid var(--color-border)' }}>
+                <span style={{ fontSize: 13, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>Emergencia: {profile.emergencyPhone}</span>
+                <CopyButton text={profile.emergencyPhone} />
               </div>
             )}
           </div>
@@ -435,6 +467,7 @@ function ProfileEditor({ personId, profile, onDone, onClose }: {
   const [phone, setPhone] = useState(profile?.phoneNumber ?? '')
   const [emergency, setEmergency] = useState(profile?.emergencyPhone ?? '')
   const [insurance, setInsurance] = useState<string | undefined>(profile?.insuranceFile)
+  const [facePhoto, setFacePhoto] = useState<string | undefined>(profile?.facePhoto)
   const [saving, setSaving] = useState(false)
 
   const toBase64 = (file: File): Promise<string> => new Promise((res, rej) => {
@@ -456,7 +489,7 @@ function ProfileEditor({ personId, profile, onDone, onClose }: {
   const handleSave = async () => {
     setSaving(true)
     try {
-      const data = { personId, passports, phoneNumber: phone || undefined, emergencyPhone: emergency || undefined, insuranceFile: insurance, updatedAt: new Date().toISOString() }
+      const data = { personId, passports, phoneNumber: phone || undefined, emergencyPhone: emergency || undefined, insuranceFile: insurance, facePhoto, updatedAt: new Date().toISOString() }
       const existing = await db.personalProfiles.where('personId').equals(personId).first()
       if (existing?.id) await db.personalProfiles.update(existing.id, data)
       else await db.personalProfiles.add(data as any)
@@ -481,6 +514,36 @@ function ProfileEditor({ personId, profile, onDone, onClose }: {
           <h3>Editar perfil</h3>
           <button onClick={onDone} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', fontSize: 13 }}>Cancelar</button>
         </div>
+
+        {/* Face photo */}
+        <p className="eyebrow" style={{ marginBottom: 10 }}>Foto de perfil</p>
+        <label style={{ display: 'block', marginBottom: 20, textAlign: 'center', cursor: 'pointer' }}>
+          {facePhoto ? (
+            <div style={{ position: 'relative', display: 'inline-block' }}>
+              <img src={facePhoto} alt="foto" style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover' }} />
+              <div style={{ position: 'absolute', bottom: 0, right: 0, width: 24, height: 24, borderRadius: '50%', background: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+              </div>
+            </div>
+          ) : (
+            <div style={{
+              width: 80, height: 80, borderRadius: '50%', margin: '0 auto',
+              background: 'var(--color-primary-10)', border: '2px dashed var(--color-primary-20)',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+              gap: 4,
+            }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="1.8" strokeLinecap="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+              <span style={{ fontSize: 9, color: 'var(--color-primary)', fontFamily: 'var(--font-detail)' }}>Tu foto</span>
+            </div>
+          )}
+          <input type="file" accept="image/*" style={{ display: 'none' }} onChange={async e => { const f = e.target.files?.[0]; if (f) setFacePhoto(await toBase64(f)) }} />
+        </label>
 
         {/* Passports */}
         <p className="eyebrow" style={{ marginBottom: 10 }}>Pasaportes</p>

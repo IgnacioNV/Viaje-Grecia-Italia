@@ -1,9 +1,15 @@
 import { useState, useRef } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { IconStamp } from '../components/ui/IconStamp'
+import { FilePreview, StaticFilePreview, CopyButton } from '../components/ui/FilePreview'
 import { db } from '../db/dexie'
-import type { DocumentType, LocalDocument } from '../types'
+import seedDocs from '../data/documents.seed.json'
+import people from '../data/people.json'
+import type { DocumentType, LocalDocument, SeedDocument } from '../types'
 import type { IconName } from '../components/ui/IconStamp'
+
+const SEED_DOCS = seedDocs as SeedDocument[]
+const PEOPLE = people as { id: string; name: string }[]
 
 // Fecha del evento — para calcular estado temporal
 interface DocItem {
@@ -15,6 +21,9 @@ interface DocItem {
   eventDate?: string    // YYYY-MM-DD
   localId?: number      // set only for locally uploaded docs
   ownerPersonId?: string
+  passportNumber?: string   // for copy button
+  photoFront?: string       // for passport preview
+  seedFilePath?: string     // for seed doc preview
 }
 
 const CATEGORY_DOCS: Record<string, DocItem[]> = {
@@ -73,6 +82,36 @@ export function DocsScreen({ personId }: DocsScreenProps) {
   const [section, setSection] = useState<DocSection>('overview')
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('tickets')
   const localDocs = useLiveQuery(() => db.localDocuments.toArray(), []) ?? []
+  const allProfiles = useLiveQuery(() => db.personalProfiles.toArray(), []) ?? []
+
+  // Passports from all personal profiles
+  const profilePassportDocs: DocItem[] = allProfiles.flatMap(profile => {
+    const person = PEOPLE.find(p => p.id === profile.personId)
+    return (profile.passports ?? []).map(passport => ({
+      id: `pp-${profile.personId}-${passport.id}`,
+      title: `Pasaporte${passport.country ? ` · ${passport.country}` : ''}`,
+      sub: person?.name ?? profile.personId,
+      icon: 'passport' as IconName,
+      detail: [
+        person?.name && `Titular: ${person.name}`,
+        passport.country && `País: ${passport.country}`,
+        passport.number && `N°: ${passport.number}`,
+        passport.expiry && `Vence: ${passport.expiry}`,
+      ].filter(Boolean).join('\n'),
+      passportNumber: passport.number,
+      photoFront: passport.photoFront,
+    }))
+  })
+
+  // Seed docs as DocItems (for preview)
+  const seedDocItems: DocItem[] = SEED_DOCS.map(doc => ({
+    id: doc.id,
+    title: doc.title,
+    sub: doc.ownerPersonId === 'group' ? 'Compartido · Grupo' : doc.ownerPersonId,
+    icon: (doc.type === 'ticket' ? 'ticket' : doc.type === 'reservation' ? 'reservation' : 'document') as IconName,
+    detail: `Tipo: ${doc.type}\nFecha: ${doc.createdAt}`,
+    seedFilePath: doc.file,
+  }))
 
   // Merge local docs into categories by type
   const localByCategory: Record<string, DocItem[]> = {
@@ -104,7 +143,11 @@ export function DocsScreen({ personId }: DocsScreenProps) {
   if (section === 'category') return (
     <CategoryView
       label={CATEGORY_LABELS[activeCategory].label}
-      docs={[...CATEGORY_DOCS[activeCategory], ...(localByCategory[activeCategory] ?? [])]}
+      docs={[
+        ...(activeCategory === 'pasaportes' ? profilePassportDocs : []),
+        ...CATEGORY_DOCS[activeCategory],
+        ...(localByCategory[activeCategory] ?? []),
+      ]}
       currentPersonId={personId}
       onBack={() => setSection('overview')}
     />
@@ -114,7 +157,8 @@ export function DocsScreen({ personId }: DocsScreenProps) {
     ...CATEGORY_DOCS.transporte,
     ...CATEGORY_DOCS.tickets,
     ...CATEGORY_DOCS.hoteles,
-  ].sort((a, b) => (a.eventDate ?? '') < (b.eventDate ?? '') ? -1 : 1)
+    ...seedDocItems,
+  ].sort((a, b) => (a.eventDate ?? 'z') < (b.eventDate ?? 'z') ? -1 : 1)
 
   return (
     <div className="screen">
@@ -152,7 +196,7 @@ export function DocsScreen({ personId }: DocsScreenProps) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 24 }}>
           {(Object.keys(CATEGORY_LABELS) as CategoryKey[]).map(key => {
             const { label, icon } = CATEGORY_LABELS[key]
-            const count = CATEGORY_DOCS[key].length + (localByCategory[key]?.length ?? 0)
+            const count = (key === 'pasaportes' ? profilePassportDocs.length : 0) + CATEGORY_DOCS[key].length + (localByCategory[key]?.length ?? 0)
             return (
               <button key={key} onClick={() => { setActiveCategory(key); setSection('category') }} style={{
                 padding: '14px 14px', textAlign: 'left', cursor: 'pointer',
@@ -235,9 +279,10 @@ export function DocsScreen({ personId }: DocsScreenProps) {
 function ExpandableRow({ doc, currentPersonId }: { doc: DocItem; currentPersonId?: string }) {
   const [open, setOpen] = useState(false)
   const [previewSrc, setPreviewSrc] = useState<string | null>(null)
+  const [staticPreview, setStaticPreview] = useState<{ path: string; title: string } | null>(null)
   const status = getDocStatus(doc.eventDate)
   const canDelete = !!(doc.localId && doc.ownerPersonId && doc.ownerPersonId === currentPersonId)
-  const canPreview = !!doc.localId
+  const canPreview = !!(doc.localId || doc.seedFilePath)
 
   const statusConfig = {
     today:    { bg: 'var(--color-surface)',    border: '2px solid var(--color-accent)' },
@@ -247,6 +292,7 @@ function ExpandableRow({ doc, currentPersonId }: { doc: DocItem; currentPersonId
   const cfg = statusConfig[status]
 
   const handlePreview = async () => {
+    if (doc.seedFilePath) { setStaticPreview({ path: doc.seedFilePath, title: doc.title }); return }
     if (!doc.localId) return
     const localDoc = await db.localDocuments.get(doc.localId)
     if (localDoc?.fileBase64) setPreviewSrc(localDoc.fileBase64)
@@ -303,6 +349,15 @@ function ExpandableRow({ doc, currentPersonId }: { doc: DocItem; currentPersonId
         {open && (
           <div style={{ padding: '12px 14px 14px 62px', fontSize: 13, lineHeight: 1.6, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', whiteSpace: 'pre-line', borderTop: '1px solid var(--color-border)' }}>
             {doc.detail}
+            {doc.photoFront && (
+              <img src={doc.photoFront} alt="Pasaporte" onClick={() => setPreviewSrc(doc.photoFront!)}
+                style={{ width: '100%', borderRadius: 8, marginTop: 10, maxHeight: 120, objectFit: 'cover', cursor: 'pointer' }} />
+            )}
+            {doc.passportNumber && (
+              <div style={{ marginTop: 10 }}>
+                <CopyButton text={doc.passportNumber} label={`Copiar N° ${doc.passportNumber}`} />
+              </div>
+            )}
             {status === 'past' && (
               <div style={{ marginTop: 10, fontSize: 11, color: 'var(--color-text-muted)', fontStyle: 'italic' }}>
                 Este evento ya pasó. Podés seguir viendo el documento si lo necesitás.
@@ -313,35 +368,12 @@ function ExpandableRow({ doc, currentPersonId }: { doc: DocItem; currentPersonId
       </div>
 
       {previewSrc && <FilePreview src={previewSrc} onClose={() => setPreviewSrc(null)} />}
+      {staticPreview && <StaticFilePreview filePath={staticPreview.path} title={staticPreview.title} onClose={() => setStaticPreview(null)} />}
     </>
   )
 }
 
-/* ── File Preview overlay ────────────────────────────────── */
-function FilePreview({ src, onClose }: { src: string; onClose: () => void }) {
-  const isPdf = src.startsWith('data:application/pdf')
-  return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.92)', zIndex: 300, display: 'flex', flexDirection: 'column' }}>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '16px 20px' }}>
-        <button onClick={onClose} style={{
-          width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.15)',
-          border: 'none', cursor: 'pointer', color: '#fff',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 16px 32px' }}>
-        {isPdf
-          ? <iframe src={src} style={{ width: '100%', height: '100%', borderRadius: 12, border: 'none' }} title="Documento" />
-          : <img src={src} alt="Vista previa" style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: 12, objectFit: 'contain' }} />
-        }
-      </div>
-    </div>
-  )
-}
+
 
 /* ── Inline SVG helper for utility buttons ──────────────── */
 function IconSVG({ name }: { name: IconName }) {

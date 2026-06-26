@@ -22,6 +22,7 @@ export interface Activity {
   period: 'morning' | 'afternoon' | 'night'
   scope: 'group' | string[]
   documentRef?: string
+  notes?: string
 }
 
 export interface Day {
@@ -71,7 +72,8 @@ export interface JournalEntry {
   date: string
   text: string
   photoBase64?: string
-  mood?: string
+  moods?: string[]   // múltiples moods
+  mood?: string      // legacy
 }
 
 export interface PersonalProfile {
@@ -81,5 +83,6 @@ export interface PersonalProfile {
   emergencyPhone?: string
   passports: Passport[]
   insuranceFile?: string
+  facePhoto?: string
   updatedAt: string
 }
