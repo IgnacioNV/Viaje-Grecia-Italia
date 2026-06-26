@@ -103,15 +103,23 @@ export function DocsScreen({ personId }: DocsScreenProps) {
     }))
   })
 
-  // Seed docs as DocItems (for preview)
+  // Seed docs as DocItems (for preview and category views)
   const seedDocItems: DocItem[] = SEED_DOCS.map(doc => ({
     id: doc.id,
     title: doc.title,
-    sub: doc.ownerPersonId === 'group' ? 'Compartido · Grupo' : doc.ownerPersonId,
+    sub: 'Compartido · Grupo',
     icon: (doc.type === 'ticket' ? 'ticket' : doc.type === 'reservation' ? 'reservation' : 'document') as IconName,
-    detail: `Tipo: ${doc.type}\nFecha: ${doc.createdAt}`,
+    detail: `Todos los integrantes · ${doc.createdAt}`,
     seedFilePath: doc.file,
   }))
+
+  // Seed docs grouped by category
+  const seedByCategory: Record<string, DocItem[]> = {
+    pasaportes: seedDocItems.filter(d => SEED_DOCS.find(s => s.id === d.id)?.type === 'passport'),
+    hoteles:    seedDocItems.filter(d => SEED_DOCS.find(s => s.id === d.id)?.type === 'reservation'),
+    transporte: seedDocItems.filter(d => SEED_DOCS.find(s => s.id === d.id)?.type === 'voucher'),
+    tickets:    seedDocItems.filter(d => SEED_DOCS.find(s => s.id === d.id)?.type === 'ticket'),
+  }
 
   // Merge local docs into categories by type
   const localByCategory: Record<string, DocItem[]> = {
@@ -145,6 +153,7 @@ export function DocsScreen({ personId }: DocsScreenProps) {
       label={CATEGORY_LABELS[activeCategory].label}
       docs={[
         ...(activeCategory === 'pasaportes' ? profilePassportDocs : []),
+        ...(seedByCategory[activeCategory] ?? []),
         ...CATEGORY_DOCS[activeCategory],
         ...(localByCategory[activeCategory] ?? []),
       ]}
@@ -196,7 +205,10 @@ export function DocsScreen({ personId }: DocsScreenProps) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 24 }}>
           {(Object.keys(CATEGORY_LABELS) as CategoryKey[]).map(key => {
             const { label, icon } = CATEGORY_LABELS[key]
-            const count = (key === 'pasaportes' ? profilePassportDocs.length : 0) + CATEGORY_DOCS[key].length + (localByCategory[key]?.length ?? 0)
+            const count = (key === 'pasaportes' ? profilePassportDocs.length : 0)
+              + (seedByCategory[key]?.length ?? 0)
+              + CATEGORY_DOCS[key].length
+              + (localByCategory[key]?.length ?? 0)
             return (
               <button key={key} onClick={() => { setActiveCategory(key); setSection('category') }} style={{
                 padding: '14px 14px', textAlign: 'left', cursor: 'pointer',
