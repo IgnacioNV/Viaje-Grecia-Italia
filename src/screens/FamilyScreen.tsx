@@ -1,9 +1,10 @@
 import { useState } from 'react'
+import { CopyButton, FilePreview } from '../components/ui/FilePreview'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { IconStamp } from '../components/ui/IconStamp'
 import { db } from '../db/dexie'
 import people from '../data/people.json'
-import type { Person, Passport } from '../types'
+import type { Person, Passport, PersonalProfile } from '../types'
 
 const PEOPLE = people as Person[]
 
@@ -59,7 +60,7 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
   const profile = useLiveQuery(
     () => db.personalProfiles.where('personId').equals(person.id).first(),
     [person.id]
-  )
+  ) as PersonalProfile | undefined
 
   const passports: Passport[] = profile?.passports ?? []
   const [previewSrc, setPreviewSrc] = useState<string | null>(null)
@@ -80,16 +81,26 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
           Todos los viajeros
         </button>
 
-        {/* Avatar */}
+        {/* Avatar — facePhoto or initials */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 24 }}>
-          <div style={{
-            width: 72, height: 72, borderRadius: 'var(--stamp-radius)',
-            background: 'var(--color-primary-10)', border: 'var(--stamp-border)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 28, fontWeight: 700, color: 'var(--color-primary)', marginBottom: 12,
-          }}>
-            {person.name.charAt(0)}
-          </div>
+          {profile?.facePhoto ? (
+            <button onClick={() => setPreviewSrc(profile.facePhoto!)} style={{
+              width: 80, height: 80, borderRadius: '50%', border: 'none',
+              padding: 0, cursor: 'pointer', marginBottom: 12, overflow: 'hidden',
+            }}>
+              <img src={profile.facePhoto} alt={person.name}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </button>
+          ) : (
+            <div style={{
+              width: 72, height: 72, borderRadius: '50%',
+              background: 'var(--color-primary-10)', border: 'var(--stamp-border)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 28, fontWeight: 700, color: 'var(--color-primary)', marginBottom: 12,
+            }}>
+              {person.name.charAt(0)}
+            </div>
+          )}
           <h2 style={{ fontSize: 24, marginBottom: 4 }}>{person.name}</h2>
           <div style={{
             padding: '3px 12px', borderRadius: 20,
@@ -102,7 +113,7 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
 
       <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
 
-        {/* Passports from Dexie profile */}
+        {/* Passports */}
         {passports.length > 0 && (
           <>
             <p className="eyebrow" style={{ padding: '0 4px', marginBottom: 4 }}>
@@ -110,30 +121,34 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
             </p>
             {passports.map((p, idx) => (
               <div key={p.id} className="card" style={{ padding: '14px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: (p.photoFront || p.photoBack) ? 12 : 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
                   <IconStamp icon="passport" size={38} />
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 600, fontSize: 15 }}>
-                      Pasaporte {passports.length > 1 ? idx + 1 : ''} {p.country ? `· ${p.country}` : ''}
+                      Pasaporte {passports.length > 1 ? idx + 1 : ''}{p.country ? ` · ${p.country}` : ''}
                     </div>
-                    {p.number && (
-                      <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
-                        N° {p.number}
-                      </div>
-                    )}
                     {p.expiry && (
-                      <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
+                      <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
                         Vence: {p.expiry}
                       </div>
                     )}
                   </div>
-                  <span style={{
-                    fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 8,
-                    background: '#d8f3dc', color: '#2d6a4f',
-                  }}>Listo</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 8, background: '#d8f3dc', color: '#2d6a4f' }}>
+                    Listo
+                  </span>
                 </div>
 
-                {/* Passport photos */}
+                {/* Number + copy */}
+                {p.number && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, paddingLeft: 50 }}>
+                    <span style={{ fontSize: 13, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
+                      N° {p.number}
+                    </span>
+                    <CopyButton text={p.number} label="Copiar N°" />
+                  </div>
+                )}
+
+                {/* Photos */}
                 {(p.photoFront || p.photoBack) && (
                   <div style={{ display: 'flex', gap: 8 }}>
                     {p.photoFront && (
@@ -170,9 +185,7 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
               <IconStamp icon="shield" size={38} />
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 600, fontSize: 15 }}>Póliza de seguro</div>
-                <div style={{ fontSize: 12, color: 'var(--color-primary)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
-                  Tocá para ver
-                </div>
+                <div style={{ fontSize: 12, color: 'var(--color-primary)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>Tocá para ver</div>
               </div>
             </button>
           </>
@@ -185,29 +198,30 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
             {profile?.phoneNumber && (
               <div className="card" style={{ padding: '14px', display: 'flex', alignItems: 'center', gap: 12 }}>
                 <IconStamp icon="family" size={38} />
-                <div>
+                <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 600, fontSize: 15 }}>Teléfono</div>
                   <div style={{ fontSize: 13, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
                     {profile.phoneNumber}
                   </div>
                 </div>
+                <CopyButton text={profile.phoneNumber} />
               </div>
             )}
             {profile?.emergencyPhone && (
               <div className="card" style={{ padding: '14px', display: 'flex', alignItems: 'center', gap: 12 }}>
                 <IconStamp icon="family" size={38} />
-                <div>
+                <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 600, fontSize: 15 }}>Emergencia</div>
                   <div style={{ fontSize: 13, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
                     {profile.emergencyPhone}
                   </div>
                 </div>
+                <CopyButton text={profile.emergencyPhone} />
               </div>
             )}
           </>
         )}
 
-        {/* Seed data (from people.json) */}
         {person.flightOrigin && (
           <>
             <p className="eyebrow" style={{ padding: '0 4px', marginBottom: 4 }}>Vuelo propio</p>
@@ -215,15 +229,12 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
               <IconStamp icon="flight" size={38} />
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 600, fontSize: 15 }}>Vuelo individual</div>
-                <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
-                  {person.flightOrigin}
-                </div>
+                <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>{person.flightOrigin}</div>
               </div>
             </div>
           </>
         )}
 
-        {/* Empty state */}
         {!profile && !person.flightOrigin && (
           <div style={{ textAlign: 'center', padding: '32px 0', color: 'var(--color-text-muted)' }}>
             <p style={{ fontSize: 14, fontFamily: 'var(--font-detail)' }}>
@@ -233,57 +244,7 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
         )}
       </div>
 
-      {/* Image preview overlay */}
-      {previewSrc && (
-        <FilePreview src={previewSrc} onClose={() => setPreviewSrc(null)} />
-      )}
-    </div>
-  )
-}
-
-/* ── File Preview ────────────────────────────────────────── */
-function FilePreview({ src, onClose }: { src: string; onClose: () => void }) {
-  const isPdf = src.startsWith('data:application/pdf')
-
-  return (
-    <div style={{
-      position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.92)',
-      zIndex: 300, display: 'flex', flexDirection: 'column',
-    }}>
-      {/* Header */}
-      <div style={{
-        display: 'flex', justifyContent: 'flex-end',
-        padding: '16px 20px',
-      }}>
-        <button onClick={onClose} style={{
-          width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.15)',
-          border: 'none', cursor: 'pointer', color: '#fff',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>
-
-      {/* Content */}
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 16px 32px' }}>
-        {isPdf ? (
-          <iframe
-            src={src}
-            style={{ width: '100%', height: '100%', borderRadius: 12, border: 'none' }}
-            title="Documento"
-          />
-        ) : (
-          <img
-            src={src}
-            alt="Vista previa"
-            style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: 12, objectFit: 'contain' }}
-          />
-        )}
-      </div>
+      {previewSrc && <FilePreview src={previewSrc} onClose={() => setPreviewSrc(null)} />}
     </div>
   )
 }

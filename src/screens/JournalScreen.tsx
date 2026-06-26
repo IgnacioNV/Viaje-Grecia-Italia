@@ -133,7 +133,7 @@ function JournalCard({ entry, onEdit, onDelete }: {
 }) {
   const date = new Date(entry.date)
   const [showActions, setShowActions] = useState(false)
-  const moodColor = MOODS.find(m => m.label === entry.mood)?.color
+
 
   return (
     <div style={{
@@ -173,15 +173,22 @@ function JournalCard({ entry, onEdit, onDelete }: {
         </div>
       )}
 
-      {entry.mood && (
-        <div style={{
-          display: 'inline-block', marginBottom: 8,
-          padding: '3px 10px', borderRadius: 20,
-          background: moodColor ? `${moodColor}20` : 'var(--color-primary-10)',
-          border: `1px solid ${moodColor ?? 'var(--color-primary)'}40`,
-          fontSize: 11, fontWeight: 600, color: moodColor ?? 'var(--color-primary)',
-          fontFamily: 'var(--font-detail)',
-        }}>{entry.mood}</div>
+      {(entry.moods?.length ?? 0) > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 8 }}>
+          {(entry.moods ?? []).map(m => {
+            const moodColor = MOODS.find(x => x.label === m)?.color
+            return (
+              <span key={m} style={{
+                display: 'inline-block', padding: '2px 8px', borderRadius: 20,
+                background: moodColor ? `${moodColor}20` : 'var(--color-primary-10)',
+                border: `1px solid ${moodColor ?? 'var(--color-primary)'}40`,
+                fontSize: 11, fontWeight: 600,
+                color: moodColor ?? 'var(--color-primary)',
+                fontFamily: 'var(--font-detail)',
+              }}>{m}</span>
+            )
+          })}
+        </div>
       )}
 
       <p style={{
@@ -205,7 +212,7 @@ function ComposeEntry({ personId, existing, onDone }: {
   personId: string; existing?: JournalEntry; onDone: () => void
 }) {
   const [text, setText] = useState(existing?.text ?? '')
-  const [mood, setMood] = useState(existing?.mood ?? '')
+  const [moods, setMoods] = useState<string[]>(existing?.moods ?? (existing?.mood ? [existing.mood] : []))
   const [photo, setPhoto] = useState<string | undefined>(existing?.photoBase64)
   const [saving, setSaving] = useState(false)
 
@@ -222,11 +229,11 @@ function ComposeEntry({ personId, existing, onDone }: {
     setSaving(true)
     try {
       if (existing?.id) {
-        await db.journalEntries.update(existing.id, { text: text.trim(), mood: mood || undefined, photoBase64: photo })
+        await db.journalEntries.update(existing.id, { text: text.trim(), moods, photoBase64: photo })
       } else {
         await db.journalEntries.add({
           authorId: personId, date: new Date().toISOString(),
-          text: text.trim(), mood: mood || undefined, photoBase64: photo,
+          text: text.trim(), moods, photoBase64: photo,
         } as JournalEntry)
       }
       onDone()
@@ -278,12 +285,12 @@ function ComposeEntry({ personId, existing, onDone }: {
       </p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 18 }}>
         {MOODS.map(m => (
-          <button key={m.label} onClick={() => setMood(mood === m.label ? '' : m.label)} style={{
+          <button key={m.label} onClick={() => setMoods(prev => prev.includes(m.label) ? prev.filter(x => x !== m.label) : [...prev, m.label])} style={{
             padding: '6px 12px', borderRadius: 20,
-            border: `1.5px solid ${mood === m.label ? m.color : 'var(--color-border)'}`,
-            background: mood === m.label ? `${m.color}18` : 'transparent',
-            color: mood === m.label ? m.color : 'var(--color-text-soft)',
-            fontSize: 12, fontWeight: mood === m.label ? 600 : 400,
+            border: `1.5px solid ${moods.includes(m.label) ? m.color : 'var(--color-border)'}`,
+            background: moods.includes(m.label) ? `${m.color}18` : 'transparent',
+            color: moods.includes(m.label) ? m.color : 'var(--color-text-soft)',
+            fontSize: 12, fontWeight: moods.includes(m.label) ? 600 : 400,
             cursor: 'pointer', fontFamily: 'var(--font-detail)',
           }}>{m.label}</button>
         ))}
