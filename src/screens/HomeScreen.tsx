@@ -170,7 +170,7 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
         )}
           <div style={{
             position: 'absolute', inset: 0,
-            background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)',
+            background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 65%)',
           }}/>
           {/* Day badge */}
           <div style={{
