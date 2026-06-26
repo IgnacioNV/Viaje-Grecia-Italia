@@ -39,7 +39,7 @@ export function FamilyScreen() {
               {person.name.charAt(0)}
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 600, fontSize: 16 }}>{person.name}</div>
+              <div style={{ fontWeight: 600, fontSize: 16, color: 'var(--color-text)' }}>{person.name}</div>
               <div style={{ fontSize: 12, color: 'var(--color-text-soft)', marginTop: 1, fontFamily: 'var(--font-detail)' }}>
                 {person.role}
               </div>
