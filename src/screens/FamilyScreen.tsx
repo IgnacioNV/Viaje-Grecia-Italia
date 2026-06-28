@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CopyButton, FilePreview } from '../components/ui/FilePreview'
+import { CopyButton, FilePreview, DownloadButton } from '../components/ui/FilePreview'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { IconStamp } from '../components/ui/IconStamp'
 import { db } from '../db/dexie'
@@ -148,24 +148,34 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
                   </div>
                 )}
 
-                {/* Photos */}
+                {/* Photos + download */}
                 {(p.photoFront || p.photoBack) && (
                   <div style={{ display: 'flex', gap: 8 }}>
                     {p.photoFront && (
-                      <button onClick={() => setPreviewSrc(p.photoFront!)} style={{
-                        flex: 1, border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden',
-                      }}>
-                        <img src={p.photoFront} alt="Frente" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
-                        <div style={{ fontSize: 10, textAlign: 'center', padding: '4px', color: 'var(--color-text-muted)', background: 'var(--color-bg)', fontFamily: 'var(--font-detail)' }}>Frente</div>
-                      </button>
+                      <div style={{ flex: 1 }}>
+                        <button onClick={() => setPreviewSrc(p.photoFront!)} style={{
+                          width: '100%', border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden', display: 'block',
+                        }}>
+                          <img src={p.photoFront} alt="Frente" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
+                        </button>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
+                          <span style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Frente</span>
+                          <DownloadButton src={p.photoFront} filename={`pasaporte-${person.name.toLowerCase()}-frente.jpg`} label="Guardar" />
+                        </div>
+                      </div>
                     )}
                     {p.photoBack && (
-                      <button onClick={() => setPreviewSrc(p.photoBack!)} style={{
-                        flex: 1, border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden',
-                      }}>
-                        <img src={p.photoBack} alt="Dorso" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
-                        <div style={{ fontSize: 10, textAlign: 'center', padding: '4px', color: 'var(--color-text-muted)', background: 'var(--color-bg)', fontFamily: 'var(--font-detail)' }}>Dorso</div>
-                      </button>
+                      <div style={{ flex: 1 }}>
+                        <button onClick={() => setPreviewSrc(p.photoBack!)} style={{
+                          width: '100%', border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden', display: 'block',
+                        }}>
+                          <img src={p.photoBack} alt="Dorso" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
+                        </button>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
+                          <span style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Dorso</span>
+                          <DownloadButton src={p.photoBack} filename={`pasaporte-${person.name.toLowerCase()}-dorso.jpg`} label="Guardar" />
+                        </div>
+                      </div>
                     )}
                   </div>
                 )}
