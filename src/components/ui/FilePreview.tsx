@@ -1,73 +1,118 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { copyToClipboard } from '../../utils/clipboard'
 
-/* ── Shared close bar ───────────────────────────────────── */
-function CloseBar({ onClose, title }: { onClose: () => void; title?: string }) {
+/* ── Full-screen overlay wrapper ────────────────────────── */
+function PreviewShell({ title, onClose, children }: {
+  title: string; onClose: () => void; children: React.ReactNode
+}) {
   return (
-    <button onClick={onClose} style={{
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      width: '100%', padding: '16px 20px',
-      background: 'none', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.1)',
-      cursor: 'pointer', flexShrink: 0,
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 300,
+      background: '#111',
+      display: 'flex', flexDirection: 'column',
     }}>
-      <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 13, fontFamily: 'var(--font-detail)', textAlign: 'left', flex: 1 }}>
-        {title ?? 'Tocá en cualquier lugar para cerrar'}
-      </span>
+      {/* Header — always visible */}
       <div style={{
-        width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,255,255,0.15)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginLeft: 12,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '12px 16px',
+        background: '#111',
+        borderBottom: '1px solid rgba(255,255,255,0.08)',
+        flexShrink: 0,
       }}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
-          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
+        <span style={{
+          color: 'rgba(255,255,255,0.8)', fontSize: 13,
+          fontFamily: 'var(--font-body)', fontWeight: 500,
+          flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+          marginRight: 12,
+        }}>
+          {title}
+        </span>
+        <button onClick={onClose} style={{
+          display: 'flex', alignItems: 'center', gap: 6,
+          padding: '8px 16px', borderRadius: 20,
+          background: 'rgba(255,255,255,0.12)',
+          border: '1px solid rgba(255,255,255,0.2)',
+          color: '#fff', fontSize: 13, fontWeight: 600,
+          cursor: 'pointer', flexShrink: 0,
+          fontFamily: 'var(--font-body)',
+        }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Cerrar
+        </button>
       </div>
-    </button>
+
+      {/* Content */}
+      <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
+        {children}
+      </div>
+
+      {/* Big "Volver" bar at the bottom — for grandparents */}
+      <button onClick={onClose} style={{
+        width: '100%',
+        padding: '18px',
+        background: 'var(--color-primary)',
+        border: 'none', cursor: 'pointer',
+        color: '#fff', fontSize: 16, fontWeight: 700,
+        fontFamily: 'var(--font-body)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+        flexShrink: 0,
+        paddingBottom: 'max(18px, env(safe-area-inset-bottom))',
+      }}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Volver a la app
+      </button>
+    </div>
   )
+}
+
+/* ── Base64 PDF → blob URL ──────────────────────────────── */
+function usePdfBlobUrl(src: string | null) {
+  const [url, setUrl] = useState<string | null>(null)
+  useEffect(() => {
+    if (!src?.startsWith('data:application/pdf')) return
+    const byteStr = atob(src.split(',')[1])
+    const arr = new Uint8Array(byteStr.length)
+    for (let i = 0; i < byteStr.length; i++) arr[i] = byteStr.charCodeAt(i)
+    const blob = new Blob([arr], { type: 'application/pdf' })
+    const u = URL.createObjectURL(blob)
+    setUrl(u)
+    return () => URL.revokeObjectURL(u)
+  }, [src])
+  return url
 }
 
 /* ── Full-screen preview for base64 files ───────────────── */
 export function FilePreview({ src, onClose }: { src: string; onClose: () => void }) {
   const isPdf = src.startsWith('data:application/pdf')
+  const blobUrl = usePdfBlobUrl(isPdf ? src : null)
 
   if (isPdf) {
-    // On mobile, PDFs in iframes are unreliable. Open in native viewer via blob URL.
-    const handleOpenPdf = () => {
-      const byteStr = atob(src.split(',')[1])
-      const arr = new Uint8Array(byteStr.length)
-      for (let i = 0; i < byteStr.length; i++) arr[i] = byteStr.charCodeAt(i)
-      const blob = new Blob([arr], { type: 'application/pdf' })
-      const url = URL.createObjectURL(blob)
-      window.open(url, '_blank')
-    }
     return (
-      <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.95)', zIndex: 300, display: 'flex', flexDirection: 'column' }}>
-        <CloseBar onClose={onClose} />
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, padding: 32 }}>
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2" strokeLinecap="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/>
-          </svg>
-          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14, textAlign: 'center', fontFamily: 'var(--font-detail)' }}>
-            Documento PDF
-          </p>
-          <button onClick={handleOpenPdf} style={{
-            padding: '12px 28px', background: 'var(--color-primary)', color: '#fff',
-            border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer',
-          }}>Abrir PDF</button>
-        </div>
-      </div>
+      <PreviewShell title="Documento" onClose={onClose}>
+        {blobUrl
+          ? <iframe src={blobUrl} style={{ width: '100%', height: '100%', border: 'none' }} title="Documento" />
+          : <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'rgba(255,255,255,0.5)', fontSize: 14 }}>
+              Cargando...
+            </div>
+        }
+      </PreviewShell>
     )
   }
 
   return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.96)', zIndex: 300, display: 'flex', flexDirection: 'column' }}>
-      <div onClick={e => e.stopPropagation()}>
-        <CloseBar onClose={onClose} />
-      </div>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px 16px 32px', overflow: 'hidden' }}>
-        <img src={src} alt="Vista previa" onClick={e => e.stopPropagation()}
-          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 10, display: 'block' }} />
-      </div>
-    </div>
+    <PreviewShell title="Imagen" onClose={onClose}>
+      <img src={src} alt="Vista previa" style={{
+        width: '100%', height: '100%',
+        objectFit: 'contain', display: 'block',
+      }} />
+    </PreviewShell>
   )
 }
 
@@ -77,37 +122,16 @@ export function StaticFilePreview({ filePath, title, onClose }: {
 }) {
   const isPdf = filePath.endsWith('.pdf')
 
-  if (isPdf) {
-    const handleOpenPdf = () => window.open(filePath, '_blank')
-    return (
-      <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.95)', zIndex: 300, display: 'flex', flexDirection: 'column' }}>
-        <CloseBar onClose={onClose} title={title} />
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, padding: 32 }}>
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2" strokeLinecap="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/>
-          </svg>
-          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14, textAlign: 'center', fontFamily: 'var(--font-detail)' }}>
-            {title}
-          </p>
-          <button onClick={handleOpenPdf} style={{
-            padding: '12px 28px', background: 'var(--color-primary)', color: '#fff',
-            border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer',
-          }}>Abrir PDF</button>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.96)', zIndex: 300, display: 'flex', flexDirection: 'column' }}>
-      <div onClick={e => e.stopPropagation()}>
-        <CloseBar onClose={onClose} title={title} />
-      </div>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px 16px 32px', overflow: 'hidden' }}>
-        <img src={filePath} alt={title} onClick={e => e.stopPropagation()}
-          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 10, display: 'block' }} />
-      </div>
-    </div>
+    <PreviewShell title={title} onClose={onClose}>
+      {isPdf
+        ? <iframe src={filePath} style={{ width: '100%', height: '100%', border: 'none' }} title={title} />
+        : <img src={filePath} alt={title} style={{
+            width: '100%', height: '100%',
+            objectFit: 'contain', display: 'block',
+          }} />
+      }
+    </PreviewShell>
   )
 }
 
@@ -125,8 +149,8 @@ export function CopyButton({ text, label }: { text: string; label?: string }) {
       border: `1px solid ${copied ? '#2d6a4f' : 'var(--color-primary-20)'}`,
       background: copied ? '#d8f3dc' : 'var(--color-primary-10)',
       color: copied ? '#2d6a4f' : 'var(--color-primary)',
-      fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-detail)',
-      transition: 'all 0.2s ease',
+      fontSize: 11, fontWeight: 600, cursor: 'pointer',
+      fontFamily: 'var(--font-detail)', transition: 'all 0.2s ease',
     }}>
       {copied
         ? <><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="20,6 9,17 4,12"/></svg>Copiado</>
@@ -147,12 +171,16 @@ export function DownloadButton({ src, filename, label }: { src: string; filename
     <button onClick={handle} style={{
       display: 'inline-flex', alignItems: 'center', gap: 4,
       padding: '3px 10px', borderRadius: 14,
-      border: '1px solid var(--color-primary-20)', background: 'var(--color-primary-10)',
-      color: 'var(--color-primary)', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-detail)',
+      border: '1px solid var(--color-primary-20)',
+      background: 'var(--color-primary-10)',
+      color: 'var(--color-primary)',
+      fontSize: 11, fontWeight: 600, cursor: 'pointer',
+      fontFamily: 'var(--font-detail)',
     }}>
       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-        <polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        <polyline points="7,10 12,15 17,10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
       </svg>
       {label ?? 'Descargar'}
     </button>
