@@ -104,14 +104,25 @@ export function DocsScreen({ personId }: DocsScreenProps) {
   })
 
   // Seed docs as DocItems (for preview and category views)
-  const seedDocItems: DocItem[] = SEED_DOCS.map(doc => ({
-    id: doc.id,
-    title: doc.title,
-    sub: 'Compartido · Grupo',
-    icon: (doc.type === 'ticket' ? 'ticket' : doc.type === 'reservation' ? 'reservation' : 'document') as IconName,
-    detail: `Todos los integrantes · ${doc.createdAt}`,
-    seedFilePath: doc.file,
-  }))
+  const seedDocItems: DocItem[] = SEED_DOCS.map(doc => {
+    let sub = 'Compartido · Grupo'
+    if (doc.ownerPersonIds?.length) {
+      const names = doc.ownerPersonIds
+        .map(id => PEOPLE.find(p => p.id === id)?.name ?? id)
+        .join(', ')
+      sub = names
+    } else if (doc.ownerPersonId !== 'group') {
+      sub = PEOPLE.find(p => p.id === doc.ownerPersonId)?.name ?? doc.ownerPersonId
+    }
+    return {
+      id: doc.id,
+      title: doc.title,
+      sub,
+      icon: (doc.type === 'ticket' ? 'ticket' : doc.type === 'reservation' ? 'reservation' : 'document') as IconName,
+      detail: `${sub} · ${doc.createdAt}`,
+      seedFilePath: doc.file,
+    }
+  })
 
   // Seed docs grouped by category
   const seedByCategory: Record<string, DocItem[]> = {

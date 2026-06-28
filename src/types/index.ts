@@ -40,7 +40,8 @@ export interface SeedDocument {
   id: string
   source: 'seed'
   type: DocumentType
-  ownerPersonId: string | 'group'
+  ownerPersonId: string | 'group'           // 'group' or single personId
+  ownerPersonIds?: string[]                  // multiple specific people
   linkedActivityId?: string
   title: string
   file: string

@@ -20,6 +20,17 @@
     "createdAt": "2026-06-26"
   },
   {
+    "id": "doc-vuelo-bari-roma",
+    "source": "seed",
+    "type": "voucher",
+    "ownerPersonId": "guille",
+    "ownerPersonIds": ["guille", "raquel", "nacho", "nico"],
+    "linkedActivityId": "act-12-1",
+    "title": "Vuelo Bari → Roma · ITA AZ 1612",
+    "file": "/seed-docs/vuelo-bari-roma.pdf",
+    "createdAt": "2026-06-28"
+  },
+  {
     "id": "doc-boarding",
     "source": "seed",
     "type": "reservation",
