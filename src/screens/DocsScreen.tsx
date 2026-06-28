@@ -239,14 +239,14 @@ export function DocsScreen({ personId }: DocsScreenProps) {
           })}
         </div>
 
-        {/* ── NIVEL 3: Documentos próximos — el contenido real ── */}
+        {/* ── NIVEL 3: Documentos próximos — máximo 3 ── */}
         <p className="eyebrow" style={{ color: 'var(--color-primary)', marginBottom: 12 }}>
           Próximos documentos
         </p>
       </div>
 
-      <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {allDocs.map(doc => <ExpandableRow key={doc.id} doc={doc} currentPersonId={personId} />)}
+      <div style={{ padding: '0 20px 130px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {allDocs.slice(0, 3).map(doc => <ExpandableRow key={doc.id} doc={doc} currentPersonId={personId} />)}
 
         {otherLocalDocs.length > 0 && (
           <>
@@ -330,6 +330,20 @@ function ExpandableRow({ doc, currentPersonId }: { doc: DocItem; currentPersonId
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 600, fontSize: 14, color: status === 'past' ? 'var(--color-text-muted)' : 'var(--color-text)' }}>{doc.title}</div>
               <div style={{ fontSize: 11, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>{doc.sub}</div>
+              {doc.eventDate && status !== 'past' && (
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 4,
+                  marginTop: 4,
+                  fontSize: 11, fontWeight: 600,
+                  color: status === 'today' ? 'var(--color-accent)' : 'var(--color-primary)',
+                  fontFamily: 'var(--font-detail)',
+                }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                  {new Date(doc.eventDate + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
+                </div>
+              )}
             </div>
           </button>
 
