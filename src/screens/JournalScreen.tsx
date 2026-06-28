@@ -58,7 +58,7 @@ export function JournalScreen({ personId, personName }: JournalScreenProps) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
             <p className="eyebrow" style={{ marginBottom: 6 }}>Solo visible para vos</p>
-            <h1 style={{ fontSize: 28 }}>Diario</h1>
+            <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.1 }}>Diario</h1>
           </div>
           {entries.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 3 }}>

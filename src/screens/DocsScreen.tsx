@@ -103,18 +103,6 @@ export function DocsScreen({ personId }: DocsScreenProps) {
     }))
   })
 
-<<<<<<< HEAD
-  // Seed docs as DocItems (for preview)
-  const seedDocItems: DocItem[] = SEED_DOCS.map(doc => ({
-    id: doc.id,
-    title: doc.title,
-    sub: doc.ownerPersonId === 'group' ? 'Compartido · Grupo' : doc.ownerPersonId,
-    icon: (doc.type === 'ticket' ? 'ticket' : doc.type === 'reservation' ? 'reservation' : 'document') as IconName,
-    detail: `Tipo: ${doc.type}\nFecha: ${doc.createdAt}`,
-    seedFilePath: doc.file,
-  }))
-
-=======
   // Seed docs as DocItems (for preview and category views)
   const seedDocItems: DocItem[] = SEED_DOCS.map(doc => ({
     id: doc.id,
@@ -133,7 +121,6 @@ export function DocsScreen({ personId }: DocsScreenProps) {
     tickets:    seedDocItems.filter(d => SEED_DOCS.find(s => s.id === d.id)?.type === 'ticket'),
   }
 
->>>>>>> main
   // Merge local docs into categories by type
   const localByCategory: Record<string, DocItem[]> = {
     pasaportes: localDocs.filter(d => d.type === 'passport').map(d => ({
@@ -166,10 +153,7 @@ export function DocsScreen({ personId }: DocsScreenProps) {
       label={CATEGORY_LABELS[activeCategory].label}
       docs={[
         ...(activeCategory === 'pasaportes' ? profilePassportDocs : []),
-<<<<<<< HEAD
-=======
         ...(seedByCategory[activeCategory] ?? []),
->>>>>>> main
         ...CATEGORY_DOCS[activeCategory],
         ...(localByCategory[activeCategory] ?? []),
       ]}
@@ -189,7 +173,7 @@ export function DocsScreen({ personId }: DocsScreenProps) {
     <div className="screen">
       <div style={{ padding: '24px 20px 0' }}>
         <p className="eyebrow" style={{ marginBottom: 6 }}>Maleta digital</p>
-        <h1 style={{ fontSize: 30, fontWeight: 700, marginBottom: 20 }}>Documentos</h1>
+        <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.1, marginBottom: 20 }}>Documentos</h1>
 
         {/* ── NIVEL 1: Acciones utilitarias — mínimas, sin card ── */}
         <div style={{ display: 'flex', gap: 16, marginBottom: 20, paddingBottom: 20, borderBottom: '1px solid var(--color-border)' }}>
@@ -221,20 +205,16 @@ export function DocsScreen({ personId }: DocsScreenProps) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 24 }}>
           {(Object.keys(CATEGORY_LABELS) as CategoryKey[]).map(key => {
             const { label, icon } = CATEGORY_LABELS[key]
-<<<<<<< HEAD
-            const count = (key === 'pasaportes' ? profilePassportDocs.length : 0) + CATEGORY_DOCS[key].length + (localByCategory[key]?.length ?? 0)
-=======
             const count = (key === 'pasaportes' ? profilePassportDocs.length : 0)
               + (seedByCategory[key]?.length ?? 0)
               + CATEGORY_DOCS[key].length
               + (localByCategory[key]?.length ?? 0)
->>>>>>> main
             return (
               <button key={key} onClick={() => { setActiveCategory(key); setSection('category') }} style={{
                 padding: '14px 14px', textAlign: 'left', cursor: 'pointer',
                 background: 'var(--color-primary-10)',
-                border: '1px solid var(--color-primary-20)',
-                borderRadius: 14, minHeight: 68,
+                border: 'none',
+                borderRadius: 16, minHeight: 72,
                 display: 'flex', flexDirection: 'column', gap: 6,
               }}>
                 <IconStamp icon={icon} size={28}

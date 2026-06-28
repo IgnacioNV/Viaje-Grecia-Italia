@@ -1,9 +1,5 @@
 import { useState } from 'react'
-<<<<<<< HEAD
-import { CopyButton, FilePreview } from '../components/ui/FilePreview'
-=======
 import { CopyButton, FilePreview, DownloadButton } from '../components/ui/FilePreview'
->>>>>>> main
 import { useLiveQuery } from 'dexie-react-hooks'
 import { IconStamp } from '../components/ui/IconStamp'
 import { db } from '../db/dexie'
@@ -23,16 +19,16 @@ export function FamilyScreen() {
     <div className="screen">
       <div style={{ padding: '20px 20px 0' }}>
         <p className="eyebrow" style={{ marginBottom: 6 }}>Familia Valcarce</p>
-        <h1 style={{ fontSize: 28 }}>{PEOPLE.length} viajeros</h1>
+        <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.1 }}>{PEOPLE.length} viajeros</h1>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '16px' }}>
         {PEOPLE.map(person => (
           <button key={person.id} onClick={() => setSelected(person)} style={{
             display: 'flex', alignItems: 'center', gap: 14,
-            padding: '14px', background: 'var(--color-surface)',
-            border: 'var(--card-border)', borderRadius: 'var(--card-radius)',
-            boxShadow: 'var(--card-shadow)', cursor: 'pointer', textAlign: 'left', width: '100%',
+            padding: '14px 4px', background: 'transparent',
+            border: 'none', borderBottom: '1px solid var(--color-border)',
+            borderRadius: 0, cursor: 'pointer', textAlign: 'left', width: '100%',
           }}>
             <div style={{
               width: 44, height: 44, borderRadius: 'var(--stamp-radius)',
@@ -43,11 +39,7 @@ export function FamilyScreen() {
               {person.name.charAt(0)}
             </div>
             <div style={{ flex: 1 }}>
-<<<<<<< HEAD
-              <div style={{ fontWeight: 600, fontSize: 16 }}>{person.name}</div>
-=======
               <div style={{ fontWeight: 600, fontSize: 16, color: 'var(--color-text)' }}>{person.name}</div>
->>>>>>> main
               <div style={{ fontSize: 12, color: 'var(--color-text-soft)', marginTop: 1, fontFamily: 'var(--font-detail)' }}>
                 {person.role}
               </div>
@@ -156,26 +148,6 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
                   </div>
                 )}
 
-<<<<<<< HEAD
-                {/* Photos */}
-                {(p.photoFront || p.photoBack) && (
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    {p.photoFront && (
-                      <button onClick={() => setPreviewSrc(p.photoFront!)} style={{
-                        flex: 1, border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden',
-                      }}>
-                        <img src={p.photoFront} alt="Frente" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
-                        <div style={{ fontSize: 10, textAlign: 'center', padding: '4px', color: 'var(--color-text-muted)', background: 'var(--color-bg)', fontFamily: 'var(--font-detail)' }}>Frente</div>
-                      </button>
-                    )}
-                    {p.photoBack && (
-                      <button onClick={() => setPreviewSrc(p.photoBack!)} style={{
-                        flex: 1, border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden',
-                      }}>
-                        <img src={p.photoBack} alt="Dorso" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
-                        <div style={{ fontSize: 10, textAlign: 'center', padding: '4px', color: 'var(--color-text-muted)', background: 'var(--color-bg)', fontFamily: 'var(--font-detail)' }}>Dorso</div>
-                      </button>
-=======
                 {/* Photos + download */}
                 {(p.photoFront || p.photoBack) && (
                   <div style={{ display: 'flex', gap: 8 }}>
@@ -204,7 +176,6 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
                           <DownloadButton src={p.photoBack} filename={`pasaporte-${person.name.toLowerCase()}-dorso.jpg`} label="Guardar" />
                         </div>
                       </div>
->>>>>>> main
                     )}
                   </div>
                 )}

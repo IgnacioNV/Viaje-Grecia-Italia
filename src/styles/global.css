@@ -199,3 +199,20 @@ body, .card, .card--activity, h1, h2, h3, h4, .person-badge {
     border-color 0.35s ease,
     color 0.35s ease;
 }
+
+/* ── Tap feedback — opacity, not scale ─────────────────── */
+button:active {
+  opacity: 0.65;
+  transition: opacity 0.08s ease;
+}
+
+/* ── No tap highlight on mobile ────────────────────────── */
+* { -webkit-tap-highlight-color: transparent; }
+
+/* ── WelcomeScreen: larger name ────────────────────────── */
+.welcome-title {
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+}

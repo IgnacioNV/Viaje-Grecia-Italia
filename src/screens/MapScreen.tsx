@@ -86,7 +86,7 @@ export function MapScreen() {
     <div className="screen">
       <div style={{ padding: '24px 20px 0' }}>
         <p className="eyebrow" style={{ marginBottom: 6 }}>Nuestro recorrido</p>
-        <h1 style={{ fontSize: 28 }}>El viaje</h1>
+        <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.1 }}>El viaje</h1>
         {currentDay && (
           <p style={{ fontSize: 13, color: 'var(--color-text-soft)', marginTop: 4, fontFamily: 'var(--font-detail)' }}>
             Día {todayDayNum} · {currentDay.destination}

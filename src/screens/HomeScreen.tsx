@@ -29,11 +29,6 @@ function getGreeting(name: string): string {
   if (h < 20) return `Buenas tardes, ${name}`
   return `Buenas noches, ${name}`
 }
-function formatDate(dateStr: string) {
-  return new Date(dateStr + 'T12:00:00').toLocaleDateString('es-ES', {
-    weekday: 'long', day: 'numeric', month: 'long',
-  })
-}
 
 type TabType = 'today' | 'all'
 
@@ -74,7 +69,7 @@ export function HomeScreen({ personId, personName }: HomeScreenProps) {
           </button>
         </div>
 
-        <h1 style={{ fontSize: 30, fontWeight: 700, marginBottom: 20 }}>Mi itinerario</h1>
+        <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.1, marginBottom: 20 }}>Mi itinerario</h1>
 
         {/* Tabs: Hoy / Todo */}
         <div style={{
@@ -157,46 +152,46 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
       {/* Destination hero */}
       <div style={{
         position: 'relative', margin: '16px 20px 0',
-        borderRadius: 20, overflow: 'hidden', height: 180,
+        borderRadius: 20, overflow: 'hidden', height: 220,
         background: 'var(--color-primary-10)',
       }}>
         {info?.image && (
-          <img
-            src={info.image}
-            alt={day.destination}
+          <img src={info.image} alt={day.destination}
             style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
-            loading="lazy"
-          />
+            loading="lazy" />
         )}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.15) 55%, transparent 100%)' }}/>
+        {/* Day pill */}
+        <div style={{
+          position: 'absolute', top: 14, left: 14,
+          background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(8px)',
+          border: '1px solid rgba(255,255,255,0.25)',
+          borderRadius: 20, padding: '4px 12px',
+          fontSize: 11, fontWeight: 700, color: '#fff',
+          letterSpacing: '0.08em', fontFamily: 'var(--font-body)',
+        }}>DÍA {dayNumber}</div>
+        {day.phase === 'individual' && (
           <div style={{
-            position: 'absolute', inset: 0,
-            background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)',
-          }}/>
-          {/* Day badge */}
+            position: 'absolute', top: 14, right: 14,
+            background: 'var(--phase-bg)', color: 'var(--phase-color)',
+            fontSize: 10, fontWeight: 600, padding: '3px 8px', borderRadius: 8,
+          }}>Fase individual</div>
+        )}
+        {/* Big editorial destination name */}
+        <div style={{ position: 'absolute', bottom: 18, left: 18, right: 18 }}>
           <div style={{
-            position: 'absolute', top: 12, left: 12,
-            background: 'var(--color-primary)', color: '#fff',
-            width: 36, height: 36, borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 14, fontWeight: 700,
-          }}>{dayNumber}</div>
-          {/* Destination label */}
-          <div style={{ position: 'absolute', bottom: 14, left: 16 }}>
-            <div style={{ color: '#fff', fontWeight: 700, fontSize: 20, lineHeight: 1.2 }}>
-              {day.destination}
-            </div>
-            <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, fontFamily: 'var(--font-detail)', marginTop: 2 }}>
-              {formatDate(day.date)} · {day.country}
-            </div>
+            fontSize: 32, fontWeight: 700, color: '#fff', lineHeight: 1.05,
+            fontFamily: 'var(--font-display)',
+            textShadow: '0 2px 16px rgba(0,0,0,0.25)',
+          }}>{day.destination}</div>
+          <div style={{
+            fontSize: 13, color: 'rgba(255,255,255,0.72)',
+            marginTop: 5, fontFamily: 'var(--font-detail)',
+          }}>
+            {new Date(day.date + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })} · {day.country}
           </div>
-          {day.phase === 'individual' && (
-            <div style={{
-              position: 'absolute', top: 12, right: 12,
-              background: 'var(--phase-bg)', color: 'var(--phase-color)',
-              fontSize: 10, fontWeight: 600, padding: '3px 8px', borderRadius: 8,
-            }}>Fase individual</div>
-          )}
         </div>
+      </div>
 
       {/* Activities */}
       <div style={{ padding: '16px 20px 0' }}>

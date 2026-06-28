@@ -25,8 +25,8 @@ export function Navbar() {
       borderTop: '0.5px solid var(--color-border)',
       display: 'flex',
       alignItems: 'flex-start',
-      paddingTop: 10,
-      paddingBottom: 'max(12px, env(safe-area-inset-bottom))',
+      paddingTop: 8,
+      paddingBottom: 'max(14px, env(safe-area-inset-bottom))',
       zIndex: 100,
       minHeight: NAVBAR_HEIGHT,
     }}>
