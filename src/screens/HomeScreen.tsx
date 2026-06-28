@@ -199,7 +199,9 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
           ? <p style={{ fontSize: 14, color: 'var(--color-text-muted)', textAlign: 'center', padding: '24px 0', fontFamily: 'var(--font-detail)' }}>
               No hay actividades para vos este día.
             </p>
-          : <PeriodGroups activities={activities} />
+          : <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+              {activities.map(a => <ActivityCard key={a.id} activity={a} />)}
+            </div>
         }
       </div>
 
@@ -300,9 +302,8 @@ function ActivityCard({ activity }: { activity: Activity }) {
           <span style={{
             fontSize: 12,
             fontWeight: 600,
-            color: 'var(--color-primary)',
+            color: 'var(--color-accent)',
             fontFamily: 'var(--font-detail)',
-            opacity: 0.7,
           }}>
             {activity.time}
           </span>
