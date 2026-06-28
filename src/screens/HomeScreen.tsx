@@ -199,12 +199,14 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
         </div>
 
       {/* Activities */}
-      <div style={{ padding: '14px 20px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div style={{ padding: '16px 20px 0' }}>
         {activities.length === 0
-          ? <p style={{ fontSize: 14, color: 'var(--color-text-muted)', textAlign: 'center', padding: '24px 0' }}>
+          ? <p style={{ fontSize: 14, color: 'var(--color-text-muted)', textAlign: 'center', padding: '24px 0', fontFamily: 'var(--font-detail)' }}>
               No hay actividades para vos este día.
             </p>
-          : activities.map(a => <ActivityCard key={a.id} activity={a} />)
+          : <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+              {activities.map(a => <ActivityCard key={a.id} activity={a} />)}
+            </div>
         }
       </div>
 
@@ -254,66 +256,99 @@ function ActivityCard({ activity }: { activity: Activity }) {
   return (
     <>
       <div style={{
-        background: 'var(--color-surface)', borderRadius: 16, padding: '14px 16px',
-        border: 'var(--card-border)', boxShadow: 'var(--card-shadow)',
+        display: 'flex',
+        gap: 14,
+        paddingBottom: 18,
+        borderBottom: '1px solid var(--color-primary-10)',
       }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
-          <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--color-text)', flex: 1, lineHeight: 1.3 }}>
-            {activity.title}
-          </div>
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 4,
-            padding: '4px 10px', borderRadius: 20,
-            background: 'var(--color-primary-10)', flexShrink: 0,
+        {/* Time column */}
+        <div style={{
+          flexShrink: 0,
+          paddingTop: 2,
+          minWidth: 42,
+          textAlign: 'right',
+        }}>
+          <span style={{
+            fontSize: 12,
+            fontWeight: 600,
+            color: 'var(--color-primary)',
+            fontFamily: 'var(--font-detail)',
+            opacity: 0.7,
           }}>
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-              stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round">
-              <circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/>
-            </svg>
-            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-primary)', fontFamily: 'var(--font-detail)' }}>
-              {activity.time}
-            </span>
-          </div>
+            {activity.time}
+          </span>
         </div>
 
-        {activity.location && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 8 }}>
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-              stroke="var(--color-accent)" strokeWidth="2.2" strokeLinecap="round">
-              <path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/>
-              <circle cx="12" cy="9" r="2.5"/>
-            </svg>
-            <span style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
-              {activity.location}
-            </span>
+        {/* Dot */}
+        <div style={{ flexShrink: 0, paddingTop: 6 }}>
+          <div style={{
+            width: 7, height: 7, borderRadius: '50%',
+            background: 'var(--color-accent)',
+            boxShadow: '0 0 0 2px var(--color-bg)',
+          }} />
+        </div>
+
+        {/* Content */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{
+            fontSize: 15,
+            fontWeight: 600,
+            color: 'var(--color-text)',
+            lineHeight: 1.3,
+            marginBottom: activity.location ? 4 : 0,
+          }}>
+            {activity.title}
           </div>
-        )}
 
-        {notes && (
-          <p style={{ marginTop: 10, fontSize: 13, lineHeight: 1.55, color: 'var(--color-accent)', fontStyle: 'italic', fontFamily: 'var(--font-detail)' }}>
-            {notes}
-          </p>
-        )}
-
-        {doc && (
-          <button
-            onClick={() => setStaticPreview({ path: doc.file, title: doc.title })}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 5,
-              marginTop: 10, padding: '5px 12px', borderRadius: 20,
-              border: '1px solid var(--color-primary-20)',
-              background: 'var(--color-primary-10)',
-              fontSize: 11, fontWeight: 500, color: 'var(--color-primary)',
-              cursor: 'pointer',
+          {activity.location && (
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 4,
+              fontSize: 12,
+              color: 'var(--color-text-soft)',
+              fontFamily: 'var(--font-detail)',
             }}>
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-              <circle cx="12" cy="12" r="3"/>
-            </svg>
-            {doc.title}
-          </button>
-        )}
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                stroke="var(--color-accent)" strokeWidth="2.2" strokeLinecap="round">
+                <path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/>
+                <circle cx="12" cy="9" r="2.5"/>
+              </svg>
+              {activity.location}
+            </div>
+          )}
+
+          {notes && (
+            <p style={{
+              marginTop: 6,
+              fontSize: 12,
+              lineHeight: 1.55,
+              color: 'var(--color-text-soft)',
+              fontStyle: 'italic',
+              fontFamily: 'var(--font-detail)',
+            }}>
+              {notes}
+            </p>
+          )}
+
+          {doc && (
+            <button
+              onClick={() => setStaticPreview({ path: doc.file, title: doc.title })}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 5,
+                marginTop: 8, padding: '4px 10px', borderRadius: 20,
+                border: '1px solid var(--color-primary-20)',
+                background: 'var(--color-primary-10)',
+                fontSize: 11, fontWeight: 500, color: 'var(--color-primary)',
+                cursor: 'pointer', fontFamily: 'var(--font-body)',
+              }}>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              {doc.title}
+            </button>
+          )}
+        </div>
       </div>
 
       {staticPreview && (
