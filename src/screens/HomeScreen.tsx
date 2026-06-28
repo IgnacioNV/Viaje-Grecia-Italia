@@ -242,12 +242,6 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
   )
 }
 
-const PERIOD_LABELS: Record<string, string> = {
-  morning:   'Mañana',
-  afternoon: 'Tarde',
-  night:     'Noche',
-}
-
 
 /* ── Activity Card ──────────────────────────────────────── */
 function ActivityCard({ activity }: { activity: Activity }) {
