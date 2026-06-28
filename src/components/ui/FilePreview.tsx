@@ -1,10 +1,22 @@
 import { useState, useEffect } from 'react'
+
+/* ── Viewport zoom control ──────────────────────────────── */
+const VIEWPORT_NO_ZOOM = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'
+const VIEWPORT_ZOOM    = 'width=device-width, initial-scale=1.0, viewport-fit=cover'
+
+function enableZoom()  { document.querySelector('meta[name="viewport"]')?.setAttribute('content', VIEWPORT_ZOOM) }
+function disableZoom() { document.querySelector('meta[name="viewport"]')?.setAttribute('content', VIEWPORT_NO_ZOOM) }
 import { copyToClipboard } from '../../utils/clipboard'
 
 /* ── Full-screen overlay wrapper ────────────────────────── */
 function PreviewShell({ title, onClose, children }: {
   title: string; onClose: () => void; children: React.ReactNode
 }) {
+  useEffect(() => {
+    enableZoom()
+    return () => disableZoom()
+  }, [])
+
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 300,
@@ -45,8 +57,8 @@ function PreviewShell({ title, onClose, children }: {
         </button>
       </div>
 
-      {/* Content */}
-      <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
+      {/* Content — fills all space between header and footer */}
+      <div style={{ flex: 1, overflow: 'hidden', position: 'relative', display: 'flex', flexDirection: 'column' }}>
         {children}
       </div>
 
@@ -97,7 +109,7 @@ export function FilePreview({ src, onClose }: { src: string; onClose: () => void
     return (
       <PreviewShell title="Documento" onClose={onClose}>
         {blobUrl
-          ? <iframe src={blobUrl} style={{ width: '100%', height: '100%', border: 'none' }} title="Documento" />
+          ? <iframe src={blobUrl} style={{ width: '100%', flex: 1, border: 'none', display: 'block' }} title="Documento" />
           : <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'rgba(255,255,255,0.5)', fontSize: 14 }}>
               Cargando...
             </div>
@@ -109,8 +121,9 @@ export function FilePreview({ src, onClose }: { src: string; onClose: () => void
   return (
     <PreviewShell title="Imagen" onClose={onClose}>
       <img src={src} alt="Vista previa" style={{
-        width: '100%', height: '100%',
+        width: '100%', flex: 1,
         objectFit: 'contain', display: 'block',
+        minHeight: 0,
       }} />
     </PreviewShell>
   )
@@ -125,7 +138,7 @@ export function StaticFilePreview({ filePath, title, onClose }: {
   return (
     <PreviewShell title={title} onClose={onClose}>
       {isPdf
-        ? <iframe src={filePath} style={{ width: '100%', height: '100%', border: 'none' }} title={title} />
+        ? <iframe src={filePath} style={{ width: '100%', flex: 1, border: 'none', display: 'block' }} title={title} />
         : <img src={filePath} alt={title} style={{
             width: '100%', height: '100%',
             objectFit: 'contain', display: 'block',
