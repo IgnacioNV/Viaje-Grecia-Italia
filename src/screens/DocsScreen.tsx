@@ -427,7 +427,7 @@ function CategoryView({ label, docs, currentPersonId, onBack }: {
   onBack: () => void
 }) {
   return (
-    <div className="screen" style={{ padding: '20px' }}>
+    <div className="screen" style={{ padding: '20px 20px 130px' }}>
       <button onClick={onBack} style={{
         display: 'flex', alignItems: 'center', gap: 6,
         background: 'none', border: 'none', cursor: 'pointer',
