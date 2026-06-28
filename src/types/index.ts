@@ -79,6 +79,7 @@ export interface JournalEntry {
 export interface PersonalProfile {
   id?: number
   personId: string
+  birthDate?: string       // DD/MM/YYYY
   phoneNumber?: string
   emergencyPhone?: string
   passports: Passport[]
