@@ -193,15 +193,13 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
         </div>
       </div>
 
-      {/* Activities */}
+      {/* Activities grouped by period */}
       <div style={{ padding: '16px 20px 0' }}>
         {activities.length === 0
           ? <p style={{ fontSize: 14, color: 'var(--color-text-muted)', textAlign: 'center', padding: '24px 0', fontFamily: 'var(--font-detail)' }}>
               No hay actividades para vos este día.
             </p>
-          : <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-              {activities.map(a => <ActivityCard key={a.id} activity={a} />)}
-            </div>
+          : <PeriodGroups activities={activities} />
         }
       </div>
 
@@ -238,6 +236,41 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+const PERIOD_LABELS: Record<string, string> = {
+  morning:   'Mañana',
+  afternoon: 'Tarde',
+  night:     'Noche',
+}
+
+function PeriodGroups({ activities }: { activities: Activity[] }) {
+  const periods = ['morning', 'afternoon', 'night']
+  const grouped: Record<string, Activity[]> = {}
+  for (const a of activities) {
+    if (!grouped[a.period]) grouped[a.period] = []
+    grouped[a.period].push(a)
+  }
+
+  return (
+    <div>
+      {periods.filter(p => grouped[p]?.length).map(period => (
+        <div key={period} style={{ marginBottom: 8 }}>
+          <div style={{
+            fontSize: 10, fontWeight: 700,
+            letterSpacing: '0.12em', textTransform: 'uppercase',
+            color: 'var(--color-accent)',
+            fontFamily: 'var(--font-body)',
+            paddingBottom: 6,
+            marginBottom: 0,
+          }}>
+            {PERIOD_LABELS[period]}
+          </div>
+          {grouped[period].map(a => <ActivityCard key={a.id} activity={a} />)}
+        </div>
+      ))}
     </div>
   )
 }
@@ -377,18 +410,26 @@ function ProfileSheet({ personId, personName, onClose }: {
   return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 200 }} />
-      <div style={{
-        position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)',
-        width: '100%', maxWidth: 430,
-        background: 'var(--color-surface)',
-        borderRadius: '20px 20px 0 0',
-        padding: '20px 20px max(24px, env(safe-area-inset-bottom))',
-        zIndex: 201, maxHeight: '85dvh', overflowY: 'auto',
-      }}>
-        <div style={{ width: 36, height: 4, borderRadius: 2, background: 'var(--color-border)', margin: '0 auto 20px' }} />
+      <div
+        style={{
+          position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)',
+          width: '100%', maxWidth: 430,
+          background: 'var(--color-surface)',
+          borderRadius: '20px 20px 0 0',
+          padding: '0 20px max(24px, env(safe-area-inset-bottom))',
+          zIndex: 201, maxHeight: '88dvh', overflowY: 'auto',
+        }}
+      >
+        {/* Drag handle — tap or swipe down to close */}
+        <div
+          onClick={onClose}
+          style={{ padding: '14px 0 6px', display: 'flex', justifyContent: 'center', cursor: 'pointer' }}
+        >
+          <div style={{ width: 40, height: 4, borderRadius: 2, background: 'var(--color-border)' }} />
+        </div>
 
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
           {profile?.facePhoto ? (
             <div style={{ width: 56, height: 56, borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
               <img src={profile.facePhoto} alt={personName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -401,19 +442,32 @@ function ProfileSheet({ personId, personName, onClose }: {
               fontSize: 20, fontWeight: 700, flexShrink: 0,
             }}>{initials}</div>
           )}
-          <div>
+          <div style={{ flex: 1 }}>
             <h2 style={{ fontSize: 22, marginBottom: 2 }}>{personName}</h2>
             <p style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
               {profile ? 'Perfil completado' : 'Perfil sin completar'}
             </p>
           </div>
-          <button onClick={() => setEditing(true)} style={{
-            marginLeft: 'auto', padding: '7px 14px', borderRadius: 20,
-            border: '1.5px solid var(--color-primary)',
-            background: 'transparent', color: 'var(--color-primary)',
-            fontSize: 12, fontWeight: 600, cursor: 'pointer',
-            fontFamily: 'var(--font-body)',
-          }}>Editar</button>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
+            <button onClick={() => setEditing(true)} style={{
+              padding: '7px 14px', borderRadius: 20,
+              border: '1.5px solid var(--color-primary)',
+              background: 'transparent', color: 'var(--color-primary)',
+              fontSize: 12, fontWeight: 600, cursor: 'pointer',
+              fontFamily: 'var(--font-body)',
+            }}>Editar</button>
+            <button onClick={onClose} style={{
+              width: 32, height: 32, borderRadius: '50%',
+              background: 'var(--color-primary-10)', border: 'none',
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                stroke="var(--color-text-soft)" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Passports */}

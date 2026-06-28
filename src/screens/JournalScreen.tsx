@@ -4,23 +4,11 @@ import { db } from '../db/dexie'
 import { exportJournalToPDF } from '../data/exportPdf'
 import type { JournalEntry } from '../types'
 
-const MOODS: { label: string; color: string }[] = [
-  { label: 'Soleado',           color: '#F5A623' },
-  { label: 'Aventurero',        color: '#1B3FA6' },
-  { label: 'Cansado',           color: '#9B9B9B' },
-  { label: 'Emocionado',        color: '#E8B84A' },
-  { label: 'Bien comido',       color: '#C2622E' },
-  { label: 'Nostálgico',        color: '#7B68EE' },
-  { label: 'Relajado',          color: '#50C878' },
-  { label: 'Asombrado',         color: '#00CED1' },
-  { label: 'Mucho calor',       color: '#FF6B35' },
-  { label: 'Fotogénico',        color: '#FF69B4' },
-  { label: 'Pensativo',         color: '#708090' },
-  { label: 'Feliz',             color: '#FFD700' },
-  { label: 'Sin batería',       color: '#A0522D' },
-  { label: 'En alta mar',       color: '#1A5FAA' },
-  { label: 'Histórico',         color: '#8B7355' },
-  { label: 'Caminé demasiado',  color: '#CD853F' },
+const MOODS: string[] = [
+  'Soleado', 'Aventurero', 'Cansado', 'Emocionado',
+  'Bien comido', 'Nostálgico', 'Relajado', 'Asombrado',
+  'Mucho calor', 'Fotogénico', 'Pensativo', 'Feliz',
+  'Sin batería', 'En alta mar', 'Histórico', 'Caminé demasiado',
 ]
 
 interface JournalScreenProps { personId: string; personName: string }
@@ -175,19 +163,16 @@ function JournalCard({ entry, onEdit, onDelete }: {
 
       {(entry.moods?.length ?? 0) > 0 && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 8 }}>
-          {(entry.moods ?? []).map(m => {
-            const moodColor = MOODS.find(x => x.label === m)?.color
-            return (
-              <span key={m} style={{
-                display: 'inline-block', padding: '2px 8px', borderRadius: 20,
-                background: moodColor ? `${moodColor}20` : 'var(--color-primary-10)',
-                border: `1px solid ${moodColor ?? 'var(--color-primary)'}40`,
-                fontSize: 11, fontWeight: 600,
-                color: moodColor ?? 'var(--color-primary)',
-                fontFamily: 'var(--font-detail)',
-              }}>{m}</span>
-            )
-          })}
+          {(entry.moods ?? []).map(m => (
+            <span key={m} style={{
+              display: 'inline-block', padding: '2px 9px', borderRadius: 20,
+              background: 'var(--color-primary-10)',
+              border: '1px solid var(--color-primary-20)',
+              fontSize: 11, fontWeight: 600,
+              color: 'var(--color-primary)',
+              fontFamily: 'var(--font-detail)',
+            }}>{m}</span>
+          ))}
         </div>
       )}
 
@@ -285,14 +270,14 @@ function ComposeEntry({ personId, existing, onDone }: {
       </p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 18 }}>
         {MOODS.map(m => (
-          <button key={m.label} onClick={() => setMoods(prev => prev.includes(m.label) ? prev.filter(x => x !== m.label) : [...prev, m.label])} style={{
+          <button key={m} onClick={() => setMoods(prev => prev.includes(m) ? prev.filter(x => x !== m) : [...prev, m])} style={{
             padding: '6px 12px', borderRadius: 20,
-            border: `1.5px solid ${moods.includes(m.label) ? m.color : 'var(--color-border)'}`,
-            background: moods.includes(m.label) ? `${m.color}18` : 'transparent',
-            color: moods.includes(m.label) ? m.color : 'var(--color-text-soft)',
-            fontSize: 12, fontWeight: moods.includes(m.label) ? 600 : 400,
+            border: `1.5px solid ${moods.includes(m) ? 'var(--color-primary)' : 'var(--color-border)'}`,
+            background: moods.includes(m) ? 'var(--color-primary-10)' : 'transparent',
+            color: moods.includes(m) ? 'var(--color-primary)' : 'var(--color-text-soft)',
+            fontSize: 12, fontWeight: moods.includes(m) ? 600 : 400,
             cursor: 'pointer', fontFamily: 'var(--font-detail)',
-          }}>{m.label}</button>
+          }}>{m}</button>
         ))}
       </div>
 
