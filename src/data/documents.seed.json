@@ -1,82 +1,32 @@
 [
   {
-    "id": "doc-ticket-trulli",
-    "source": "seed",
-    "type": "ticket",
-    "ownerPersonId": "group",
-    "linkedActivityId": "act-3-1",
-    "title": "Tour Trulli de Alberobello",
-    "file": "/seed-docs/ticket-trulli.pdf",
-    "createdAt": "2026-05-01"
-  },
-  {
-    "id": "doc-ticket-coliseo",
-    "source": "seed",
-    "type": "ticket",
-    "ownerPersonId": "group",
-    "linkedActivityId": "act-2-1",
-    "title": "Coliseo de Roma — entrada general",
-    "file": "/seed-docs/ticket-coliseo.pdf",
-    "createdAt": "2026-05-01"
-  },
-  {
-    "id": "doc-ticket-acropolis",
+    "id": "doc-excursion-santorini",
     "source": "seed",
     "type": "ticket",
     "ownerPersonId": "group",
     "linkedActivityId": "act-7-2",
-    "title": "La Acrópolis — 7 adultos",
-    "file": "/seed-docs/ticket-acropolis.pdf",
-    "createdAt": "2026-05-01"
+    "title": "Excursión Santorini · Oia y Fira",
+    "file": "/seed-docs/excursion-santorini.pdf",
+    "createdAt": "2026-06-26"
   },
   {
-    "id": "doc-ticket-dubrovnik",
+    "id": "doc-excursion-katakolon",
     "source": "seed",
     "type": "ticket",
     "ownerPersonId": "group",
-    "linkedActivityId": "act-4-3",
-    "title": "Murallas de Dubrovnik",
-    "file": "/seed-docs/ticket-dubrovnik.pdf",
-    "createdAt": "2026-05-01"
+    "linkedActivityId": "act-9-2",
+    "title": "Excursión Katakolon · Olympia",
+    "file": "/seed-docs/excursion-katakolon.pdf",
+    "createdAt": "2026-06-26"
   },
   {
     "id": "doc-boarding",
     "source": "seed",
     "type": "reservation",
     "ownerPersonId": "group",
-    "linkedActivityId": "act-4-1",
+    "linkedActivityId": "act-5-2",
     "title": "Boarding pass MSC Crucero",
     "file": "/seed-docs/boarding-msc.pdf",
-    "createdAt": "2026-05-01"
-  },
-  {
-    "id": "doc-hotel-roma",
-    "source": "seed",
-    "type": "reservation",
-    "ownerPersonId": "group",
-    "linkedActivityId": "act-1-2",
-    "title": "Hotel Artemide, Roma — 2 noches",
-    "file": "/seed-docs/hotel-roma.pdf",
-    "createdAt": "2026-05-01"
-  },
-  {
-    "id": "doc-hotel-mystique",
-    "source": "seed",
-    "type": "reservation",
-    "ownerPersonId": "group",
-    "linkedActivityId": "act-8-2",
-    "title": "Hotel Mystique, Oia — 2 noches",
-    "file": "/seed-docs/hotel-mystique.pdf",
-    "createdAt": "2026-05-01"
-  },
-  {
-    "id": "doc-vuelo-santorini",
-    "source": "seed",
-    "type": "ticket",
-    "ownerPersonId": "group",
-    "linkedActivityId": "act-8-1",
-    "title": "Atenas → Santorini · Aegean A3",
-    "file": "/seed-docs/vuelo-santorini.pdf",
     "createdAt": "2026-05-01"
   }
 ]

@@ -7,7 +7,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icons/**', 'seed-docs/**'],
+      includeAssets: ['icons/**', 'seed-docs/**', 'images/**'],
       manifest: {
         name: 'Viaje Europa 2026 · Valcarce',
         short_name: 'Europa',

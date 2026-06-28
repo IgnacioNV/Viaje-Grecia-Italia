@@ -111,7 +111,7 @@ export function JournalScreen({ personId, personName }: JournalScreenProps) {
 
       {/* FAB — higher to not touch navbar */}
       <button onClick={() => setComposing(true)} style={{
-        position: 'fixed', bottom: 108,
+        position: 'fixed', bottom: 132,
         right: 'max(20px, calc(50vw - 195px))',
         width: 52, height: 52, borderRadius: '50%',
         background: 'var(--color-primary)', border: 'none',

@@ -1,5 +1,9 @@
 import { useState } from 'react'
+<<<<<<< HEAD
 import { CopyButton, FilePreview } from '../components/ui/FilePreview'
+=======
+import { CopyButton, FilePreview, DownloadButton } from '../components/ui/FilePreview'
+>>>>>>> main
 import { useLiveQuery } from 'dexie-react-hooks'
 import { IconStamp } from '../components/ui/IconStamp'
 import { db } from '../db/dexie'
@@ -39,7 +43,11 @@ export function FamilyScreen() {
               {person.name.charAt(0)}
             </div>
             <div style={{ flex: 1 }}>
+<<<<<<< HEAD
               <div style={{ fontWeight: 600, fontSize: 16 }}>{person.name}</div>
+=======
+              <div style={{ fontWeight: 600, fontSize: 16, color: 'var(--color-text)' }}>{person.name}</div>
+>>>>>>> main
               <div style={{ fontSize: 12, color: 'var(--color-text-soft)', marginTop: 1, fontFamily: 'var(--font-detail)' }}>
                 {person.role}
               </div>
@@ -148,6 +156,7 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
                   </div>
                 )}
 
+<<<<<<< HEAD
                 {/* Photos */}
                 {(p.photoFront || p.photoBack) && (
                   <div style={{ display: 'flex', gap: 8 }}>
@@ -166,6 +175,36 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
                         <img src={p.photoBack} alt="Dorso" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
                         <div style={{ fontSize: 10, textAlign: 'center', padding: '4px', color: 'var(--color-text-muted)', background: 'var(--color-bg)', fontFamily: 'var(--font-detail)' }}>Dorso</div>
                       </button>
+=======
+                {/* Photos + download */}
+                {(p.photoFront || p.photoBack) && (
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    {p.photoFront && (
+                      <div style={{ flex: 1 }}>
+                        <button onClick={() => setPreviewSrc(p.photoFront!)} style={{
+                          width: '100%', border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden', display: 'block',
+                        }}>
+                          <img src={p.photoFront} alt="Frente" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
+                        </button>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
+                          <span style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Frente</span>
+                          <DownloadButton src={p.photoFront} filename={`pasaporte-${person.name.toLowerCase()}-frente.jpg`} label="Guardar" />
+                        </div>
+                      </div>
+                    )}
+                    {p.photoBack && (
+                      <div style={{ flex: 1 }}>
+                        <button onClick={() => setPreviewSrc(p.photoBack!)} style={{
+                          width: '100%', border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden', display: 'block',
+                        }}>
+                          <img src={p.photoBack} alt="Dorso" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
+                        </button>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
+                          <span style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Dorso</span>
+                          <DownloadButton src={p.photoBack} filename={`pasaporte-${person.name.toLowerCase()}-dorso.jpg`} label="Guardar" />
+                        </div>
+                      </div>
+>>>>>>> main
                     )}
                   </div>
                 )}

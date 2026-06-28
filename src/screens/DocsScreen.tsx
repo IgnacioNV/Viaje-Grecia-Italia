@@ -103,6 +103,7 @@ export function DocsScreen({ personId }: DocsScreenProps) {
     }))
   })
 
+<<<<<<< HEAD
   // Seed docs as DocItems (for preview)
   const seedDocItems: DocItem[] = SEED_DOCS.map(doc => ({
     id: doc.id,
@@ -113,6 +114,26 @@ export function DocsScreen({ personId }: DocsScreenProps) {
     seedFilePath: doc.file,
   }))
 
+=======
+  // Seed docs as DocItems (for preview and category views)
+  const seedDocItems: DocItem[] = SEED_DOCS.map(doc => ({
+    id: doc.id,
+    title: doc.title,
+    sub: 'Compartido · Grupo',
+    icon: (doc.type === 'ticket' ? 'ticket' : doc.type === 'reservation' ? 'reservation' : 'document') as IconName,
+    detail: `Todos los integrantes · ${doc.createdAt}`,
+    seedFilePath: doc.file,
+  }))
+
+  // Seed docs grouped by category
+  const seedByCategory: Record<string, DocItem[]> = {
+    pasaportes: seedDocItems.filter(d => SEED_DOCS.find(s => s.id === d.id)?.type === 'passport'),
+    hoteles:    seedDocItems.filter(d => SEED_DOCS.find(s => s.id === d.id)?.type === 'reservation'),
+    transporte: seedDocItems.filter(d => SEED_DOCS.find(s => s.id === d.id)?.type === 'voucher'),
+    tickets:    seedDocItems.filter(d => SEED_DOCS.find(s => s.id === d.id)?.type === 'ticket'),
+  }
+
+>>>>>>> main
   // Merge local docs into categories by type
   const localByCategory: Record<string, DocItem[]> = {
     pasaportes: localDocs.filter(d => d.type === 'passport').map(d => ({
@@ -145,6 +166,10 @@ export function DocsScreen({ personId }: DocsScreenProps) {
       label={CATEGORY_LABELS[activeCategory].label}
       docs={[
         ...(activeCategory === 'pasaportes' ? profilePassportDocs : []),
+<<<<<<< HEAD
+=======
+        ...(seedByCategory[activeCategory] ?? []),
+>>>>>>> main
         ...CATEGORY_DOCS[activeCategory],
         ...(localByCategory[activeCategory] ?? []),
       ]}
@@ -196,7 +221,14 @@ export function DocsScreen({ personId }: DocsScreenProps) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 24 }}>
           {(Object.keys(CATEGORY_LABELS) as CategoryKey[]).map(key => {
             const { label, icon } = CATEGORY_LABELS[key]
+<<<<<<< HEAD
             const count = (key === 'pasaportes' ? profilePassportDocs.length : 0) + CATEGORY_DOCS[key].length + (localByCategory[key]?.length ?? 0)
+=======
+            const count = (key === 'pasaportes' ? profilePassportDocs.length : 0)
+              + (seedByCategory[key]?.length ?? 0)
+              + CATEGORY_DOCS[key].length
+              + (localByCategory[key]?.length ?? 0)
+>>>>>>> main
             return (
               <button key={key} onClick={() => { setActiveCategory(key); setSection('category') }} style={{
                 padding: '14px 14px', textAlign: 'left', cursor: 'pointer',
@@ -259,7 +291,7 @@ export function DocsScreen({ personId }: DocsScreenProps) {
 
       {/* FAB */}
       <button onClick={() => setSection('upload')} style={{
-        position: 'fixed', bottom: 108,
+        position: 'fixed', bottom: 132,
         right: 'max(20px, calc(50vw - 195px))',
         width: 52, height: 52, borderRadius: '50%',
         background: 'var(--color-primary)', border: 'none',
@@ -456,7 +488,7 @@ function ProfileSection({ personId, onBack }: { personId: string; onBack: () => 
   }
 
   return (
-    <div style={{ minHeight: '100dvh', overflowY: 'auto', padding: '20px 20px 40px', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100dvh', overflowY: 'auto', padding: '20px 20px 100px', background: 'var(--color-bg)' }}>
       <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', fontSize: 14, fontWeight: 500, marginBottom: 20, padding: 0, fontFamily: 'var(--font-body)' }}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
         Documentos
@@ -565,7 +597,7 @@ function UploadSection({ personId, onBack }: { personId: string; onBack: () => v
   }
 
   return (
-    <div style={{ minHeight: '100dvh', overflowY: 'auto', padding: '20px 20px 40px', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100dvh', overflowY: 'auto', padding: '20px 20px 100px', background: 'var(--color-bg)' }}>
       <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', fontSize: 14, fontWeight: 500, marginBottom: 20, padding: 0, fontFamily: 'var(--font-body)' }}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
         Documentos
