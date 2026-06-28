@@ -226,12 +226,9 @@ function ComposeEntry({ personId, existing, onDone }: {
   }
 
   return (
-    /* Full-height scrollable container */
-    <div style={{
-      minHeight: '100dvh', overflowY: 'auto',
-      padding: '20px 20px 40px',
-      background: 'var(--color-bg)',
-    }}>
+    <div style={{ minHeight: '100dvh', background: 'var(--color-bg)', display: 'flex', flexDirection: 'column' }}>
+    {/* Scrollable content */}
+    <div style={{ flex: 1, overflowY: 'auto', padding: '20px 20px 16px' }}>
       <button onClick={onDone} style={{
         display: 'flex', alignItems: 'center', gap: 6,
         background: 'none', border: 'none', cursor: 'pointer',
@@ -304,6 +301,9 @@ function ComposeEntry({ personId, existing, onDone }: {
         }} />
       )}
 
+    </div>{/* end scrollable */}
+    {/* Sticky save */}
+    <div style={{ padding: '12px 20px max(20px, env(safe-area-inset-bottom))', background: 'var(--color-bg)', borderTop: '1px solid var(--color-border)', flexShrink: 0 }}>
       <button onClick={handleSave} disabled={!text.trim() || saving} style={{
         width: '100%', padding: '15px',
         background: !text.trim() ? 'var(--color-border)' : 'var(--color-primary)',
@@ -311,10 +311,10 @@ function ComposeEntry({ personId, existing, onDone }: {
         fontSize: 15, fontWeight: 600,
         cursor: !text.trim() ? 'default' : 'pointer',
         fontFamily: 'var(--font-body)',
-        marginBottom: 20,
       }}>
         {saving ? 'Guardando...' : existing ? 'Guardar cambios' : 'Guardar entrada'}
       </button>
+    </div>
     </div>
   )
 }

@@ -194,7 +194,7 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
       </div>
 
       {/* Activities grouped by period */}
-      <div style={{ padding: '16px 20px 0' }}>
+      <div style={{ padding: `16px 20px ${(!info?.facts || info.facts.length === 0) ? '110px' : '0'}` }}>
         {activities.length === 0
           ? <p style={{ fontSize: 14, color: 'var(--color-text-muted)', textAlign: 'center', padding: '24px 0', fontFamily: 'var(--font-detail)' }}>
               No hay actividades para vos este día.
@@ -207,7 +207,7 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
 
       {/* Cultural facts */}
       {info?.facts && info.facts.length > 0 && (
-        <div style={{ padding: '20px 20px 0' }}>
+        <div style={{ padding: '20px 20px 110px' }}>
           <p className="eyebrow" style={{ marginBottom: 10 }}>Cultura e historia</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {info.facts.map((fact, i) => (
@@ -317,8 +317,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
               marginTop: 6,
               fontSize: 12,
               lineHeight: 1.55,
-              color: 'var(--color-text-soft)',
-              fontStyle: 'italic',
+              color: 'var(--color-accent)',
               fontFamily: 'var(--font-detail)',
             }}>
               {notes}
@@ -383,17 +382,19 @@ function ProfileSheet({ personId, personName, onClose }: {
           width: '100%', maxWidth: 430,
           background: 'var(--color-surface)',
           borderRadius: '20px 20px 0 0',
-          padding: '0 20px max(24px, env(safe-area-inset-bottom))',
-          zIndex: 201, maxHeight: '88dvh', overflowY: 'auto',
+          zIndex: 201, maxHeight: '88dvh',
+          display: 'flex', flexDirection: 'column',
         }}
       >
         {/* Drag handle — tap or swipe down to close */}
         <div
           onClick={onClose}
-          style={{ padding: '14px 0 6px', display: 'flex', justifyContent: 'center', cursor: 'pointer' }}
+          style={{ padding: '14px 0 6px', display: 'flex', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}
         >
           <div style={{ width: 40, height: 4, borderRadius: 2, background: 'var(--color-border)' }} />
         </div>
+        {/* Scrollable content */}
+        <div style={{ overflowY: 'auto', flex: 1, padding: '0 20px max(24px, env(safe-area-inset-bottom))' }}>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
@@ -505,6 +506,7 @@ function ProfileSheet({ personId, personName, onClose }: {
             }}>Completar perfil</button>
           </div>
         )}
+        </div>{/* end scrollable content */}
       </div>
     </>
   )
@@ -556,9 +558,11 @@ function ProfileEditor({ personId, profile, onDone, onClose }: {
         width: '100%', maxWidth: 430,
         background: 'var(--color-surface)',
         borderRadius: '20px 20px 0 0',
-        padding: '20px 20px max(80px, env(safe-area-inset-bottom))',
-        zIndex: 201, maxHeight: '92dvh', overflowY: 'auto',
+        zIndex: 201, maxHeight: '92dvh',
+        display: 'flex', flexDirection: 'column',
       }}>
+        {/* Scrollable content area */}
+        <div style={{ overflowY: 'auto', flex: 1, padding: '20px 20px 12px' }}>
         <div style={{ width: 36, height: 4, borderRadius: 2, background: 'var(--color-border)', margin: '0 auto 20px' }} />
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
@@ -674,9 +678,13 @@ function ProfileEditor({ personId, profile, onDone, onClose }: {
           </div>
         ))}
 
-        <button onClick={handleSave} disabled={saving} style={{ width: '100%', padding: '14px', marginTop: 12, background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
-          {saving ? 'Guardando...' : 'Guardar perfil'}
-        </button>
+        </div>{/* end scrollable */}
+        {/* Sticky save button */}
+        <div style={{ padding: '12px 20px max(20px, env(safe-area-inset-bottom))', background: 'var(--color-surface)', borderTop: '1px solid var(--color-border)', flexShrink: 0 }}>
+          <button onClick={handleSave} disabled={saving} style={{ width: '100%', padding: '14px', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
+            {saving ? 'Guardando...' : 'Guardar perfil'}
+          </button>
+        </div>
       </div>
     </>
   )
