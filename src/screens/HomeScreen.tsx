@@ -258,6 +258,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
       <div style={{
         display: 'flex',
         gap: 14,
+        paddingTop: 16,
         paddingBottom: 18,
         borderBottom: '1px solid var(--color-primary-10)',
       }}>
