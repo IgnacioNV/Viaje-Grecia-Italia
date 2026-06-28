@@ -271,7 +271,7 @@ export function DocsScreen({ personId }: DocsScreenProps) {
 
       {/* FAB */}
       <button onClick={() => setSection('upload')} style={{
-        position: 'fixed', bottom: 108,
+        position: 'fixed', bottom: 132,
         right: 'max(20px, calc(50vw - 195px))',
         width: 52, height: 52, borderRadius: '50%',
         background: 'var(--color-primary)', border: 'none',
@@ -468,7 +468,7 @@ function ProfileSection({ personId, onBack }: { personId: string; onBack: () => 
   }
 
   return (
-    <div style={{ minHeight: '100dvh', overflowY: 'auto', padding: '20px 20px 40px', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100dvh', overflowY: 'auto', padding: '20px 20px 100px', background: 'var(--color-bg)' }}>
       <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', fontSize: 14, fontWeight: 500, marginBottom: 20, padding: 0, fontFamily: 'var(--font-body)' }}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
         Documentos
@@ -577,7 +577,7 @@ function UploadSection({ personId, onBack }: { personId: string; onBack: () => v
   }
 
   return (
-    <div style={{ minHeight: '100dvh', overflowY: 'auto', padding: '20px 20px 40px', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100dvh', overflowY: 'auto', padding: '20px 20px 100px', background: 'var(--color-bg)' }}>
       <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', fontSize: 14, fontWeight: 500, marginBottom: 20, padding: 0, fontFamily: 'var(--font-body)' }}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
         Documentos
