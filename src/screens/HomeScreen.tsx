@@ -504,8 +504,8 @@ function ProfileEditor({ personId, profile, onDone, onClose }: {
         width: '100%', maxWidth: 430,
         background: 'var(--color-surface)',
         borderRadius: '20px 20px 0 0',
-        padding: '20px 20px max(24px, env(safe-area-inset-bottom))',
-        zIndex: 201, maxHeight: '90dvh', overflowY: 'auto',
+        padding: '20px 20px max(80px, env(safe-area-inset-bottom))',
+        zIndex: 201, maxHeight: '92dvh', overflowY: 'auto',
       }}>
         <div style={{ width: 36, height: 4, borderRadius: 2, background: 'var(--color-border)', margin: '0 auto 20px' }} />
 
