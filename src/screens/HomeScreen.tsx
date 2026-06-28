@@ -248,34 +248,6 @@ const PERIOD_LABELS: Record<string, string> = {
   night:     'Noche',
 }
 
-function PeriodGroups({ activities }: { activities: Activity[] }) {
-  const periods = ['morning', 'afternoon', 'night']
-  const grouped: Record<string, Activity[]> = {}
-  for (const a of activities) {
-    if (!grouped[a.period]) grouped[a.period] = []
-    grouped[a.period].push(a)
-  }
-
-  return (
-    <div>
-      {periods.filter(p => grouped[p]?.length).map(period => (
-        <div key={period} style={{ marginBottom: 8 }}>
-          <div style={{
-            fontSize: 10, fontWeight: 700,
-            letterSpacing: '0.12em', textTransform: 'uppercase',
-            color: 'var(--color-accent)',
-            fontFamily: 'var(--font-body)',
-            paddingBottom: 6,
-            marginBottom: 0,
-          }}>
-            {PERIOD_LABELS[period]}
-          </div>
-          {grouped[period].map(a => <ActivityCard key={a.id} activity={a} />)}
-        </div>
-      ))}
-    </div>
-  )
-}
 
 /* ── Activity Card ──────────────────────────────────────── */
 function ActivityCard({ activity }: { activity: Activity }) {
