@@ -1,4 +1,4 @@
-export type Theme = 'greece' | 'puglia' | 'cruise'
+export type Theme = 'greece' | 'puglia'
 export type Phase = 'individual' | 'group'
 export type DocumentType = 'ticket' | 'passport' | 'reservation' | 'voucher' | 'other'
 export type DocumentSource = 'seed' | 'local'

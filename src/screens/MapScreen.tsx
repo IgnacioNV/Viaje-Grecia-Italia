@@ -35,7 +35,7 @@ function getTransport(dayNum: number): Transport {
   if (dayNum === 0) return 'plane' // before trip
   const day = DAYS[dayNum - 1]
   if (!day) return 'plane'
-  if (day.theme === 'cruise') return 'ship'
+  if (day.phase === 'group' && day.destination.toLowerCase().includes('bordo')) return 'ship'
   const hasTrainActivity = day.activities.some(a => a.title.toLowerCase().includes('tren'))
   if (hasTrainActivity) return 'train'
   return 'walking'

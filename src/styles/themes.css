@@ -1,6 +1,6 @@
 /* ============================================================
    EUROPE TRIP — THEME SYSTEM
-   3 themes: greece (base) | puglia | cruise
+   2 themes: greece (base) | puglia
    Cambio via data-theme en :root
    ============================================================ */
 
@@ -82,44 +82,6 @@
 
   --texture-color-1: rgba(194, 98, 46, 0.03);
   --texture-color-2: rgba(194, 98, 46, 0.015);
-
-  --phase-bg:    #FFF3CD;
-  --phase-color: #856404;
-}
-
-/* ── CRUISE (Adriático) ────────────────────────────────── */
-:root[data-theme='cruise'] {
-  --color-primary:    #1A5FAA;
-  --color-primary-10: rgba(26, 95, 170, 0.10);
-  --color-primary-20: rgba(26, 95, 170, 0.20);
-  --color-accent:     #3EADD4;
-  --color-bg:         #F1F6FB;
-  --color-surface:    #FFFFFF;
-  --color-text:       #0D1F35;
-  --color-text-soft:  rgba(13, 31, 53, 0.55);
-  --color-text-muted: rgba(13, 31, 53, 0.38);
-  --color-border:     rgba(26, 95, 170, 0.12);
-
-  --card-radius:        20px;
-  --card-shadow:        0 2px 16px rgba(26, 95, 170, 0.10);
-  --card-border:        none;
-  --card-border-left:   none;
-  --card-border-radius-left: 20px;
-
-  --stamp-radius:  50%;
-  --stamp-bg:      var(--color-primary-10);
-  --stamp-border:  none;
-  --stamp-shadow:  0 1px 6px rgba(62, 173, 212, 0.20);
-
-  --font-detail: 'Shantell Sans', cursive;
-  --font-body:   'Albert Sans', sans-serif;
-
-  --nav-active-color:   var(--color-primary);
-  --nav-active-bg:      var(--color-primary);
-  --nav-active-border:  var(--color-accent);
-
-  --texture-color-1: rgba(62, 173, 212, 0.02);
-  --texture-color-2: rgba(26, 95, 170, 0.01);
 
   --phase-bg:    #FFF3CD;
   --phase-color: #856404;
