@@ -186,31 +186,6 @@ export function DocsScreen({ personId }: DocsScreenProps) {
         <p className="eyebrow" style={{ marginBottom: 6 }}>Maleta digital</p>
         <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.1, marginBottom: 20 }}>Documentos</h1>
 
-        {/* ── NIVEL 1: Acciones utilitarias — mínimas, sin card ── */}
-        <div style={{ display: 'flex', gap: 16, marginBottom: 20, paddingBottom: 20, borderBottom: '1px solid var(--color-border)' }}>
-          {[
-            { icon: 'passport' as IconName, label: 'Mi perfil', action: () => setSection('profile') },
-            { icon: 'upload'   as IconName, label: 'Subir archivo', action: () => setSection('upload') },
-          ].map(({ icon, label, action }) => (
-            <button key={label} onClick={action} style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '7px 14px', borderRadius: 20,
-              border: '1px solid var(--color-border)',
-              background: 'var(--color-surface)',
-              color: 'var(--color-text-soft)',
-              fontSize: 13, fontWeight: 500,
-              cursor: 'pointer', fontFamily: 'var(--font-body)',
-            }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"
-                color="var(--color-primary)">
-                <IconSVG name={icon} />
-              </svg>
-              {label}
-            </button>
-          ))}
-        </div>
-
         {/* ── NIVEL 2: Categorías — fondo soft, rol de navegación ── */}
         <p className="eyebrow" style={{ marginBottom: 10 }}>Categorías</p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 24 }}>
@@ -413,12 +388,6 @@ function ExpandableRow({ doc, currentPersonId }: { doc: DocItem; currentPersonId
 
 
 /* ── Inline SVG helper for utility buttons ──────────────── */
-function IconSVG({ name }: { name: IconName }) {
-  if (name === 'passport') return <><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="11" r="3"/><line x1="7" y1="7" x2="17" y2="7"/><line x1="7" y1="18" x2="17" y2="18"/></>
-  if (name === 'upload')   return <><polyline points="16,6 12,2 8,6"/><line x1="12" y1="2" x2="12" y2="15"/><path d="M20 17v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/></>
-  return null
-}
-
 /* ── Category detail view ───────────────────────────────── */
 function CategoryView({ label, docs, currentPersonId, onBack }: {
   label: string
