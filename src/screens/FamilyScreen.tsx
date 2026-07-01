@@ -57,7 +57,7 @@ export function FamilyScreen() {
 /* ── Info row ────────────────────────────────────────────── */
 function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, paddingBottom: 10, borderBottom: '1px solid var(--color-border)' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, paddingTop: 12, paddingBottom: 12, borderBottom: '1px solid var(--color-border)' }}>
       <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', flexShrink: 0 }}>
         {label}
       </span>
@@ -196,7 +196,7 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
                       <button onClick={() => setPreviewSrc(p.photoFront!)} style={{ width: '100%', border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden', display: 'block' }}>
                         <img src={p.photoFront} alt="Frente" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
                       </button>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
                         <span style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Frente</span>
                         <DownloadButton src={p.photoFront} filename={`pasaporte-${person.name.toLowerCase().replace(' ', '-')}-frente.jpg`} label="Guardar" />
                       </div>
@@ -207,7 +207,7 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
                       <button onClick={() => setPreviewSrc(p.photoBack!)} style={{ width: '100%', border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden', display: 'block' }}>
                         <img src={p.photoBack} alt="Dorso" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
                       </button>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
                         <span style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Dorso</span>
                         <DownloadButton src={p.photoBack} filename={`pasaporte-${person.name.toLowerCase().replace(' ', '-')}-dorso.jpg`} label="Guardar" />
                       </div>
