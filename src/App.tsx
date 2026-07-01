@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
 import { useCurrentPerson } from './hooks/useCurrentPerson'
 import { useTheme } from './hooks/useTheme'
 import { WelcomeScreen } from './screens/WelcomeScreen'
@@ -8,6 +9,7 @@ import { DocsScreen } from './screens/DocsScreen'
 import { JournalScreen } from './screens/JournalScreen'
 import { MapScreen } from './screens/MapScreen'
 import { Navbar } from './components/ui/Navbar'
+import { seedDatabase } from './utils/seedDatabase'
 import './styles/global.css'
 
 function AppRoutes() {
@@ -37,6 +39,7 @@ function AppRoutes() {
 }
 
 export default function App() {
+  useEffect(() => { seedDatabase() }, [])
   return (
     <BrowserRouter>
       <AppRoutes />

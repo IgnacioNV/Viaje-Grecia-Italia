@@ -61,16 +61,20 @@ function PDFViewer({ src, isUrl }: { src: string; isUrl?: boolean }) {
         container.innerHTML = ''
 
         const viewportWidth = container.clientWidth || window.innerWidth
+        const dpr = window.devicePixelRatio || 1
 
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i)
-          const scale = viewportWidth / page.getViewport({ scale: 1 }).width
-          const viewport = page.getViewport({ scale })
+          // Scale to fit viewport width, multiplied by DPR for sharp rendering
+          const baseScale = viewportWidth / page.getViewport({ scale: 1 }).width
+          const viewport = page.getViewport({ scale: baseScale * dpr })
 
           const canvas = document.createElement('canvas')
           canvas.width = viewport.width
           canvas.height = viewport.height
+          // CSS size stays at 1x — DPR handled by canvas resolution
           canvas.style.width = '100%'
+          canvas.style.height = 'auto'
           canvas.style.display = 'block'
           canvas.style.marginBottom = i < pdf.numPages ? '8px' : '0'
 
