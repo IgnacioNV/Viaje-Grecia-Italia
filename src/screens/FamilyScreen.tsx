@@ -55,14 +55,17 @@ export function FamilyScreen() {
 }
 
 /* ── Info row ────────────────────────────────────────────── */
-function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
+function InfoRow({ label, children, copyText }: { label: string; children: React.ReactNode; copyText?: string }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, paddingTop: 12, paddingBottom: 12, borderBottom: '1px solid var(--color-border)' }}>
-      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', flexShrink: 0 }}>
+    <div style={{ paddingTop: 12, paddingBottom: 12, borderBottom: '1px solid var(--color-border)' }}>
+      <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
         {label}
       </span>
-      <div style={{ fontSize: 13, color: 'var(--color-text)', textAlign: 'right' }}>
-        {children}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 5, gap: 8 }}>
+        <span style={{ fontSize: 15, color: 'var(--color-text)', lineHeight: 1.3 }}>
+          {children}
+        </span>
+        {copyText && <CopyButton text={copyText} />}
       </div>
     </div>
   )
@@ -137,19 +140,11 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
             <InfoRow label="Fecha de nacimiento">
               {profile?.birthDate ?? <Pending />}
             </InfoRow>
-            <InfoRow label="Teléfono">
-              {profile?.phoneNumber
-                ? <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    {profile.phoneNumber} <CopyButton text={profile.phoneNumber} />
-                  </span>
-                : <Pending />}
+            <InfoRow label="Teléfono" copyText={profile?.phoneNumber}>
+              {profile?.phoneNumber ?? <Pending />}
             </InfoRow>
-            <InfoRow label="Emergencia">
-              {profile?.emergencyPhone
-                ? <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    {profile.emergencyPhone} <CopyButton text={profile.emergencyPhone} />
-                  </span>
-                : <Pending />}
+            <InfoRow label="Emergencia" copyText={profile?.emergencyPhone}>
+              {profile?.emergencyPhone ?? <Pending />}
             </InfoRow>
           </div>
         </section>
