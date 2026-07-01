@@ -389,7 +389,7 @@ function ProfileSheet({ personId, personName, onClose }: {
           <div style={{ width: 40, height: 4, borderRadius: 2, background: 'var(--color-border)' }} />
         </div>
         {/* Scrollable content */}
-        <div style={{ overflowY: 'auto', flex: 1, padding: '0 20px max(24px, env(safe-area-inset-bottom))' }}>
+        <div style={{ overflowY: 'auto', flex: 1, padding: '0 20px max(100px, calc(env(safe-area-inset-bottom) + 80px))' }}>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
