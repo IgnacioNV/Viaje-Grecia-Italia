@@ -122,8 +122,8 @@ function PDFViewer({ src, isUrl }: { src: string; isUrl?: boolean }) {
 }
 
 /* ── Shared shell ───────────────────────────────────────── */
-function PreviewShell({ title, onClose, children }: {
-  title: string; onClose: () => void; children: React.ReactNode
+function PreviewShell({ title, onClose, children, onDownload }: {
+  title: string; onClose: () => void; children: React.ReactNode; onDownload?: () => void
 }) {
   useEffect(() => {
     enableZoom()
@@ -150,18 +150,36 @@ function PreviewShell({ title, onClose, children }: {
         }}>
           {title}
         </span>
-        <button onClick={onClose} style={{
-          display: 'flex', alignItems: 'center', gap: 6,
-          padding: '8px 16px', borderRadius: 20,
-          background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)',
-          color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', flexShrink: 0,
-          fontFamily: 'var(--font-body)',
-        }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-          Cerrar
-        </button>
+        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+          {onDownload && (
+            <button onClick={onDownload} style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '8px 14px', borderRadius: 20,
+              background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)',
+              color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+              fontFamily: 'var(--font-body)',
+            }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7,10 12,15 17,10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Guardar
+            </button>
+          )}
+          <button onClick={onClose} style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            padding: '8px 16px', borderRadius: 20,
+            background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)',
+            color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+            fontFamily: 'var(--font-body)',
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+            Cerrar
+          </button>
+        </div>
       </div>
 
       {/* Content */}
@@ -187,11 +205,17 @@ function PreviewShell({ title, onClose, children }: {
 }
 
 /* ── FilePreview (base64) ───────────────────────────────── */
-export function FilePreview({ src, onClose }: { src: string; onClose: () => void }) {
+export function FilePreview({ src, filename, onClose }: { src: string; filename?: string; onClose: () => void }) {
   const isPdf = src.startsWith('data:application/pdf')
+  const handleDownload = () => {
+    const a = document.createElement('a')
+    a.href = src
+    a.download = filename ?? (isPdf ? 'documento.pdf' : 'imagen.jpg')
+    document.body.appendChild(a); a.click(); document.body.removeChild(a)
+  }
 
   return (
-    <PreviewShell title={isPdf ? 'Documento' : 'Imagen'} onClose={onClose}>
+    <PreviewShell title={isPdf ? 'Documento' : 'Imagen'} onClose={onClose} onDownload={handleDownload}>
       {isPdf
         ? <PDFViewer src={src} isUrl={false} />
         : <img src={src} alt="Vista previa" style={{ width: '100%', flex: 1, objectFit: 'contain', display: 'block', minHeight: 0 }} />
@@ -206,8 +230,10 @@ export function StaticFilePreview({ filePath, title, onClose }: {
 }) {
   const isPdf = filePath.endsWith('.pdf')
 
+  const handleDownload = () => downloadStaticFile(filePath, title + (isPdf ? '.pdf' : ''))
+
   return (
-    <PreviewShell title={title} onClose={onClose}>
+    <PreviewShell title={title} onClose={onClose} onDownload={handleDownload}>
       {isPdf
         ? <PDFViewer src={filePath} isUrl={true} />
         : <img src={filePath} alt={title} style={{ width: '100%', flex: 1, objectFit: 'contain', display: 'block', minHeight: 0 }} />
@@ -264,4 +290,22 @@ export function DownloadButton({ src, filename, label }: { src: string; filename
       {label ?? 'Descargar'}
     </button>
   )
+}
+
+/* ── Download static file (fetch → blob) ───────────────── */
+export async function downloadStaticFile(filePath: string, filename: string) {
+  try {
+    const res = await fetch(filePath)
+    const blob = await res.blob()
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  } catch (e) {
+    console.error('Download failed', e)
+  }
 }

@@ -15,7 +15,14 @@
         "title": "Llegada a Bari",
         "location": "Aeropuerto de Bari",
         "period": "afternoon",
-        "scope": "group"
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ]
       },
       {
         "id": "act-1-2",
@@ -24,7 +31,14 @@
         "title": "Bari Vecchia",
         "location": "Casco histórico de Bari",
         "period": "afternoon",
-        "scope": "group",
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ],
         "notes": "Basilica di San Nicola, Cattedrale di San Sabino, Arco Basso (calle de las orecchiette) y calles medievales. Caminar sin apuro."
       },
       {
@@ -34,7 +48,14 @@
         "title": "Paseo marítimo al atardecer",
         "location": "Lungomare Nazario Sauro",
         "period": "night",
-        "scope": "group",
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ],
         "notes": "Ideal para el atardecer."
       },
       {
@@ -44,7 +65,14 @@
         "title": "Cena en Bari",
         "location": "Bari Vecchia",
         "period": "night",
-        "scope": "group",
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ],
         "notes": "Probar focaccia barese, panzerotti y helado artesanal."
       }
     ]
@@ -65,7 +93,14 @@
         "title": "Tren a Monopoli",
         "location": "Estación de Bari Central",
         "period": "morning",
-        "scope": "group",
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ],
         "notes": "Duración aproximada: 30 minutos."
       },
       {
@@ -75,7 +110,14 @@
         "title": "Porto Antico di Monopoli",
         "location": "Puerto histórico de Monopoli",
         "period": "morning",
-        "scope": "group",
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ],
         "notes": "Puerto histórico con excelentes vistas."
       },
       {
@@ -85,7 +127,14 @@
         "title": "Centro histórico de Monopoli",
         "location": "Monopoli, Italia",
         "period": "morning",
-        "scope": "group",
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ],
         "notes": "Callecitas blancas, plazas y rincones frente al mar. Bastioni di Monopoli, Basilica Cattedrale Maria Santissima della Madia y Castello Carlo V."
       },
       {
@@ -95,7 +144,14 @@
         "title": "Almuerzo en el puerto",
         "location": "Porto Antico, Monopoli",
         "period": "afternoon",
-        "scope": "group"
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ]
       },
       {
         "id": "act-2-5",
@@ -104,7 +160,14 @@
         "title": "Playa Cala Porta Vecchia (opcional)",
         "location": "Monopoli",
         "period": "afternoon",
-        "scope": "group"
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ]
       },
       {
         "id": "act-2-6",
@@ -113,7 +176,14 @@
         "title": "Regreso a Bari",
         "location": "Estación de Monopoli",
         "period": "afternoon",
-        "scope": "group"
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ]
       },
       {
         "id": "act-2-7",
@@ -122,7 +192,14 @@
         "title": "Noche en Bari",
         "location": "Via Sparano · Paseo marítimo",
         "period": "night",
-        "scope": "group",
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ],
         "notes": "Via Sparano, plazas del centro y paseo marítimo iluminado. Helado artesanal antes de volver al hotel."
       }
     ]
@@ -143,7 +220,14 @@
         "title": "Punto de encuentro excursión",
         "location": "Corso Cavour · Camera di Commercio",
         "period": "morning",
-        "scope": "group",
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ],
         "notes": "Presentarse a las 08:30. Salida a las 09:00. Llevar zapatillas, agua, gorra y protector solar."
       },
       {
@@ -153,7 +237,14 @@
         "title": "Matera",
         "location": "Matera, Basilicata",
         "period": "morning",
-        "scope": "group",
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ],
         "notes": "Los Sassi, miradores panorámicos, iglesias excavadas en roca y centro histórico."
       },
       {
@@ -163,7 +254,14 @@
         "title": "Alberobello",
         "location": "Alberobello, Puglia",
         "period": "afternoon",
-        "scope": "group",
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ],
         "notes": "Barrio de los trulli, miradores y calles típicas."
       },
       {
@@ -173,7 +271,14 @@
         "title": "Regreso a Bari",
         "location": "Bari",
         "period": "night",
-        "scope": "group"
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ]
       }
     ]
   },
@@ -193,7 +298,14 @@
         "title": "Punto de encuentro excursión",
         "location": "Piazza Eroi del Mare",
         "period": "morning",
-        "scope": "group",
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ],
         "notes": "Presentarse a las 08:15. Salida a las 08:30. Regreso a las 18:30."
       },
       {
@@ -203,7 +315,14 @@
         "title": "Polignano a Mare",
         "location": "Polignano a Mare, Puglia",
         "period": "morning",
-        "scope": "group",
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ],
         "notes": "Acantilados, miradores, centro histórico y Playa Lama Monachile."
       },
       {
@@ -213,7 +332,14 @@
         "title": "Ostuni — La Ciudad Blanca",
         "location": "Ostuni, Puglia",
         "period": "afternoon",
-        "scope": "group"
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ]
       },
       {
         "id": "act-4-4",
@@ -222,7 +348,14 @@
         "title": "Locorotondo",
         "location": "Locorotondo, Puglia",
         "period": "afternoon",
-        "scope": "group",
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ],
         "notes": "Uno de los pueblos más bonitos de Puglia."
       },
       {
@@ -232,7 +365,14 @@
         "title": "Regreso a Bari",
         "location": "Bari",
         "period": "night",
-        "scope": "group"
+        "scope": [
+          "guille",
+          "raquel",
+          "joaco",
+          "nacho",
+          "nico",
+          "emi"
+        ]
       }
     ]
   },
