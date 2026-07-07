@@ -35,7 +35,7 @@ function getTransport(dayNum: number): Transport {
   if (dayNum === 0) return 'plane' // before trip
   const day = DAYS[dayNum - 1]
   if (!day) return 'plane'
-  if (day.theme === 'cruise') return 'ship'
+  if (day.phase === 'group' && day.destination.toLowerCase().includes('bordo')) return 'ship'
   const hasTrainActivity = day.activities.some(a => a.title.toLowerCase().includes('tren'))
   if (hasTrainActivity) return 'train'
   return 'walking'
@@ -86,7 +86,7 @@ export function MapScreen() {
     <div className="screen">
       <div style={{ padding: '24px 20px 0' }}>
         <p className="eyebrow" style={{ marginBottom: 6 }}>Nuestro recorrido</p>
-        <h1 style={{ fontSize: 28 }}>El viaje</h1>
+        <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.1 }}>El viaje</h1>
         {currentDay && (
           <p style={{ fontSize: 13, color: 'var(--color-text-soft)', marginTop: 4, fontFamily: 'var(--font-detail)' }}>
             Día {todayDayNum} · {currentDay.destination}

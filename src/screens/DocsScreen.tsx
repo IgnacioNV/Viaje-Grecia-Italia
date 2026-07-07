@@ -104,14 +104,25 @@ export function DocsScreen({ personId }: DocsScreenProps) {
   })
 
   // Seed docs as DocItems (for preview and category views)
-  const seedDocItems: DocItem[] = SEED_DOCS.map(doc => ({
-    id: doc.id,
-    title: doc.title,
-    sub: 'Compartido · Grupo',
-    icon: (doc.type === 'ticket' ? 'ticket' : doc.type === 'reservation' ? 'reservation' : 'document') as IconName,
-    detail: `Todos los integrantes · ${doc.createdAt}`,
-    seedFilePath: doc.file,
-  }))
+  const seedDocItems: DocItem[] = SEED_DOCS.map(doc => {
+    let sub = 'Compartido · Grupo'
+    if (doc.ownerPersonIds?.length) {
+      const names = doc.ownerPersonIds
+        .map(id => PEOPLE.find(p => p.id === id)?.name ?? id)
+        .join(', ')
+      sub = names
+    } else if (doc.ownerPersonId !== 'group') {
+      sub = PEOPLE.find(p => p.id === doc.ownerPersonId)?.name ?? doc.ownerPersonId
+    }
+    return {
+      id: doc.id,
+      title: doc.title,
+      sub,
+      icon: (doc.type === 'ticket' ? 'ticket' : doc.type === 'reservation' ? 'reservation' : 'document') as IconName,
+      detail: `${sub} · ${doc.createdAt}`,
+      seedFilePath: doc.file,
+    }
+  })
 
   // Seed docs grouped by category
   const seedByCategory: Record<string, DocItem[]> = {
@@ -173,32 +184,7 @@ export function DocsScreen({ personId }: DocsScreenProps) {
     <div className="screen">
       <div style={{ padding: '24px 20px 0' }}>
         <p className="eyebrow" style={{ marginBottom: 6 }}>Maleta digital</p>
-        <h1 style={{ fontSize: 30, fontWeight: 700, marginBottom: 20 }}>Documentos</h1>
-
-        {/* ── NIVEL 1: Acciones utilitarias — mínimas, sin card ── */}
-        <div style={{ display: 'flex', gap: 16, marginBottom: 20, paddingBottom: 20, borderBottom: '1px solid var(--color-border)' }}>
-          {[
-            { icon: 'passport' as IconName, label: 'Mi perfil', action: () => setSection('profile') },
-            { icon: 'upload'   as IconName, label: 'Subir archivo', action: () => setSection('upload') },
-          ].map(({ icon, label, action }) => (
-            <button key={label} onClick={action} style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '7px 14px', borderRadius: 20,
-              border: '1px solid var(--color-border)',
-              background: 'var(--color-surface)',
-              color: 'var(--color-text-soft)',
-              fontSize: 13, fontWeight: 500,
-              cursor: 'pointer', fontFamily: 'var(--font-body)',
-            }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"
-                color="var(--color-primary)">
-                <IconSVG name={icon} />
-              </svg>
-              {label}
-            </button>
-          ))}
-        </div>
+        <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.1, marginBottom: 20 }}>Documentos</h1>
 
         {/* ── NIVEL 2: Categorías — fondo soft, rol de navegación ── */}
         <p className="eyebrow" style={{ marginBottom: 10 }}>Categorías</p>
@@ -213,8 +199,8 @@ export function DocsScreen({ personId }: DocsScreenProps) {
               <button key={key} onClick={() => { setActiveCategory(key); setSection('category') }} style={{
                 padding: '14px 14px', textAlign: 'left', cursor: 'pointer',
                 background: 'var(--color-primary-10)',
-                border: '1px solid var(--color-primary-20)',
-                borderRadius: 14, minHeight: 68,
+                border: 'none',
+                borderRadius: 16, minHeight: 72,
                 display: 'flex', flexDirection: 'column', gap: 6,
               }}>
                 <IconStamp icon={icon} size={28}
@@ -228,14 +214,14 @@ export function DocsScreen({ personId }: DocsScreenProps) {
           })}
         </div>
 
-        {/* ── NIVEL 3: Documentos próximos — el contenido real ── */}
+        {/* ── NIVEL 3: Documentos próximos — máximo 3 ── */}
         <p className="eyebrow" style={{ color: 'var(--color-primary)', marginBottom: 12 }}>
           Próximos documentos
         </p>
       </div>
 
-      <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {allDocs.map(doc => <ExpandableRow key={doc.id} doc={doc} currentPersonId={personId} />)}
+      <div style={{ padding: '0 20px 130px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {allDocs.slice(0, 3).map(doc => <ExpandableRow key={doc.id} doc={doc} currentPersonId={personId} />)}
 
         {otherLocalDocs.length > 0 && (
           <>
@@ -319,6 +305,20 @@ function ExpandableRow({ doc, currentPersonId }: { doc: DocItem; currentPersonId
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 600, fontSize: 14, color: status === 'past' ? 'var(--color-text-muted)' : 'var(--color-text)' }}>{doc.title}</div>
               <div style={{ fontSize: 11, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>{doc.sub}</div>
+              {doc.eventDate && status !== 'past' && (
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 4,
+                  marginTop: 4,
+                  fontSize: 11, fontWeight: 600,
+                  color: status === 'today' ? 'var(--color-accent)' : 'var(--color-primary)',
+                  fontFamily: 'var(--font-detail)',
+                }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                  {new Date(doc.eventDate + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
+                </div>
+              )}
             </div>
           </button>
 
@@ -388,12 +388,6 @@ function ExpandableRow({ doc, currentPersonId }: { doc: DocItem; currentPersonId
 
 
 /* ── Inline SVG helper for utility buttons ──────────────── */
-function IconSVG({ name }: { name: IconName }) {
-  if (name === 'passport') return <><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="11" r="3"/><line x1="7" y1="7" x2="17" y2="7"/><line x1="7" y1="18" x2="17" y2="18"/></>
-  if (name === 'upload')   return <><polyline points="16,6 12,2 8,6"/><line x1="12" y1="2" x2="12" y2="15"/><path d="M20 17v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/></>
-  return null
-}
-
 /* ── Category detail view ───────────────────────────────── */
 function CategoryView({ label, docs, currentPersonId, onBack }: {
   label: string
@@ -402,7 +396,7 @@ function CategoryView({ label, docs, currentPersonId, onBack }: {
   onBack: () => void
 }) {
   return (
-    <div className="screen" style={{ padding: '20px' }}>
+    <div className="screen" style={{ padding: '20px 20px 130px' }}>
       <button onClick={onBack} style={{
         display: 'flex', alignItems: 'center', gap: 6,
         background: 'none', border: 'none', cursor: 'pointer',

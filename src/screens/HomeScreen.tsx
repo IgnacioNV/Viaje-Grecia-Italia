@@ -29,11 +29,6 @@ function getGreeting(name: string): string {
   if (h < 20) return `Buenas tardes, ${name}`
   return `Buenas noches, ${name}`
 }
-function formatDate(dateStr: string) {
-  return new Date(dateStr + 'T12:00:00').toLocaleDateString('es-ES', {
-    weekday: 'long', day: 'numeric', month: 'long',
-  })
-}
 
 type TabType = 'today' | 'all'
 
@@ -74,7 +69,7 @@ export function HomeScreen({ personId, personName }: HomeScreenProps) {
           </button>
         </div>
 
-        <h1 style={{ fontSize: 30, fontWeight: 700, marginBottom: 20 }}>Mi itinerario</h1>
+        <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.1, marginBottom: 20 }}>Mi itinerario</h1>
 
         {/* Tabs: Hoy / Todo */}
         <div style={{
@@ -157,49 +152,49 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
       {/* Destination hero */}
       <div style={{
         position: 'relative', margin: '16px 20px 0',
-        borderRadius: 20, overflow: 'hidden', height: 180,
+        borderRadius: 20, overflow: 'hidden', height: 220,
         background: 'var(--color-primary-10)',
       }}>
         {info?.image && (
-          <img
-            src={info.image}
-            alt={day.destination}
+          <img src={info.image} alt={day.destination}
             style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
-            loading="lazy"
-          />
+            loading="lazy" />
         )}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.15) 55%, transparent 100%)' }}/>
+        {/* Day pill */}
+        <div style={{
+          position: 'absolute', top: 14, left: 14,
+          background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(8px)',
+          border: '1px solid rgba(255,255,255,0.25)',
+          borderRadius: 20, padding: '4px 12px',
+          fontSize: 11, fontWeight: 700, color: '#fff',
+          letterSpacing: '0.08em', fontFamily: 'var(--font-body)',
+        }}>DÍA {dayNumber}</div>
+        {day.phase === 'individual' && (
           <div style={{
-            position: 'absolute', inset: 0,
-            background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 65%)',
-          }}/>
-          {/* Day badge */}
+            position: 'absolute', top: 14, right: 14,
+            background: 'var(--phase-bg)', color: 'var(--phase-color)',
+            fontSize: 10, fontWeight: 600, padding: '3px 8px', borderRadius: 8,
+          }}>Fase individual</div>
+        )}
+        {/* Big editorial destination name */}
+        <div style={{ position: 'absolute', bottom: 18, left: 18, right: 18 }}>
           <div style={{
-            position: 'absolute', top: 12, left: 12,
-            background: 'var(--color-primary)', color: '#fff',
-            width: 36, height: 36, borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 14, fontWeight: 700,
-          }}>{dayNumber}</div>
-          {/* Destination label */}
-          <div style={{ position: 'absolute', bottom: 14, left: 16 }}>
-            <div style={{ color: '#fff', fontWeight: 700, fontSize: 20, lineHeight: 1.2 }}>
-              {day.destination}
-            </div>
-            <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, fontFamily: 'var(--font-detail)', marginTop: 2 }}>
-              {formatDate(day.date)} · {day.country}
-            </div>
+            fontSize: 32, fontWeight: 700, color: '#fff', lineHeight: 1.05,
+            fontFamily: 'var(--font-display)',
+            textShadow: '0 2px 16px rgba(0,0,0,0.25)',
+          }}>{day.destination}</div>
+          <div style={{
+            fontSize: 13, color: 'rgba(255,255,255,0.72)',
+            marginTop: 5, fontFamily: 'var(--font-detail)',
+          }}>
+            {new Date(day.date + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })} · {day.country}
           </div>
-          {day.phase === 'individual' && (
-            <div style={{
-              position: 'absolute', top: 12, right: 12,
-              background: 'var(--phase-bg)', color: 'var(--phase-color)',
-              fontSize: 10, fontWeight: 600, padding: '3px 8px', borderRadius: 8,
-            }}>Fase individual</div>
-          )}
         </div>
+      </div>
 
-      {/* Activities */}
-      <div style={{ padding: '16px 20px 0' }}>
+      {/* Activities grouped by period */}
+      <div style={{ padding: `16px 20px ${(!info?.facts || info.facts.length === 0) ? '110px' : '0'}` }}>
         {activities.length === 0
           ? <p style={{ fontSize: 14, color: 'var(--color-text-muted)', textAlign: 'center', padding: '24px 0', fontFamily: 'var(--font-detail)' }}>
               No hay actividades para vos este día.
@@ -212,7 +207,7 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
 
       {/* Cultural facts */}
       {info?.facts && info.facts.length > 0 && (
-        <div style={{ padding: '20px 20px 0' }}>
+        <div style={{ padding: '20px 20px 110px' }}>
           <p className="eyebrow" style={{ marginBottom: 10 }}>Cultura e historia</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {info.facts.map((fact, i) => (
@@ -247,6 +242,7 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
   )
 }
 
+
 /* ── Activity Card ──────────────────────────────────────── */
 function ActivityCard({ activity }: { activity: Activity }) {
   const doc = getDocForActivity(activity.id)
@@ -272,9 +268,8 @@ function ActivityCard({ activity }: { activity: Activity }) {
           <span style={{
             fontSize: 12,
             fontWeight: 600,
-            color: 'var(--color-primary)',
+            color: 'var(--color-accent)',
             fontFamily: 'var(--font-detail)',
-            opacity: 0.7,
           }}>
             {activity.time}
           </span>
@@ -322,8 +317,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
               marginTop: 6,
               fontSize: 12,
               lineHeight: 1.55,
-              color: 'var(--color-text-soft)',
-              fontStyle: 'italic',
+              color: 'var(--color-accent)',
               fontFamily: 'var(--font-detail)',
             }}>
               {notes}
@@ -371,29 +365,34 @@ function ProfileSheet({ personId, personName, onClose }: {
     () => db.personalProfiles.where('personId').equals(personId).first(),
     [personId]
   )
-  const [editing, setEditing] = useState(false)
-
-  if (editing) {
-    return <ProfileEditor personId={personId} profile={profile ?? null} onDone={() => setEditing(false)} onClose={onClose} />
-  }
 
   const initials = personName.slice(0, 2).toUpperCase()
 
   return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 200 }} />
-      <div style={{
-        position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)',
-        width: '100%', maxWidth: 430,
-        background: 'var(--color-surface)',
-        borderRadius: '20px 20px 0 0',
-        padding: '20px 20px max(24px, env(safe-area-inset-bottom))',
-        zIndex: 201, maxHeight: '85dvh', overflowY: 'auto',
-      }}>
-        <div style={{ width: 36, height: 4, borderRadius: 2, background: 'var(--color-border)', margin: '0 auto 20px' }} />
+      <div
+        style={{
+          position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)',
+          width: '100%', maxWidth: 430,
+          background: 'var(--color-surface)',
+          borderRadius: '20px 20px 0 0',
+          zIndex: 201, maxHeight: '88dvh',
+          display: 'flex', flexDirection: 'column',
+        }}
+      >
+        {/* Drag handle — tap or swipe down to close */}
+        <div
+          onClick={onClose}
+          style={{ padding: '14px 0 6px', display: 'flex', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}
+        >
+          <div style={{ width: 40, height: 4, borderRadius: 2, background: 'var(--color-border)' }} />
+        </div>
+        {/* Scrollable content */}
+        <div style={{ overflowY: 'auto', flex: 1, padding: '0 20px max(100px, calc(env(safe-area-inset-bottom) + 80px))' }}>
 
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
           {profile?.facePhoto ? (
             <div style={{ width: 56, height: 56, borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
               <img src={profile.facePhoto} alt={personName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -406,19 +405,24 @@ function ProfileSheet({ personId, personName, onClose }: {
               fontSize: 20, fontWeight: 700, flexShrink: 0,
             }}>{initials}</div>
           )}
-          <div>
+          <div style={{ flex: 1 }}>
             <h2 style={{ fontSize: 22, marginBottom: 2 }}>{personName}</h2>
             <p style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
               {profile ? 'Perfil completado' : 'Perfil sin completar'}
             </p>
           </div>
-          <button onClick={() => setEditing(true)} style={{
-            marginLeft: 'auto', padding: '7px 14px', borderRadius: 20,
-            border: '1.5px solid var(--color-primary)',
-            background: 'transparent', color: 'var(--color-primary)',
-            fontSize: 12, fontWeight: 600, cursor: 'pointer',
-            fontFamily: 'var(--font-body)',
-          }}>Editar</button>
+          <button onClick={onClose} style={{
+            width: 32, height: 32, borderRadius: '50%',
+            background: 'var(--color-primary-10)', border: 'none',
+            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+              stroke="var(--color-text-soft)" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
         </div>
 
         {/* Passports */}
@@ -479,189 +483,14 @@ function ProfileSheet({ personId, personName, onClose }: {
 
         {!profile && (
           <div style={{ textAlign: 'center', padding: '20px 0' }}>
-            <p style={{ color: 'var(--color-text-muted)', fontSize: 14, marginBottom: 16, fontFamily: 'var(--font-detail)' }}>
-              Todavía no cargaste tu información.
+            <p style={{ color: 'var(--color-text-muted)', fontSize: 14, fontFamily: 'var(--font-detail)' }}>
+              Tu información todavía no fue cargada.
             </p>
-            <button onClick={() => setEditing(true)} style={{
-              padding: '12px 24px', background: 'var(--color-primary)',
-              color: '#fff', border: 'none', borderRadius: 12,
-              fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)',
-            }}>Completar perfil</button>
           </div>
         )}
+        </div>{/* end scrollable content */}
       </div>
     </>
   )
 }
 
-/* ── Profile Editor ─────────────────────────────────────── */
-function ProfileEditor({ personId, profile, onDone, onClose }: {
-  personId: string; profile: any; onDone: () => void; onClose: () => void
-}) {
-  const [passports, setPassports] = useState<Passport[]>(profile?.passports ?? [])
-  const [phone, setPhone] = useState(profile?.phoneNumber ?? '')
-  const [emergency, setEmergency] = useState(profile?.emergencyPhone ?? '')
-  const [insurance, setInsurance] = useState<string | undefined>(profile?.insuranceFile)
-  const [facePhoto, setFacePhoto] = useState<string | undefined>(profile?.facePhoto)
-  const [saving, setSaving] = useState(false)
-
-  const toBase64 = (file: File): Promise<string> => new Promise((res, rej) => {
-    const r = new FileReader(); r.onload = () => res(r.result as string); r.onerror = rej; r.readAsDataURL(file)
-  })
-
-  const addPassport = () => {
-    setPassports(prev => [...prev, { id: crypto.randomUUID(), country: '' }])
-  }
-
-  const updatePassport = (id: string, field: keyof Passport, value: string) => {
-    setPassports(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p))
-  }
-
-  const removePassport = (id: string) => {
-    setPassports(prev => prev.filter(p => p.id !== id))
-  }
-
-  const handleSave = async () => {
-    setSaving(true)
-    try {
-      const data = { personId, passports, phoneNumber: phone || undefined, emergencyPhone: emergency || undefined, insuranceFile: insurance, facePhoto, updatedAt: new Date().toISOString() }
-      const existing = await db.personalProfiles.where('personId').equals(personId).first()
-      if (existing?.id) await db.personalProfiles.update(existing.id, data)
-      else await db.personalProfiles.add(data as any)
-      onDone()
-    } finally { setSaving(false) }
-  }
-
-  return (
-    <>
-      <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 200 }} />
-      <div style={{
-        position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)',
-        width: '100%', maxWidth: 430,
-        background: 'var(--color-surface)',
-        borderRadius: '20px 20px 0 0',
-        padding: '20px 20px max(80px, env(safe-area-inset-bottom))',
-        zIndex: 201, maxHeight: '92dvh', overflowY: 'auto',
-      }}>
-        <div style={{ width: 36, height: 4, borderRadius: 2, background: 'var(--color-border)', margin: '0 auto 20px' }} />
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-          <h3>Editar perfil</h3>
-          <button onClick={onDone} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', fontSize: 13 }}>Cancelar</button>
-        </div>
-
-        {/* Face photo */}
-        <p className="eyebrow" style={{ marginBottom: 10 }}>Foto de perfil</p>
-        <label style={{ display: 'block', marginBottom: 20, textAlign: 'center', cursor: 'pointer' }}>
-          {facePhoto ? (
-            <div style={{ position: 'relative', display: 'inline-block' }}>
-              <img src={facePhoto} alt="foto" style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover' }} />
-              <div style={{ position: 'absolute', bottom: 0, right: 0, width: 24, height: 24, borderRadius: '50%', background: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                  <circle cx="12" cy="13" r="4"/>
-                </svg>
-              </div>
-            </div>
-          ) : (
-            <div style={{
-              width: 80, height: 80, borderRadius: '50%', margin: '0 auto',
-              background: 'var(--color-primary-10)', border: '2px dashed var(--color-primary-20)',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-              gap: 4,
-            }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="1.8" strokeLinecap="round">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                <circle cx="12" cy="13" r="4"/>
-              </svg>
-              <span style={{ fontSize: 9, color: 'var(--color-primary)', fontFamily: 'var(--font-detail)' }}>Tu foto</span>
-            </div>
-          )}
-          <input type="file" accept="image/*" style={{ display: 'none' }} onChange={async e => { const f = e.target.files?.[0]; if (f) setFacePhoto(await toBase64(f)) }} />
-        </label>
-
-        {/* Passports */}
-        <p className="eyebrow" style={{ marginBottom: 10 }}>Pasaportes</p>
-        {passports.map((p, idx) => (
-          <div key={p.id} style={{ marginBottom: 14, padding: '14px', background: 'var(--color-bg)', borderRadius: 12, border: '1px solid var(--color-border)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-primary)' }}>Pasaporte {idx + 1}</span>
-              <button onClick={() => removePassport(p.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#e53e3e', fontSize: 12, fontFamily: 'var(--font-body)' }}>Eliminar</button>
-            </div>
-            {[
-              { field: 'country' as const, label: 'País', placeholder: 'Argentina' },
-              { field: 'number'  as const, label: 'Número', placeholder: 'AAA123456' },
-              { field: 'expiry'  as const, label: 'Vencimiento', placeholder: '2029-12-31' },
-            ].map(({ field, label, placeholder }) => (
-              <div key={field} style={{ marginBottom: 8 }}>
-                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: 4 }}>{label}</div>
-                <input value={p[field] ?? ''} onChange={e => updatePassport(p.id, field, e.target.value)}
-                  placeholder={placeholder} style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--color-border)', borderRadius: 8, fontSize: 13, background: 'var(--color-surface)', color: 'var(--color-text)', outline: 'none', boxSizing: 'border-box' as const, fontFamily: 'var(--font-body)' }} />
-              </div>
-            ))}
-          {(['photoFront', 'photoBack'] as const).map(field => (
-            <div key={field} style={{ marginBottom: 8 }}>
-              <div style={{ fontSize: 11, fontWeight: 600, marginBottom: 4, color: 'var(--color-text-soft)' }}>
-                {field === 'photoFront' ? 'Foto frente' : 'Foto dorso'}
-              </div>
-              {p[field] ? (
-                <div style={{ position: 'relative' }}>
-                  <img src={p[field]} alt={field} style={{ width: '100%', borderRadius: 8, maxHeight: 100, objectFit: 'cover', display: 'block' }} />
-                  <button
-                    onClick={() => updatePassport(p.id, field, '')}
-                    style={{
-                      position: 'absolute', top: 6, right: 6,
-                      width: 26, height: 26, borderRadius: '50%',
-                      background: 'rgba(0,0,0,0.6)', border: 'none',
-                      cursor: 'pointer', color: '#fff', fontSize: 14,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}
-                  >
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                  </button>
-                </div>
-              ) : (
-                <label style={{ display: 'block', cursor: 'pointer' }}>
-                  <div style={{ padding: '10px 12px', border: '1px dashed var(--color-border)', borderRadius: 8, fontSize: 12, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>
-                    Tocá para agregar foto
-                  </div>
-                  <input type="file" accept="image/*" style={{ display: 'none' }} onChange={async e => { const f = e.target.files?.[0]; if (f) updatePassport(p.id, field, await toBase64(f)) }} />
-                </label>
-              )}
-            </div>
-          ))}
-          </div>
-        ))}
-
-        <button onClick={addPassport} style={{ width: '100%', padding: '10px', marginBottom: 20, border: '1.5px dashed var(--color-primary)', borderRadius: 10, background: 'transparent', color: 'var(--color-primary)', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
-          + Agregar pasaporte
-        </button>
-
-        {/* Insurance */}
-        <p className="eyebrow" style={{ marginBottom: 10 }}>Seguro médico</p>
-        <label style={{ display: 'block', marginBottom: 20, padding: '12px 14px', borderRadius: 12, border: '1px dashed var(--color-primary-20)', cursor: 'pointer' }}>
-          {insurance ? <img src={insurance} alt="seguro" style={{ width: '100%', borderRadius: 8, maxHeight: 120, objectFit: 'cover' }} /> : <div style={{ fontSize: 12, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Tocá para agregar póliza</div>}
-          <input type="file" accept="image/*,.pdf" style={{ display: 'none' }} onChange={async e => { const f = e.target.files?.[0]; if (f) setInsurance(await toBase64(f)) }} />
-        </label>
-
-        {/* Phones */}
-        <p className="eyebrow" style={{ marginBottom: 10 }}>Teléfonos</p>
-        {[
-          { label: 'Tu número', val: phone, set: setPhone },
-          { label: 'Emergencia (opcional)', val: emergency, set: setEmergency },
-        ].map(({ label, val, set }) => (
-          <div key={label} style={{ marginBottom: 10 }}>
-            <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: 4 }}>{label}</div>
-            <input type="tel" value={val} onChange={e => set(e.target.value)} placeholder="+54 9 11 1234-5678" style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--color-border)', borderRadius: 8, fontSize: 13, background: 'var(--color-bg)', color: 'var(--color-text)', outline: 'none', boxSizing: 'border-box' as const, fontFamily: 'var(--font-detail)' }} />
-          </div>
-        ))}
-
-        <button onClick={handleSave} disabled={saving} style={{ width: '100%', padding: '14px', marginTop: 12, background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
-          {saving ? 'Guardando...' : 'Guardar perfil'}
-        </button>
-      </div>
-    </>
-  )
-}

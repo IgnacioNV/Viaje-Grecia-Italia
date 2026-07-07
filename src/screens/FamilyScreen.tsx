@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { CopyButton, FilePreview, DownloadButton } from '../components/ui/FilePreview'
+import React from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { IconStamp } from '../components/ui/IconStamp'
+import { CopyButton, FilePreview, DownloadButton } from '../components/ui/FilePreview'
 import { db } from '../db/dexie'
 import people from '../data/people.json'
 import type { Person, Passport, PersonalProfile } from '../types'
@@ -11,28 +12,26 @@ const PEOPLE = people as Person[]
 export function FamilyScreen() {
   const [selected, setSelected] = useState<Person | null>(null)
 
-  if (selected) {
-    return <PersonDetail person={selected} onBack={() => setSelected(null)} />
-  }
+  if (selected) return <PersonDetail person={selected} onBack={() => setSelected(null)} />
 
   return (
     <div className="screen">
       <div style={{ padding: '20px 20px 0' }}>
         <p className="eyebrow" style={{ marginBottom: 6 }}>Familia Valcarce</p>
-        <h1 style={{ fontSize: 28 }}>{PEOPLE.length} viajeros</h1>
+        <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.1 }}>{PEOPLE.length} viajeros</h1>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', padding: '16px 20px' }}>
         {PEOPLE.map(person => (
           <button key={person.id} onClick={() => setSelected(person)} style={{
             display: 'flex', alignItems: 'center', gap: 14,
-            padding: '14px', background: 'var(--color-surface)',
-            border: 'var(--card-border)', borderRadius: 'var(--card-radius)',
-            boxShadow: 'var(--card-shadow)', cursor: 'pointer', textAlign: 'left', width: '100%',
+            padding: '14px 4px', background: 'transparent',
+            border: 'none', borderBottom: '1px solid var(--color-border)',
+            borderRadius: 0, cursor: 'pointer', textAlign: 'left', width: '100%',
           }}>
             <div style={{
-              width: 44, height: 44, borderRadius: 'var(--stamp-radius)',
-              background: 'var(--color-primary-10)', border: 'var(--stamp-border)',
+              width: 44, height: 44, borderRadius: '50%',
+              background: 'var(--color-primary-10)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 18, fontWeight: 700, color: 'var(--color-primary)', flexShrink: 0,
             }}>
@@ -54,6 +53,29 @@ export function FamilyScreen() {
     </div>
   )
 }
+
+/* ── Info row ────────────────────────────────────────────── */
+function InfoRow({ label, children, copyText }: { label: string; children: React.ReactNode; copyText?: string }) {
+  return (
+    <div style={{ paddingTop: 12, paddingBottom: 12, borderBottom: '1px solid var(--color-border)' }}>
+      <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        {label}
+      </span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 5, gap: 8 }}>
+        <span style={{ fontSize: 15, color: 'var(--color-text)', lineHeight: 1.3 }}>
+          {children}
+        </span>
+        {copyText && <CopyButton text={copyText} />}
+      </div>
+    </div>
+  )
+}
+
+const Pending = () => (
+  <span style={{ color: 'var(--color-text-muted)', fontStyle: 'italic', fontSize: 12, fontFamily: 'var(--font-detail)' }}>
+    Sin cargar
+  </span>
+)
 
 /* ── Person Detail ───────────────────────────────────────── */
 function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }) {
@@ -81,8 +103,8 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
           Todos los viajeros
         </button>
 
-        {/* Avatar — facePhoto or initials */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 24 }}>
+        {/* Avatar */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 28 }}>
           {profile?.facePhoto ? (
             <button onClick={() => setPreviewSrc(profile.facePhoto!)} style={{
               width: 80, height: 80, borderRadius: '50%', border: 'none',
@@ -94,163 +116,136 @@ function PersonDetail({ person, onBack }: { person: Person; onBack: () => void }
           ) : (
             <div style={{
               width: 72, height: 72, borderRadius: '50%',
-              background: 'var(--color-primary-10)', border: 'var(--stamp-border)',
+              background: 'var(--color-primary-10)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 28, fontWeight: 700, color: 'var(--color-primary)', marginBottom: 12,
             }}>
               {person.name.charAt(0)}
             </div>
           )}
-          <h2 style={{ fontSize: 24, marginBottom: 4 }}>{person.name}</h2>
+          <h2 style={{ fontSize: 28, fontWeight: 700, marginBottom: 4 }}>{person.name}</h2>
           <div style={{
-            padding: '3px 12px', borderRadius: 20,
-            background: 'var(--color-primary-10)',
-            fontSize: 12, fontWeight: 600, color: 'var(--color-primary)',
-            fontFamily: 'var(--font-detail)',
+            padding: '3px 12px', borderRadius: 20, background: 'var(--color-primary-10)',
+            fontSize: 12, fontWeight: 600, color: 'var(--color-primary)', fontFamily: 'var(--font-detail)',
           }}>{person.role}</div>
         </div>
       </div>
 
-      <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div style={{ padding: '0 20px 110px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+
+        {/* Personal data */}
+        <section>
+          <p className="eyebrow" style={{ marginBottom: 10 }}>Datos personales</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+            <InfoRow label="Fecha de nacimiento">
+              {profile?.birthDate ?? <Pending />}
+            </InfoRow>
+            <InfoRow label="Teléfono" copyText={profile?.phoneNumber}>
+              {profile?.phoneNumber ?? <Pending />}
+            </InfoRow>
+            <InfoRow label="Emergencia" copyText={profile?.emergencyPhone}>
+              {profile?.emergencyPhone ?? <Pending />}
+            </InfoRow>
+          </div>
+        </section>
 
         {/* Passports */}
-        {passports.length > 0 && (
-          <>
-            <p className="eyebrow" style={{ padding: '0 4px', marginBottom: 4 }}>
-              Pasaportes ({passports.length})
+        <section>
+          <p className="eyebrow" style={{ marginBottom: 10 }}>
+            Pasaportes{passports.length > 0 ? ` (${passports.length})` : ''}
+          </p>
+          {passports.length === 0 ? (
+            <p style={{ fontSize: 13, color: 'var(--color-text-muted)', fontStyle: 'italic', fontFamily: 'var(--font-detail)' }}>
+              Sin cargar
             </p>
-            {passports.map((p, idx) => (
-              <div key={p.id} className="card" style={{ padding: '14px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                  <IconStamp icon="passport" size={38} />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 600, fontSize: 15 }}>
-                      Pasaporte {passports.length > 1 ? idx + 1 : ''}{p.country ? ` · ${p.country}` : ''}
+          ) : passports.map((p, idx) => (
+            <div key={p.id} style={{ marginBottom: 12, border: '1px solid var(--color-border)', borderRadius: 14, padding: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: p.number || p.photoFront ? 10 : 0 }}>
+                <IconStamp icon="passport" size={36} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>
+                    Pasaporte{passports.length > 1 ? ` ${idx + 1}` : ''}{p.country ? ` · ${p.country}` : ''}
+                  </div>
+                  {p.expiry && (
+                    <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
+                      Vence: {p.expiry}
                     </div>
-                    {p.expiry && (
-                      <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
-                        Vence: {p.expiry}
-                      </div>
-                    )}
-                  </div>
-                  <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 8, background: '#d8f3dc', color: '#2d6a4f' }}>
-                    Listo
-                  </span>
+                  )}
                 </div>
-
-                {/* Number + copy */}
-                {p.number && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, paddingLeft: 50 }}>
-                    <span style={{ fontSize: 13, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>
-                      N° {p.number}
-                    </span>
-                    <CopyButton text={p.number} label="Copiar N°" />
-                  </div>
-                )}
-
-                {/* Photos + download */}
-                {(p.photoFront || p.photoBack) && (
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    {p.photoFront && (
-                      <div style={{ flex: 1 }}>
-                        <button onClick={() => setPreviewSrc(p.photoFront!)} style={{
-                          width: '100%', border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden', display: 'block',
-                        }}>
-                          <img src={p.photoFront} alt="Frente" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
-                        </button>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
-                          <span style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Frente</span>
-                          <DownloadButton src={p.photoFront} filename={`pasaporte-${person.name.toLowerCase()}-frente.jpg`} label="Guardar" />
-                        </div>
-                      </div>
-                    )}
-                    {p.photoBack && (
-                      <div style={{ flex: 1 }}>
-                        <button onClick={() => setPreviewSrc(p.photoBack!)} style={{
-                          width: '100%', border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden', display: 'block',
-                        }}>
-                          <img src={p.photoBack} alt="Dorso" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
-                        </button>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
-                          <span style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Dorso</span>
-                          <DownloadButton src={p.photoBack} filename={`pasaporte-${person.name.toLowerCase()}-dorso.jpg`} label="Guardar" />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
+                <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 8, background: '#d8f3dc', color: '#2d6a4f' }}>
+                  Listo
+                </span>
               </div>
-            ))}
-          </>
-        )}
+
+              {p.number && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, paddingLeft: 48, marginBottom: 10 }}>
+                  <span style={{ fontSize: 13, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)' }}>N° {p.number}</span>
+                  <CopyButton text={p.number} label="Copiar" />
+                </div>
+              )}
+
+              {(p.photoFront || p.photoBack) && (
+                <div style={{ display: 'flex', gap: 8 }}>
+                  {p.photoFront && (
+                    <div style={{ flex: 1 }}>
+                      <button onClick={() => setPreviewSrc(p.photoFront!)} style={{ width: '100%', border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden', display: 'block' }}>
+                        <img src={p.photoFront} alt="Frente" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
+                      </button>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
+                        <span style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Frente</span>
+                        <DownloadButton src={p.photoFront} filename={`pasaporte-${person.name.toLowerCase().replace(' ', '-')}-frente.jpg`} label="Guardar" />
+                      </div>
+                    </div>
+                  )}
+                  {p.photoBack && (
+                    <div style={{ flex: 1 }}>
+                      <button onClick={() => setPreviewSrc(p.photoBack!)} style={{ width: '100%', border: 'none', padding: 0, cursor: 'pointer', borderRadius: 8, overflow: 'hidden', display: 'block' }}>
+                        <img src={p.photoBack} alt="Dorso" style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block' }} />
+                      </button>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
+                        <span style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'var(--font-detail)' }}>Dorso</span>
+                        <DownloadButton src={p.photoBack} filename={`pasaporte-${person.name.toLowerCase().replace(' ', '-')}-dorso.jpg`} label="Guardar" />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </section>
 
         {/* Insurance */}
-        {profile?.insuranceFile && (
-          <>
-            <p className="eyebrow" style={{ padding: '0 4px', marginBottom: 4 }}>Seguro médico</p>
-            <button onClick={() => setPreviewSrc(profile.insuranceFile!)} className="card" style={{
-              padding: '14px', display: 'flex', alignItems: 'center', gap: 12,
-              width: '100%', cursor: 'pointer', border: 'none', textAlign: 'left',
+        <section>
+          <p className="eyebrow" style={{ marginBottom: 10 }}>Seguro médico</p>
+          {profile?.insuranceFile ? (
+            <button onClick={() => setPreviewSrc(profile.insuranceFile!)} style={{
+              display: 'flex', alignItems: 'center', gap: 12, width: '100%',
+              padding: '12px 14px', border: '1px solid var(--color-border)',
+              borderRadius: 14, background: 'var(--color-surface)', cursor: 'pointer', textAlign: 'left',
             }}>
-              <IconStamp icon="shield" size={38} />
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: 15 }}>Póliza de seguro</div>
+              <IconStamp icon="shield" size={36} />
+              <div>
+                <div style={{ fontWeight: 600, fontSize: 14 }}>Póliza de seguro</div>
                 <div style={{ fontSize: 12, color: 'var(--color-primary)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>Tocá para ver</div>
               </div>
             </button>
-          </>
-        )}
+          ) : (
+            <p style={{ fontSize: 13, color: 'var(--color-text-muted)', fontStyle: 'italic', fontFamily: 'var(--font-detail)' }}>Sin cargar</p>
+          )}
+        </section>
 
-        {/* Phones */}
-        {(profile?.phoneNumber || profile?.emergencyPhone) && (
-          <>
-            <p className="eyebrow" style={{ padding: '0 4px', marginBottom: 4 }}>Teléfonos</p>
-            {profile?.phoneNumber && (
-              <div className="card" style={{ padding: '14px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <IconStamp icon="family" size={38} />
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600, fontSize: 15 }}>Teléfono</div>
-                  <div style={{ fontSize: 13, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
-                    {profile.phoneNumber}
-                  </div>
-                </div>
-                <CopyButton text={profile.phoneNumber} />
-              </div>
-            )}
-            {profile?.emergencyPhone && (
-              <div className="card" style={{ padding: '14px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <IconStamp icon="family" size={38} />
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600, fontSize: 15 }}>Emergencia</div>
-                  <div style={{ fontSize: 13, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>
-                    {profile.emergencyPhone}
-                  </div>
-                </div>
-                <CopyButton text={profile.emergencyPhone} />
-              </div>
-            )}
-          </>
-        )}
-
+        {/* Individual flight */}
         {person.flightOrigin && (
-          <>
-            <p className="eyebrow" style={{ padding: '0 4px', marginBottom: 4 }}>Vuelo propio</p>
-            <div className="card" style={{ padding: '14px', display: 'flex', alignItems: 'center', gap: 12 }}>
-              <IconStamp icon="flight" size={38} />
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: 15 }}>Vuelo individual</div>
+          <section>
+            <p className="eyebrow" style={{ marginBottom: 10 }}>Vuelo propio</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', border: '1px solid var(--color-border)', borderRadius: 14 }}>
+              <IconStamp icon="flight" size={36} />
+              <div>
+                <div style={{ fontWeight: 600, fontSize: 14 }}>Vuelo individual</div>
                 <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>{person.flightOrigin}</div>
               </div>
             </div>
-          </>
-        )}
-
-        {!profile && !person.flightOrigin && (
-          <div style={{ textAlign: 'center', padding: '32px 0', color: 'var(--color-text-muted)' }}>
-            <p style={{ fontSize: 14, fontFamily: 'var(--font-detail)' }}>
-              {person.name} todavía no cargó su información.
-            </p>
-          </div>
+          </section>
         )}
       </div>
 

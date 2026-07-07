@@ -1,4 +1,4 @@
-export type Theme = 'greece' | 'puglia' | 'cruise'
+export type Theme = 'greece' | 'puglia'
 export type Phase = 'individual' | 'group'
 export type DocumentType = 'ticket' | 'passport' | 'reservation' | 'voucher' | 'other'
 export type DocumentSource = 'seed' | 'local'
@@ -40,7 +40,8 @@ export interface SeedDocument {
   id: string
   source: 'seed'
   type: DocumentType
-  ownerPersonId: string | 'group'
+  ownerPersonId: string | 'group'           // 'group' or single personId
+  ownerPersonIds?: string[]                  // multiple specific people
   linkedActivityId?: string
   title: string
   file: string
@@ -79,6 +80,7 @@ export interface JournalEntry {
 export interface PersonalProfile {
   id?: number
   personId: string
+  birthDate?: string       // DD/MM/YYYY
   phoneNumber?: string
   emergencyPhone?: string
   passports: Passport[]
