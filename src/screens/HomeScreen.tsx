@@ -15,8 +15,12 @@ function getMyActivities(day: Day, personId: string): Activity[] {
     a.scope === 'group' || (Array.isArray(a.scope) && a.scope.includes(personId))
   )
 }
-function getDocForActivity(actId: string) {
-  return DOCS.find(d => d.linkedActivityId === actId)
+function getDocForActivity(actId: string, personId: string) {
+  return DOCS.find(d => {
+    if (d.linkedActivityId !== actId) return false
+    if (d.ownerPersonIds?.length) return d.ownerPersonIds.includes(personId)
+    return d.ownerPersonId === 'group' || d.ownerPersonId === personId
+  })
 }
 function getTodayIndex(): number {
   const today = new Date().toISOString().split('T')[0]
@@ -200,7 +204,7 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
               No hay actividades para vos este día.
             </p>
           : <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-              {activities.map(a => <ActivityCard key={a.id} activity={a} />)}
+              {activities.map(a => <ActivityCard key={a.id} activity={a} personId={personId} />)}
             </div>
         }
       </div>
@@ -244,8 +248,8 @@ function DayContent({ day, personId, dayNumber }: { day: Day; personId: string; 
 
 
 /* ── Activity Card ──────────────────────────────────────── */
-function ActivityCard({ activity }: { activity: Activity }) {
-  const doc = getDocForActivity(activity.id)
+function ActivityCard({ activity, personId }: { activity: Activity; personId: string }) {
+  const doc = getDocForActivity(activity.id, personId)
   const notes = activity.notes
   const [staticPreview, setStaticPreview] = useState<{ path: string; title: string } | null>(null)
 

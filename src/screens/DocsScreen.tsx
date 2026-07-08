@@ -105,7 +105,13 @@ export function DocsScreen({ personId }: DocsScreenProps) {
   })
 
   // Seed docs as DocItems (for preview and category views)
-  const seedDocItems: DocItem[] = SEED_DOCS.map(doc => {
+  // Filter seed docs: solo los que le pertenecen al usuario actual
+  const mySeeDocs = SEED_DOCS.filter(doc => {
+    if (doc.ownerPersonIds?.length) return doc.ownerPersonIds.includes(personId)
+    return doc.ownerPersonId === 'group' || doc.ownerPersonId === personId
+  })
+
+  const seedDocItems: DocItem[] = mySeeDocs.map(doc => {
     let sub = 'Compartido · Grupo'
     if (doc.ownerPersonIds?.length) {
       const names = doc.ownerPersonIds
@@ -128,10 +134,10 @@ export function DocsScreen({ personId }: DocsScreenProps) {
 
   // Seed docs grouped by category
   const seedByCategory: Record<string, DocItem[]> = {
-    pasaportes: seedDocItems.filter(d => SEED_DOCS.find(s => s.id === d.id)?.type === 'passport'),
-    hoteles:    seedDocItems.filter(d => SEED_DOCS.find(s => s.id === d.id)?.type === 'reservation'),
-    transporte: seedDocItems.filter(d => SEED_DOCS.find(s => s.id === d.id)?.type === 'voucher'),
-    tickets:    seedDocItems.filter(d => SEED_DOCS.find(s => s.id === d.id)?.type === 'ticket'),
+    pasaportes: seedDocItems.filter(d => mySeeDocs.find(s => s.id === d.id)?.type === 'passport'),
+    hoteles:    seedDocItems.filter(d => mySeeDocs.find(s => s.id === d.id)?.type === 'reservation'),
+    transporte: seedDocItems.filter(d => mySeeDocs.find(s => s.id === d.id)?.type === 'voucher'),
+    tickets:    seedDocItems.filter(d => mySeeDocs.find(s => s.id === d.id)?.type === 'ticket'),
   }
 
   // Merge local docs into categories by type
