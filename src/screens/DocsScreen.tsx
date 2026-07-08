@@ -24,6 +24,7 @@ interface DocItem {
   passportNumber?: string   // for copy button
   photoFront?: string       // for passport preview
   seedFilePath?: string     // for seed doc preview
+  seedLink?: string         // for external URL docs (require internet)
 }
 
 const CATEGORY_DOCS: Record<string, DocItem[]> = {
@@ -121,6 +122,7 @@ export function DocsScreen({ personId }: DocsScreenProps) {
       icon: (doc.type === 'ticket' ? 'ticket' : doc.type === 'reservation' ? 'reservation' : 'document') as IconName,
       detail: `${sub} · ${doc.createdAt}`,
       seedFilePath: doc.file,
+      seedLink: doc.link,
     }
   })
 
@@ -280,7 +282,7 @@ function ExpandableRow({ doc, currentPersonId }: { doc: DocItem; currentPersonId
   const [staticPreview, setStaticPreview] = useState<{ path: string; title: string } | null>(null)
   const status = getDocStatus(doc.eventDate)
   const canDelete = !!(doc.localId && doc.ownerPersonId && doc.ownerPersonId === currentPersonId)
-  const canPreview = !!(doc.localId || doc.seedFilePath)
+  const canPreview = !!(doc.localId || doc.seedFilePath || doc.seedLink)
 
   const statusConfig = {
     today:    { bg: 'var(--color-surface)',    border: '2px solid var(--color-accent)' },
@@ -290,6 +292,7 @@ function ExpandableRow({ doc, currentPersonId }: { doc: DocItem; currentPersonId
   const cfg = statusConfig[status]
 
   const handlePreview = async () => {
+    if (doc.seedLink) { window.open(doc.seedLink, '_blank'); return }
     if (doc.seedFilePath) { setStaticPreview({ path: doc.seedFilePath, title: doc.title }); return }
     if (!doc.localId) return
     const localDoc = await db.localDocuments.get(doc.localId)

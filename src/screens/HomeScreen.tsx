@@ -326,7 +326,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
 
           {doc && (
             <button
-              onClick={() => setStaticPreview({ path: doc.file, title: doc.title })}
+              onClick={() => doc.link ? window.open(doc.link, '_blank') : setStaticPreview({ path: doc.file!, title: doc.title })}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 5,
                 marginTop: 8, padding: '4px 10px', borderRadius: 20,

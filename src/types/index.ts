@@ -40,11 +40,12 @@ export interface SeedDocument {
   id: string
   source: 'seed'
   type: DocumentType
-  ownerPersonId: string | 'group'           // 'group' or single personId
-  ownerPersonIds?: string[]                  // multiple specific people
+  ownerPersonId: string | 'group'
+  ownerPersonIds?: string[]
   linkedActivityId?: string
   title: string
-  file: string
+  file?: string       // local path, e.g. /seed-docs/file.pdf
+  link?: string       // external URL (requires internet)
   createdAt: string
 }
 

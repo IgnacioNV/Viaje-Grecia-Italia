@@ -7,7 +7,7 @@
     "linkedActivityId": "act-7-2",
     "title": "Excursión Santorini · Oia y Fira",
     "file": "/seed-docs/excursion-santorini.pdf",
-    "createdAt": "2026-06-26"
+    "createdAt": "2026-07-27"
   },
   {
     "id": "doc-excursion-katakolon",
@@ -17,7 +17,40 @@
     "linkedActivityId": "act-9-2",
     "title": "Excursión Katakolon · Olympia",
     "file": "/seed-docs/excursion-katakolon.pdf",
-    "createdAt": "2026-06-26"
+    "createdAt": "2026-07-29"
+  },
+  {
+    "id": "doc-tren-roma-bari",
+    "source": "seed",
+    "type": "voucher",
+    "ownerPersonId": "raquel",
+    "ownerPersonIds": ["raquel", "guille", "nacho", "nico"],
+    "linkedActivityId": "act-1-1",
+    "title": "Tren Roma → Bari · Frecciarossa 9511",
+    "file": "/seed-docs/tren-roma-bari.pdf",
+    "createdAt": "2026-07-21"
+  },
+  {
+    "id": "doc-excursion-matera",
+    "source": "seed",
+    "type": "ticket",
+    "ownerPersonId": "raquel",
+    "ownerPersonIds": ["raquel", "guille", "nacho", "nico", "joaco", "emi"],
+    "linkedActivityId": "act-3-1",
+    "title": "Excursión Matera y Alberobello",
+    "link": "https://gyg.me/g8lATNde",
+    "createdAt": "2026-07-23"
+  },
+  {
+    "id": "doc-excursion-valle-itria",
+    "source": "seed",
+    "type": "ticket",
+    "ownerPersonId": "raquel",
+    "ownerPersonIds": ["raquel", "guille", "nacho", "nico", "joaco", "emi"],
+    "linkedActivityId": "act-4-1",
+    "title": "Excursión Valle de Itria",
+    "link": "https://gyg.me/NPbJHhfb",
+    "createdAt": "2026-07-24"
   },
   {
     "id": "doc-vuelo-bari-roma",
@@ -28,16 +61,6 @@
     "linkedActivityId": "act-12-1",
     "title": "Vuelo Bari → Roma · ITA AZ 1612",
     "file": "/seed-docs/vuelo-bari-roma.pdf",
-    "createdAt": "2026-06-28"
-  },
-  {
-    "id": "doc-boarding",
-    "source": "seed",
-    "type": "reservation",
-    "ownerPersonId": "group",
-    "linkedActivityId": "act-5-2",
-    "title": "Boarding pass MSC Crucero",
-    "file": "/seed-docs/boarding-msc.pdf",
-    "createdAt": "2026-05-01"
+    "createdAt": "2026-08-01"
   }
 ]
