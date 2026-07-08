@@ -41,20 +41,7 @@ const CATEGORY_DOCS: Record<string, DocItem[]> = {
     { id: 't3', title: 'Crucero MSC', sub: '25 jul – 1 ago · 7 noches', icon: 'anchor', eventDate: '2026-07-25',
       detail: 'Puerto de embarque: Bari\nRuta: Santorini → Atenas → Katakolo → Cefalonia → Corfú' },
   ],
-  tickets: [
-    { id: 'e1', title: 'Excursión Matera + Alberobello', sub: 'Día 3 · 23 jul · Salida 09:00', icon: 'ticket', eventDate: '2026-07-23',
-      detail: 'Punto de encuentro: Corso Cavour\nRegreso: 19:00. Llevar agua y zapatillas.' },
-    { id: 'e2', title: 'Excursión Valle de Itria', sub: 'Día 4 · 24 jul · Salida 08:30', icon: 'ticket', eventDate: '2026-07-24',
-      detail: 'Punto de encuentro: Piazza Eroi del Mare\nPolignano · Ostuni · Locorotondo · Regreso 18:30' },
-    { id: 'e3', title: 'Excursión Santorini', sub: 'Día 7 · 27 jul · Contratada', icon: 'ticket', eventDate: '2026-07-27',
-      detail: 'Excursión ya contratada. Llevar protector solar y agua.' },
-    { id: 'e4', title: 'Excursión Atenas', sub: 'Día 8 · 28 jul · Contratada', icon: 'ticket', eventDate: '2026-07-28',
-      detail: 'Acrópolis y Partenón. Excursión ya contratada.' },
-    { id: 'e5', title: 'Excursión Olimpia', sub: 'Día 9 · 29 jul · Contratada', icon: 'ticket', eventDate: '2026-07-29',
-      detail: 'Archaeological Site of Olympia. Excursión ya contratada.' },
-    { id: 'e6', title: 'Melissani Cave', sub: 'Día 10 · 30 jul · Reservada', icon: 'ticket', eventDate: '2026-07-30',
-      detail: 'Excursión reservada con traslado. Evita filas.' },
-  ],
+  tickets: [],
 }
 
 type DocStatus = 'upcoming' | 'today' | 'past'

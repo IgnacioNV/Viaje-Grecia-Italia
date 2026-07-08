@@ -4,7 +4,12 @@
     "source": "seed",
     "type": "voucher",
     "ownerPersonId": "raquel",
-    "ownerPersonIds": ["raquel", "guille", "nacho", "nico"],
+    "ownerPersonIds": [
+      "raquel",
+      "guille",
+      "nacho",
+      "nico"
+    ],
     "linkedActivityId": "act-1-1",
     "title": "Tren Roma → Bari",
     "subtitle": "Día 1 · 21 jul · 10:00 → 14:23",
@@ -17,7 +22,14 @@
     "source": "seed",
     "type": "ticket",
     "ownerPersonId": "raquel",
-    "ownerPersonIds": ["raquel", "guille", "nacho", "nico", "joaco", "emi"],
+    "ownerPersonIds": [
+      "raquel",
+      "guille",
+      "nacho",
+      "nico",
+      "joaco",
+      "emi"
+    ],
     "linkedActivityId": "act-3-1",
     "title": "Excursión Matera + Alberobello",
     "subtitle": "Día 3 · 23 jul · Salida 09:00",
@@ -30,7 +42,14 @@
     "source": "seed",
     "type": "ticket",
     "ownerPersonId": "raquel",
-    "ownerPersonIds": ["raquel", "guille", "nacho", "nico", "joaco", "emi"],
+    "ownerPersonIds": [
+      "raquel",
+      "guille",
+      "nacho",
+      "nico",
+      "joaco",
+      "emi"
+    ],
     "linkedActivityId": "act-4-1",
     "title": "Excursión Valle de Itria",
     "subtitle": "Día 4 · 24 jul",
@@ -41,7 +60,7 @@
   {
     "id": "doc-boarding-crucero",
     "source": "seed",
-    "type": "reservation",
+    "type": "voucher",
     "ownerPersonId": "group",
     "linkedActivityId": "act-5-2",
     "title": "Boarding Pass · MSC Crucero",
@@ -78,7 +97,12 @@
     "source": "seed",
     "type": "voucher",
     "ownerPersonId": "guille",
-    "ownerPersonIds": ["guille", "raquel", "nacho", "nico"],
+    "ownerPersonIds": [
+      "guille",
+      "raquel",
+      "nacho",
+      "nico"
+    ],
     "linkedActivityId": "act-12-1",
     "title": "Vuelo Bari → Roma",
     "subtitle": "Día 12 · 1 ago · 11:20",
