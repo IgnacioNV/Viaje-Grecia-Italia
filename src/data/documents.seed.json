@@ -1,32 +1,14 @@
 [
   {
-    "id": "doc-excursion-santorini",
-    "source": "seed",
-    "type": "ticket",
-    "ownerPersonId": "group",
-    "linkedActivityId": "act-7-2",
-    "title": "Excursión Santorini · Oia y Fira",
-    "file": "/seed-docs/excursion-santorini.pdf",
-    "createdAt": "2026-07-27"
-  },
-  {
-    "id": "doc-excursion-katakolon",
-    "source": "seed",
-    "type": "ticket",
-    "ownerPersonId": "group",
-    "linkedActivityId": "act-9-2",
-    "title": "Excursión Katakolon · Olympia",
-    "file": "/seed-docs/excursion-katakolon.pdf",
-    "createdAt": "2026-07-29"
-  },
-  {
     "id": "doc-tren-roma-bari",
     "source": "seed",
     "type": "voucher",
     "ownerPersonId": "raquel",
     "ownerPersonIds": ["raquel", "guille", "nacho", "nico"],
     "linkedActivityId": "act-1-1",
-    "title": "Tren Roma → Bari · Frecciarossa 9511",
+    "title": "Tren Roma → Bari",
+    "subtitle": "Día 1 · 21 jul · 10:00 → 14:23",
+    "detail": "Frecciarossa 9511 · Coche 5\nNacho: asiento 7A · Guille: asiento 6B\nNico: asiento 7B · Raquel: asiento 6A\nPNR: BNWLX5",
     "file": "/seed-docs/tren-roma-bari.pdf",
     "createdAt": "2026-07-21"
   },
@@ -37,7 +19,9 @@
     "ownerPersonId": "raquel",
     "ownerPersonIds": ["raquel", "guille", "nacho", "nico", "joaco", "emi"],
     "linkedActivityId": "act-3-1",
-    "title": "Excursión Matera y Alberobello",
+    "title": "Excursión Matera + Alberobello",
+    "subtitle": "Día 3 · 23 jul · Salida 09:00",
+    "detail": "Punto de encuentro: Corso Cavour\nRegreso: 19:00\nLlevar agua y zapatillas.",
     "link": "https://gyg.me/g8lATNde",
     "createdAt": "2026-07-23"
   },
@@ -49,8 +33,45 @@
     "ownerPersonIds": ["raquel", "guille", "nacho", "nico", "joaco", "emi"],
     "linkedActivityId": "act-4-1",
     "title": "Excursión Valle de Itria",
+    "subtitle": "Día 4 · 24 jul",
+    "detail": "Link con el QR de la excursión.",
     "link": "https://gyg.me/NPbJHhfb",
     "createdAt": "2026-07-24"
+  },
+  {
+    "id": "doc-boarding-crucero",
+    "source": "seed",
+    "type": "reservation",
+    "ownerPersonId": "group",
+    "linkedActivityId": "act-5-2",
+    "title": "Boarding Pass · MSC Crucero",
+    "subtitle": "Día 5 · 25 jul · Embarque Bari",
+    "detail": "Pendiente de carga.",
+    "createdAt": "2026-07-25"
+  },
+  {
+    "id": "doc-excursion-santorini",
+    "source": "seed",
+    "type": "ticket",
+    "ownerPersonId": "group",
+    "linkedActivityId": "act-7-2",
+    "title": "Excursión Santorini · Oia y Fira",
+    "subtitle": "Día 7 · 27 jul · 10:00",
+    "detail": "Desembarque en lanchas — recoger turno en recepción el día anterior.\nPuerto Antiguo (Fira Skala) · Llegada al puerto: 14:30\nTel contacto: 00 30 694 756 3976 (activo 30 min antes)",
+    "file": "/seed-docs/excursion-santorini.pdf",
+    "createdAt": "2026-07-27"
+  },
+  {
+    "id": "doc-excursion-katakolon",
+    "source": "seed",
+    "type": "ticket",
+    "ownerPersonId": "group",
+    "linkedActivityId": "act-9-2",
+    "title": "Excursión Katakolon · Olympia",
+    "subtitle": "Día 9 · 29 jul · 10:30",
+    "detail": "Seguir franja roja al bajar → restaurante Karousos (guía con cartel Shore2Shore).\nTel contacto: 00 30 698 946 54 14 (activo 30 min antes)",
+    "file": "/seed-docs/excursion-katakolon.pdf",
+    "createdAt": "2026-07-29"
   },
   {
     "id": "doc-vuelo-bari-roma",
@@ -59,7 +80,9 @@
     "ownerPersonId": "guille",
     "ownerPersonIds": ["guille", "raquel", "nacho", "nico"],
     "linkedActivityId": "act-12-1",
-    "title": "Vuelo Bari → Roma · ITA AZ 1612",
+    "title": "Vuelo Bari → Roma",
+    "subtitle": "Día 12 · 1 ago · 11:20",
+    "detail": "ITA Airways AZ 1612 · Terminal BRI\nLlegada Fiumicino (FCO) Terminal 1: 12:30\nEquipaje facturado: 1 PC",
     "file": "/seed-docs/vuelo-bari-roma.pdf",
     "createdAt": "2026-08-01"
   }

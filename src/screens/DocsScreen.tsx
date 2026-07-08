@@ -124,9 +124,10 @@ export function DocsScreen({ personId }: DocsScreenProps) {
     return {
       id: doc.id,
       title: doc.title,
-      sub,
+      sub: doc.subtitle ?? sub,
       icon: (doc.type === 'ticket' ? 'ticket' : doc.type === 'reservation' ? 'reservation' : 'document') as IconName,
-      detail: `${sub} · ${doc.createdAt}`,
+      detail: doc.detail ?? sub,
+      eventDate: doc.createdAt,
       seedFilePath: doc.file,
       seedLink: doc.link,
     }

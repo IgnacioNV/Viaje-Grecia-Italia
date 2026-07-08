@@ -44,8 +44,10 @@ export interface SeedDocument {
   ownerPersonIds?: string[]
   linkedActivityId?: string
   title: string
-  file?: string       // local path, e.g. /seed-docs/file.pdf
-  link?: string       // external URL (requires internet)
+  subtitle?: string   // short context: 'Día 3 · 23 jul · 09:00'
+  detail?: string    // expandable info: meeting point, notes, etc.
+  file?: string      // local path, e.g. /seed-docs/file.pdf
+  link?: string      // external URL (requires internet)
   createdAt: string
 }
 
