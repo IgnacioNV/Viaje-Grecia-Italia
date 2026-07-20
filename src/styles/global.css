@@ -1,3 +1,13 @@
+/* ── Fuentes locales (offline-first) ──────────────────── */
+@import '@fontsource/albert-sans/400.css';
+@import '@fontsource/albert-sans/500.css';
+@import '@fontsource/albert-sans/600.css';
+@import '@fontsource/albert-sans/700.css';
+@import '@fontsource/shantell-sans/400.css';
+@import '@fontsource/shantell-sans/600.css';
+@import '@fontsource/shantell-sans/400-italic.css';
+@import '@fontsource/shantell-sans/600-italic.css';
+
 @import './themes.css';
 
 *, *::before, *::after {

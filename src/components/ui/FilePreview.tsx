@@ -7,24 +7,13 @@ const VP_ZOOM    = 'width=device-width, initial-scale=1.0, viewport-fit=cover'
 function enableZoom()  { document.querySelector('meta[name="viewport"]')?.setAttribute('content', VP_ZOOM) }
 function disableZoom() { document.querySelector('meta[name="viewport"]')?.setAttribute('content', VP_NO_ZOOM) }
 
-/* ── PDF.js loader ──────────────────────────────────────── */
-const PDFJS_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'
-const WORKER_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'
+/* ── PDF.js (bundled, offline-first) ───────────────────── */
+import * as pdfjsLib from 'pdfjs-dist'
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 function usePdfJs(): any {
-  const [lib, setLib] = useState<any>(null)
-  useEffect(() => {
-    if ((window as any).pdfjsLib) { setLib((window as any).pdfjsLib); return }
-    const s = document.createElement('script')
-    s.src = PDFJS_CDN
-    s.onload = () => {
-      const lib = (window as any).pdfjsLib
-      lib.GlobalWorkerOptions.workerSrc = WORKER_CDN
-      setLib(lib)
-    }
-    document.head.appendChild(s)
-  }, [])
-  return lib
+  return pdfjsLib
 }
 
 /* ── PDF Viewer using PDF.js ────────────────────────────── */
