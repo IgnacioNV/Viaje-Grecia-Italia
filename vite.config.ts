@@ -23,12 +23,24 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2}'],
+        skipWaiting: true,
+        clientsClaim: true,
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff,woff2,avif,webp,jpg,jpeg,pdf}'],
         runtimeCaching: [
           {
             urlPattern: /\/seed-docs\/.*/,
             handler: 'CacheFirst',
             options: { cacheName: 'seed-docs', expiration: { maxEntries: 100 } }
+          },
+          {
+            urlPattern: /\/boarding-passes\/.*/,
+            handler: 'CacheFirst',
+            options: { cacheName: 'boarding-passes', expiration: { maxEntries: 50 } }
+          },
+          {
+            urlPattern: /\/profile-photos\/.*/,
+            handler: 'CacheFirst',
+            options: { cacheName: 'profile-photos', expiration: { maxEntries: 50 } }
           }
         ]
       }
