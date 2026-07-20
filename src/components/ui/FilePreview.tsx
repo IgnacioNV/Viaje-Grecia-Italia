@@ -196,6 +196,18 @@ function PreviewShell({ title, onClose, children, onDownload }: {
 /* ── FilePreview (base64) ───────────────────────────────── */
 export function FilePreview({ src, filename, onClose }: { src: string; filename?: string; onClose: () => void }) {
   const isPdf = src.startsWith('data:application/pdf')
+  const [blobUrl, setBlobUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!isPdf) return
+    const b64 = src.split(',')[1]
+    const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0))
+    const blob = new Blob([bytes], { type: 'application/pdf' })
+    const url = URL.createObjectURL(blob)
+    setBlobUrl(url)
+    return () => URL.revokeObjectURL(url)
+  }, [src, isPdf])
+
   const handleDownload = () => {
     const a = document.createElement('a')
     a.href = src
@@ -206,7 +218,9 @@ export function FilePreview({ src, filename, onClose }: { src: string; filename?
   return (
     <PreviewShell title={isPdf ? 'Documento' : 'Imagen'} onClose={onClose} onDownload={handleDownload}>
       {isPdf
-        ? <PDFViewer src={src} isUrl={false} />
+        ? blobUrl
+          ? <iframe src={blobUrl} style={{ flex: 1, width: '100%', border: 'none', display: 'block' }} title="Documento" />
+          : <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.5)', fontSize: 14 }}>Cargando...</div>
         : <img src={src} alt="Vista previa" style={{ width: '100%', flex: 1, objectFit: 'contain', display: 'block', minHeight: 0 }} />
       }
     </PreviewShell>
