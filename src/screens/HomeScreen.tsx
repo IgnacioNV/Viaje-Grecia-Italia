@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { CopyButton, StaticFilePreview } from '../components/ui/FilePreview'
+import { CopyButton, StaticFilePreview, FilePreview } from '../components/ui/FilePreview'
 import itinerary from '../data/itinerary.json'
 import seedDocs from '../data/documents.seed.json'
 import { getDestinationInfo } from '../data/cultural'
@@ -369,11 +369,13 @@ function ProfileSheet({ personId, personName, onClose }: {
     () => db.personalProfiles.where('personId').equals(personId).first(),
     [personId]
   )
+  const [previewSrc, setPreviewSrc] = useState<string | null>(null)
 
   const initials = personName.slice(0, 2).toUpperCase()
 
   return (
     <>
+      {previewSrc && <FilePreview src={previewSrc} onClose={() => setPreviewSrc(null)} />}
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 200 }} />
       <div
         style={{
@@ -448,7 +450,9 @@ function ProfileSheet({ personId, personName, onClose }: {
                   )}
                   {p.expiry && <div style={{ fontSize: 12, color: 'var(--color-text-soft)', fontFamily: 'var(--font-detail)', marginTop: 2 }}>Vence: {p.expiry}</div>}
                   {p.photoFront && (
-                    <img src={p.photoFront} alt="Pasaporte" style={{ width: '100%', borderRadius: 8, marginTop: 8, maxHeight: 120, objectFit: 'cover' }} />
+                    <button onClick={() => setPreviewSrc(p.photoFront!)} style={{ border: 'none', padding: 0, cursor: 'pointer', width: '100%', borderRadius: 8, overflow: 'hidden', display: 'block' }}>
+                      <img src={p.photoFront} alt="Pasaporte" style={{ width: '100%', borderRadius: 8, marginTop: 8, maxHeight: 120, objectFit: 'cover', display: 'block' }} />
+                    </button>
                   )}
                 </div>
               ))}
