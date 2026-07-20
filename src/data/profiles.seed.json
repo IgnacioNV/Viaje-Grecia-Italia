@@ -4,20 +4,8 @@
     "birthDate": "14/11/1944",
     "phoneNumber": "+54 9 11 5619-8322",
     "passports": [
-      {
-        "id": "guille-esp",
-        "country": "España",
-        "number": "XDC838777",
-        "expiry": "19/10/2027",
-        "photoFront": "/profile-photos/guille-esp.jpg"
-      },
-      {
-        "id": "guille-arg",
-        "country": "Argentina",
-        "number": "AAJ244108",
-        "expiry": "05/08/2033",
-        "photoFront": "/profile-photos/guille-arg.jpg"
-      }
+      { "id": "guille-esp", "country": "España", "number": "XDC838777", "expiry": "19/10/2027", "photoFront": "/profile-photos/guille-esp.jpg" },
+      { "id": "guille-arg", "country": "Argentina", "number": "AAJ244108", "expiry": "05/08/2033", "photoFront": "/profile-photos/guille-arg.jpg" }
     ]
   },
   {
@@ -25,20 +13,8 @@
     "birthDate": "15/09/1947",
     "phoneNumber": "+54 9 11 5568-2788",
     "passports": [
-      {
-        "id": "raquel-esp",
-        "country": "España",
-        "number": "XDD446957",
-        "expiry": "24/09/2029",
-        "photoFront": "/profile-photos/raquel-esp.jpg"
-      },
-      {
-        "id": "raquel-arg",
-        "country": "Argentina",
-        "number": "AAM019415",
-        "expiry": "06/10/2035",
-        "photoFront": "/profile-photos/raquel-arg.jpg"
-      }
+      { "id": "raquel-esp", "country": "España", "number": "XDD446957", "expiry": "24/09/2029", "photoFront": "/profile-photos/raquel-esp.jpg" },
+      { "id": "raquel-arg", "country": "Argentina", "number": "AAM019415", "expiry": "06/10/2035", "photoFront": "/profile-photos/raquel-arg.jpg" }
     ]
   },
   {
@@ -46,13 +22,7 @@
     "birthDate": "16/10/2002",
     "phoneNumber": "+1 (857) 265-0433",
     "passports": [
-      {
-        "id": "manu-ita",
-        "country": "Italia",
-        "number": "YB7720411",
-        "expiry": "21/04/2031",
-        "photoFront": "/profile-photos/manu-ita.jpg"
-      }
+      { "id": "manu-ita", "country": "Italia", "number": "YB7720411", "expiry": "21/04/2031", "photoFront": "/profile-photos/manu-ita.jpg" }
     ]
   },
   {
@@ -60,35 +30,25 @@
     "birthDate": "28/03/2007",
     "phoneNumber": "+52 55 1195 7685",
     "passports": [
-      {
-        "id": "joaco-ita",
-        "country": "Italia",
-        "number": "YD1684240",
-        "expiry": "09/03/2036",
-        "photoFront": "/profile-photos/joaco-ita.jpg"
-      }
+      { "id": "joaco-ita", "country": "Italia", "number": "YD1684240", "expiry": "09/03/2036", "photoFront": "/profile-photos/joaco-ita.jpg" }
     ]
   },
   {
     "personId": "nacho",
+    "birthDate": "16/07/2007",
     "phoneNumber": "+54 9 11 6568-1607",
     "passports": [
-      {
-        "id": "nacho-esp",
-        "country": "España",
-        "number": "XDD964631"
-      }
+      { "id": "nacho-esp", "country": "España", "number": "XDF756994", "expiry": "09/03/2031", "photoFront": "/profile-photos/nacho-esp.jpg" },
+      { "id": "nacho-arg", "country": "Argentina", "number": "AAM448244", "expiry": "13/02/2036", "photoFront": "/profile-photos/nacho-arg.jpg" }
     ]
   },
   {
     "personId": "nico",
+    "birthDate": "21/05/2010",
     "phoneNumber": "+54 9 11 2580-9910",
     "passports": [
-      {
-        "id": "nico-esp",
-        "country": "España",
-        "number": "XDD964630"
-      }
+      { "id": "nico-esp", "country": "España", "number": "XDF756993", "expiry": "09/03/2031", "photoFront": "/profile-photos/nico-esp.jpg" },
+      { "id": "nico-arg", "country": "Argentina", "number": "AAM210907", "expiry": "12/12/2030", "photoFront": "/profile-photos/nico-arg.jpg" }
     ]
   },
   {
@@ -96,13 +56,7 @@
     "birthDate": "02/11/2010",
     "phoneNumber": "+52 55 7478 0944",
     "passports": [
-      {
-        "id": "emi-esp",
-        "country": "España",
-        "number": "XDF749991",
-        "expiry": "03/02/2031",
-        "photoFront": "/profile-photos/emi-esp.jpg"
-      }
+      { "id": "emi-esp", "country": "España", "number": "XDF749991", "expiry": "03/02/2031", "photoFront": "/profile-photos/emi-esp.jpg" }
     ]
   }
 ]

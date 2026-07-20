@@ -2,7 +2,7 @@ import { db } from '../db/dexie'
 import seedProfiles from '../data/profiles.seed.json'
 import type { PersonalProfile } from '../types'
 
-const SEED_VERSION = 'profiles_seeded_v2'
+const SEED_VERSION = 'profiles_seeded_v3'
 
 export async function seedDatabase() {
   if (localStorage.getItem(SEED_VERSION)) return

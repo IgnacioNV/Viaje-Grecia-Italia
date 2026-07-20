@@ -29,10 +29,7 @@ interface DocItem {
 
 const CATEGORY_DOCS: Record<string, DocItem[]> = {
   pasaportes: [],
-  hoteles: [
-    { id: 'h1', title: 'Hotel en Bari', sub: '21–25 jul · 4 noches', icon: 'reservation', eventDate: '2026-07-21',
-      detail: 'Check-in: 21 jul a partir de 15:00\nCheck-out: 25 jul antes de 11:00\nConfirmación: pendiente de agregar' },
-  ],
+  hoteles: [],
   transporte: [
     { id: 't1', title: 'Vuelo Buenos Aires → Bari', sub: 'Por confirmar · julio 2026', icon: 'flight', eventDate: '2026-07-21',
       detail: 'Vuelo de ida. Detalles pendientes.' },

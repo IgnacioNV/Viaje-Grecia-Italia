@@ -1,5 +1,73 @@
 [
   {
+    "id": "doc-bp-guille",
+    "source": "seed",
+    "type": "voucher",
+    "ownerPersonId": "guille",
+    "linkedActivityId": "act-1-1",
+    "title": "Boarding Pass BUE → Roma",
+    "subtitle": "20 jul · AZ681 · Asiento 44L",
+    "detail": "ITA Airways AZ681\nEZE 12:55 → FCO 06:40+1\nTerminal P · Boarding: 11:55 · Cierre: 12:40\nGrupo 4 · Asiento 44L",
+    "file": "/boarding-passes/bp-guille.jpg",
+    "createdAt": "2026-07-20"
+  },
+  {
+    "id": "doc-bp-raquel",
+    "source": "seed",
+    "type": "voucher",
+    "ownerPersonId": "raquel",
+    "linkedActivityId": "act-1-1",
+    "title": "Boarding Pass BUE → Roma",
+    "subtitle": "20 jul · AZ681 · Asiento 39E",
+    "detail": "ITA Airways AZ681\nEZE 12:55 → FCO 06:40+1\nTerminal P · Boarding: 11:55 · Cierre: 12:40\nGrupo 4 · Asiento 39E",
+    "file": "/boarding-passes/bp-raquel.jpg",
+    "createdAt": "2026-07-20"
+  },
+  {
+    "id": "doc-bp-nacho",
+    "source": "seed",
+    "type": "voucher",
+    "ownerPersonId": "nacho",
+    "linkedActivityId": "act-1-1",
+    "title": "Boarding Pass BUE → Roma",
+    "subtitle": "20 jul · AZ681",
+    "detail": "ITA Airways AZ681\nEZE 12:55 → FCO 06:40+1\nTerminal P · Boarding: 11:55",
+    "file": "/boarding-passes/bp-nacho.jpg",
+    "createdAt": "2026-07-20"
+  },
+  {
+    "id": "doc-bp-nico",
+    "source": "seed",
+    "type": "voucher",
+    "ownerPersonId": "nico",
+    "linkedActivityId": "act-1-1",
+    "title": "Boarding Pass BUE → Roma",
+    "subtitle": "20 jul · AZ681",
+    "detail": "ITA Airways AZ681\nEZE 12:55 → FCO 06:40+1\nTerminal P · Boarding: 11:55",
+    "file": "/boarding-passes/bp-nico.jpg",
+    "createdAt": "2026-07-20"
+  },
+  {
+    "id": "doc-hotel-bari",
+    "source": "seed",
+    "type": "reservation",
+    "ownerPersonId": "raquel",
+    "ownerPersonIds": [
+      "raquel",
+      "guille",
+      "nacho",
+      "nico",
+      "joaco",
+      "emi"
+    ],
+    "linkedActivityId": "act-1-2",
+    "title": "Hotel Chagall · Bari",
+    "subtitle": "21–25 jul · 4 noches",
+    "detail": "Chagall Bozzi 59 · Bari\nCheck-in: 21 jul desde 15:00\nCheck-out: 25 jul antes de 11:00",
+    "link": "https://www.booking.com/hotel/it/chagall-bozzi-59.es.html",
+    "createdAt": "2026-07-21"
+  },
+  {
     "id": "doc-tren-roma-bari",
     "source": "seed",
     "type": "voucher",
